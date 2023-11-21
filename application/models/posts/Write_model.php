@@ -9,6 +9,7 @@ class Write_model extends CI_Model {
             'title'=> $title,
             'content'=> $content,
             'user_id' => $user_id,
+            'depth' => 0,
             'delete_status' => FALSE
         );
 
@@ -22,15 +23,32 @@ class Write_model extends CI_Model {
        return $query->row();
     }
 
-    public function save_reply($title, $content, $user_id, $parent_post_id) {
+    private function get_depth($post_id) {
+
+        $this->db->select('depth');
+        $this->db->from('post');
+        $this->db->where('post_id', $post_id);
+        $query = $this->db->get();
+    
+        if ($query->num_rows() > 0) {
+            return $query->row()->depth;
+        } else {
+            return 0; // 기본값, 원본 게시물인 경우
+        }
+    }
+
+    public function save_reply($title, $content, $user_id, $post_id) {
+
+        $depth = $this->get_depth($post_id);
 
         $data = array(
 
             'title' => $title,
             'content' => $content,
             'user_id' => $user_id,
-            'parent_post_id' => $parent_post_id,
+            'parent_post_id' => $post_id,
             'create_date' => date('Y-m-d H:i:s'),
+            'depth' => $depth + 1,
           
         );
 

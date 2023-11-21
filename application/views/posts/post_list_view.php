@@ -142,154 +142,150 @@
             
         </div>
     </div>
-
-
-
-
-    
-        <body class="  bg-base-300">
-            <!-- 리스트 페이지의 내용 -->
+                <body class="bg-base-300">
+                <!-- 리스트 페이지의 내용 -->
                 <div class="bg-base-100 mt-4">
                     <div class="overflow-x-auto shadow-md">
-                            <table class="table">
-                            <?php if(!empty($search_data)): ?>
-                                
-                               <tbody name="search-body">
-                               
-                                        <?php foreach($search_data as $post): ?>
-                                    <!-- 검색 결과 게시물 표시 -->
-                                    <tr class="border-b border-l border-r border-t hover:bg-gray-200 h-20" onclick="window.location.href='/posts/free/<?=$post['post_id']?>'">
-                                            <th class="w-32">
-                                                <div class="flex flex-col items-center">
-                                                    <label for="" class="">▲</label>
-                                                    <div class="">12</div>
-                                                </div>
-                                            </th>
 
-                                            <td>
-                                                <div class="flex items-center gap-3 ml-4">
-                                                    <div>
-                                                        <div class="font-bold"><?php echo $post['title']; ?> [5]</div>
-                                                        <div class="flex mt-1">
-                                                            <div class="text-sm opacity-50">채널이름</div>
-                                                            <!-- <a class="view-replies ml-2 text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" data-post-id="<?=$post->post_id?>">답글보기</a> -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div><?php echo $post['user_id']  ?></div>
-                                            </td>
-                                            <td><?php echo $post['views'] ?></td>
-                                            <th>
-                                                <div class="text-sm"><?php echo $post['create_date']  ?></div>
-                                            </th>
-                                        </tr>
-                                      
+                        <!-- 메인 글 -->
+                        <?php foreach($get_list as $post): ?>
+                            <div class="flex flex-col border-b answer-row">
+                                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200 cursor-pointer" onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                    <div class="ml-4 flex-[0.8] flex items-center">
+                                        <div>▲ 12</div>
+                                    </div>
+                                    <div class="flex-[6] font-bold">
+                                        <?php echo $post->title; ?>
+                                        <div class="flex">
+                                            <div class="font-base">자유</div>
 
-                                    <?php endforeach; ?>
-                                  
-                                     
-                               </tbody>
-                               <!-- 검색 결과 없을때  표시  -->
-                                <?php else: ?>
-
-                                    <?php if(isset($no_results)): ?>
-                                        <div class="flex justify-center mt-4 font-bold text-lg">
-                                            <?php echo $no_results; ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                <?php endif; ?>
-
-                                <!-- 검색 결과 게시물 표시 끝 -->
-
-
-                                <tbody name="posts-body">
-                                <?php foreach($get_list as $post): ?>       
-                                        <!-- 메인 게시물 -->
-                                        <tr class="border-b border-l border-r border-t hover:bg-gray-200 h-20" onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
-                                            <th class="w-32">
-                                                <div class="flex flex-col items-center">
-                                                    <label for="" class="">▲</label>
-                                                    <div class="">12</div>
-                                                </div>
-                                            </th>
-
-                                            <td>
-                                                <div class="flex items-center gap-3 ml-4">
-                                                    <div>
-                                                        <div class="font-bold"><?php echo $post->title; ?> [5]</div>
-                                                        <div class="flex mt-1">
-                                                            <div class="text-sm opacity-50">채널이름</div>
-                                                            <a class="view-replies ml-2 text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" data-post-id="<?=$post->post_id?>">답글보기</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div><?php echo $post->user_id; ?></div>
-                                            </td>
-                                            <td><?php echo $post->views; ?></td>
-                                            <th>
-                                                <div class="text-sm"><?php echo $post->create_date; ?></div>
-                                            </th>
-                                        </tr>
-                                        <!-- 메인게시물 끝 -->
-
-                                        <!-- 관련 답변 게시물 -->
-                                        <?php foreach($get_answer_list as $answer_post): ?>
-                                            <?php if($answer_post->parent_post_id == $post->post_id): ?>
-                                                <tr name="answer-title" class="answer-row hidden border-b border-l border-r border-t hover:bg-gray-200 h-20" data-parent-post-id="<?=$answer_post->parent_post_id?>" onclick="window.location.href='/posts/free/<?=$answer_post->post_id?>'">
-                                                    <td>└</td>
-                                                    <td>
-                                                        <div class="flex items-center gap-3">
-                                                            <div>
-                                                                <div class="font-bold text-gray-400"><?= $answer_post->parent_title; ?> 에 대한 답변</div>
-                                                                <div class="font-bold mt-1"><?= $answer_post->title; ?></div>
-                                                                <a class="view-replies ml-2 text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" data-post-id="<?=$answer_post->post_id?>">답글보기</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div><?= $answer_post->user_id ?></div>
-                                                    </td>
-                                                    <td>21</td>
-                                                    <th>
-                                                        <div class="text-sm">2020-10-31 01:32</div>
-                                                    </th>
-                                                </tr>
+                                            <!-- 답글이 있을때만 버튼 보임 -->
+                                            <?php if($post->replies_count > 0): ?>
+                                            <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
                                             <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    <?php endforeach; ?>
-                                </tbody>
-
-
-                     
-                            </table>
-                            
-                            <div class="mt-6 mb-6">
-                                <div class="flex justify-center">
-                                
-                                <div class="pagination">
-                                    <?php echo $link; ?><br>
-                                    
-                                                
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="flex-1"><?php echo $post->user_id ?></div>
+                                    <div class="flex-1"><?php echo $post->views ?>조회 23</div>
+                                    <div class="flex-1"><?php echo $post->create_date?></div>
                                 </div>
+                                
+                                <div id="replies-container-<?=$post->post_id?>"></div> 
+                            </div>
+                        <?php endforeach; ?>
+                        <!-- 메인 글 끝-->
 
-                                
-                            </div>
-                                
-                            </div>
-                        
+
+                        <!-- 검색 결과 -->
+                        <?php if(!empty($search_data)): ?>
+                            <?php foreach($search_data as $post): ?>
+                                <div class="flex flex-col border-b ">
+                                    <div class="flex flex-1 p-4 space-x-2 space-y-2">
+                                        <div class="ml-4 flex-[0.8] flex items-center">
+                                            <div>▲ 12</div>
+                                        </div>
+                                        <div class="flex-[6]">
+                                            <?php echo $post['title']; ?> [5]
+                                            <div class="flex">
+                                                <div>자유</div>
+                                                <!-- <span class="ml-2 text-red-500">답글보기</span> -->
+                                            </div>
+                                        </div>
+                                        <div class="flex-1"><?php echo $post['user_id']; ?></div>
+                                        <div class="flex-1"><?php echo $post['views']; ?>조회 23</div>
+                                        <div class="flex-1"><?php echo $post['create_date']; ?></div>
+                                    </div>
+                                    <div id="replies-container-<?=$post['post_id']?>"></div> 
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php if(isset($no_results)): ?>
+                                <div class="flex justify-center m-4 font-bold text-lg">
+                                    <?php echo $no_results; ?>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <!-- 검색 결과 끝 -->
+
                     </div>
-               
-            </div>
-        </body>
+                    
+                        
+                        <div class="mt-6 mb-6">
+                            <div class="flex justify-center">
+                                                    
+                                <div class="pagination mb-4">
+                                <?php echo $link; ?>
+
+                                                    
+                                </div>
+                                                    
+                            </div>
+                        </div>
+                    
+                </div>
+            </body>
+            
+           
+
     </div>
 </div>
 
 <script>
+
+
+
+function loadReplies(postId, parentContainerId = null) {
+    let repliesContainer;
+    if (parentContainerId) {
+        // 중첩된 답글을 로드하는 경우
+        repliesContainer = document.getElementById(parentContainerId);
+    } else {
+        // 최상위 답글을 로드하는 경우
+        repliesContainer = document.getElementById(`replies-container-${postId}`);
+    }
+    repliesContainer.innerHTML = ''; // 기존 내용 초기화
+
+    fetch(`posts/post/fetch_replies/${postId}`)
+    .then(response => response.json())
+    .then(replies => {
+        replies.forEach(reply => {
+            const replyElement = document.createElement('div');
+            replyElement.className = 'flex flex-col border-t';
+            replyElement.innerHTML = `
+                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200" onclick="window.location.href='/posts/free/${reply.post_id}'">
+            
+                    <div class="ml-4 flex-[0.8] flex items-center hover:gray-300">
+                        <div>└</div>
+                    </div>
+                    <div class="flex-[6]">
+                        <div class="font-bold text-gray-400">${reply.parent_title} 에 대한 답변</div>
+                        <div class="font-bold mt-1">${reply.title}</div>
+                        <a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>
+                    </div>
+                    <div class="flex-1">${reply.user_id}</div>
+                    <div class="flex-1">21</div>
+                    <div class="flex-1">${reply.create_date}</div>
+                </div>
+            `;
+
+            // 중첩된 답글을 위한 컨테이너 추가
+            const nestedRepliesContainer = document.createElement('div');
+            nestedRepliesContainer.id = `nested-replies-container-${reply.post_id}`;
+            nestedRepliesContainer.className = 'nested-replies';
+            
+            replyElement.appendChild(nestedRepliesContainer);
+            repliesContainer.appendChild(replyElement);
+        });
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+
+
+
     
     document.addEventListener('DOMContentLoaded', function () {
     
@@ -352,9 +348,3 @@ document.addEventListener('DOMContentLoaded', function () {
     } 
 });
 </script>
-
-
-
-
-
-

@@ -23,6 +23,21 @@ class Post_model extends CI_Model {
         return $query->row();
     }
 
+    public function get_replies($post_id) {
+        $this->db->select('post.*, parent.title as parent_title');
+        $this->db->from('post');
+        $this->db->join('post as parent', 'post.parent_post_id = parent.post_id', 'left');
+        $this->db->where('post.parent_post_id', $post_id); // parent_post_id가 post_id와 정확히 일치하는 경우만 조회
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_replies_count($post_id){
+        $this->db->from('post');
+        $this->db->where('parent_post_id', $post_id);
+        return $this->db->count_all_results();
+    }
+    
     public function get_answer_posts() {
 
         $this->db->select('post.*, parent.title as parent_title');
@@ -32,6 +47,9 @@ class Post_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    
+
 
     public function create_comment($post_id,$comment_content, $user_id) {
 

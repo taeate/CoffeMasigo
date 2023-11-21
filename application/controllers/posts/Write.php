@@ -22,7 +22,7 @@ class Write extends CI_Controller {
 
             $this->Write_model->set_article($title, $content, $user_id);
 
-            redirect('/posts/all');
+            redirect('/posts');
         }
 
         $data['post_data'] = null;
@@ -43,7 +43,7 @@ class Write extends CI_Controller {
                 $user_id = $this->session->userdata('user_id'); // 세션에서 사용자 ID 가져오기
     
                   
-              
+                
                 $this->Write_model->save_reply($title, $content, $user_id, $post_id);
     
                 
