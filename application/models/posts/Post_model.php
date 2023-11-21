@@ -24,10 +24,10 @@ class Post_model extends CI_Model {
     }
 
     public function get_replies($post_id) {
-        $this->db->select('post.*, parent.title as parent_title');
+        $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id) as replies_count');
         $this->db->from('post');
         $this->db->join('post as parent', 'post.parent_post_id = parent.post_id', 'left');
-        $this->db->where('post.parent_post_id', $post_id); // parent_post_id가 post_id와 정확히 일치하는 경우만 조회
+        $this->db->where('post.parent_post_id', $post_id);
         $query = $this->db->get();
         return $query->result();
     }

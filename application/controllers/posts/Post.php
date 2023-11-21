@@ -19,7 +19,7 @@ class Post extends CI_Controller {
         $config['base_url'] = site_url('posts/all/page/');
         $config['first_url'] = site_url('posts/all/page/1');
         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
-        $config['per_page'] = 11; // 페이지당 게시물수
+        $config['per_page'] = 30; // 페이지당 게시물수
         $config['num_links'] = FALSE;
         $config['use_page_numbers'] = TRUE;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';

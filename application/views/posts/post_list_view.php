@@ -8,7 +8,7 @@
 </div>
     
     <!-- 리스트 페이지 컨텐츠 -->
-    <div id="content" class="contentbox ml-8 z-10" style="flex: 3;" >
+    <div id="content" class="contentbox ml-4 z-10" style="flex: 3;" >
 
         <div name="top-box" class="flex flex-col w-full">
             <div name="search-nav" class="searchbox z-30 h-auto bg-base-100 place-items-center shadow-md">
@@ -149,24 +149,26 @@
 
                         <!-- 메인 글 -->
                         <?php foreach($get_list as $post): ?>
-                            <div class="flex flex-col border-b answer-row">
-                                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200 cursor-pointer" onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
-                                    <div class="ml-4 flex-[0.8] flex items-center">
-                                        <div>▲ 12</div>
+                            <div class="flex flex-col border-b answer-row" >
+                                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                    <div class="ml-4 flex-[1] flex flex-col items-center">
+                                        <div>▲</div>
+                                        <div>12</div>
                                     </div>
-                                    <div class="flex-[6] font-bold">
+                                    <div class="flex-[6]">
                                         <?php echo $post->title; ?>
                                         <div class="flex">
                                             <div class="font-base">자유</div>
 
                                             <!-- 답글이 있을때만 버튼 보임 -->
                                             <?php if($post->replies_count > 0): ?>
-                                            <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+
                                             <?php endif; ?>
-                                            
+
                                         </div>
                                     </div>
-                                    <div class="flex-1"><?php echo $post->user_id ?></div>
+                                    <div class="flex-[2]"><?php echo $post->user_id ?></div>
                                     <div class="flex-1"><?php echo $post->views ?>조회 23</div>
                                     <div class="flex-1"><?php echo $post->create_date?></div>
                                 </div>
@@ -229,14 +231,25 @@
            
 
     </div>
+
+    <div class="w-80 ml-4">
+    <?php $this->load->view('layout/rightbar'); ?>
+    </div>
 </div>
+
+
 
 <script>
 
 
 
 function loadReplies(postId, parentContainerId = null) {
-    let repliesContainer;
+
+    console.log("loadReplies called with postId:", postId); // 현재 postId 확인
+    let repliesContainer = parentContainerId ? document.getElementById(parentContainerId) : document.getElementById(`replies-container-${postId}`);
+    console.log("Using URL:", `posts/post/fetch_replies/${postId}`); // 사용되는 URL 확인
+
+
     if (parentContainerId) {
         // 중첩된 답글을 로드하는 경우
         repliesContainer = document.getElementById(parentContainerId);
@@ -246,28 +259,32 @@ function loadReplies(postId, parentContainerId = null) {
     }
     repliesContainer.innerHTML = ''; // 기존 내용 초기화
 
-    fetch(`posts/post/fetch_replies/${postId}`)
+    fetch(`/posts/post/fetch_replies/${postId}`)
     .then(response => response.json())
     .then(replies => {
         replies.forEach(reply => {
+           
             const replyElement = document.createElement('div');
             replyElement.className = 'flex flex-col border-t';
             replyElement.innerHTML = `
                 <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200" onclick="window.location.href='/posts/free/${reply.post_id}'">
             
                     <div class="ml-4 flex-[0.8] flex items-center hover:gray-300">
-                        <div>└</div>
+                     
                     </div>
+                    └
                     <div class="flex-[6]">
-                        <div class="font-bold text-gray-400">${reply.parent_title} 에 대한 답변</div>
-                        <div class="font-bold mt-1">${reply.title}</div>
-                        <a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>
+                        <div class="text-gray-400">${reply.parent_title} 에 대한 답변</div>
+                        <div class="mt-1">${reply.title}</div>
+                        
+                        ${reply.replies_count > 0 ? `<a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="event.stopPropagation(); loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>` : ''}
                     </div>
                     <div class="flex-1">${reply.user_id}</div>
                     <div class="flex-1">21</div>
                     <div class="flex-1">${reply.create_date}</div>
                 </div>
             `;
+            
 
             // 중첩된 답글을 위한 컨테이너 추가
             const nestedRepliesContainer = document.createElement('div');
@@ -276,49 +293,49 @@ function loadReplies(postId, parentContainerId = null) {
             
             replyElement.appendChild(nestedRepliesContainer);
             repliesContainer.appendChild(replyElement);
+
+     
+       
         });
     })
     .catch(error => console.error('Error:', error));
 }
 
 
-
-
-
-
     
-    document.addEventListener('DOMContentLoaded', function () {
+//     document.addEventListener('DOMContentLoaded', function () {
     
-    const viewRepliesButtons = document.querySelectorAll('.view-replies'); // 답글보기 class
+//     const viewRepliesButtons = document.querySelectorAll('.view-replies'); // 답글보기 class
 
-    viewRepliesButtons.forEach(function (button) {
+//     viewRepliesButtons.forEach(function (button) {
 
-        button.addEventListener('click', function (event) {
+//         button.addEventListener('click', function (event) {
 
-            event.stopPropagation();
+//             event.stopPropagation();
             
-            const postId = this.getAttribute('data-post-id');
+//             const postId = this.getAttribute('data-post-id');
 
-            const answerRows = document.querySelectorAll(`.answer-row[data-parent-post-id="${postId}"]`);
+//             const answerRows = document.querySelectorAll(`.answer-row[data-parent-post-id="${postId}"]`);
             
-            answerRows.forEach(row => {
-                row.classList.toggle('hidden');
-            });
-        });
-    });
-});
+          
+//         });
+//     });
+// });
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
     const navbar = document.querySelector('nav');
     const search = document.querySelector('.searchbox');
     const sidebar = document.querySelector('.sidebarbox');
+    const rightbar = document.querySelector('.rightbox');
 
     // 원래 sidebar의 너비 계산
     const originalSidebarWidth = sidebar.offsetWidth + 'px';
     const originalSearchWidth = search.offsetWidth + 'px';
+    const originalRightWidth = search.offsetWidth + 'px';
 
-    if (navbar && content && sidebar) {
+    if (navbar && content && sidebar && rightbar) {
 
         const navbarHeight = navbar.offsetHeight;
         const contentTop = content.getBoundingClientRect().top + window.scrollY - navbarHeight;
@@ -327,15 +344,24 @@ document.addEventListener('DOMContentLoaded', function () {
             if(window.scrollY >= contentTop){
                 sidebar.classList.add('fixed');
                 search.classList.add('fixed');
+                rightbar.classList.add('fixed');
                 sidebar.style.top = `${navbarHeight}px`;
+                rightbar.style.top = `${navbarHeight}px`;
                 search.style.top = `${navbarHeight}px`;
 
+                rightbar.style.width = originalSidebarWidth; 
                 sidebar.style.width = originalSidebarWidth; 
                 search.style.width = originalSearchWidth; // 고정 상태에서 원래 너비 적용
             } else {
                 sidebar.classList.remove('fixed');
                 sidebar.style.top = '';
                 sidebar.style.width = ''; // 너비 스타일 제거
+
+
+                rightbar.classList.remove('fixed');
+                rightbar.style.top = '';
+                rightbar.style.width = ''; 
+
 
                  // searchbox 스타일 초기화
                 search.classList.remove('fixed');
