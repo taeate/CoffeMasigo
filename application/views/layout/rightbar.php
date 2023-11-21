@@ -8,7 +8,7 @@
                     최다 조회
                 </div>
                 <div class="flex-1">
-                    최
+                    
                 </div>
                 <div class="flex-1">
                     tab3

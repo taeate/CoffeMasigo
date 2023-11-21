@@ -137,7 +137,7 @@
                                         <a href="" class="text-red-500">댓글보기</a>
                                     </div>
                                     <div class="flex ml-auto">
-                                        <a class="mt-4 text-sm">수정하기</a>
+                                    
                                         <a class="mt-4 ml-4 text-sm">삭제하기</a>
                                     </div>
                                 </div>
@@ -157,8 +157,13 @@
                 </div>
                 
             </div>
+            
         </div>
         <body class="mt-96">
         </body>
+        
+    </div>
+    <div class="w-80 ml-4">
+    <?php $this->load->view('layout/rightbar'); ?>
     </div>
 </div>

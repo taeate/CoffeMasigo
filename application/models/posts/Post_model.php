@@ -24,10 +24,11 @@ class Post_model extends CI_Model {
     }
 
     public function get_replies($post_id) {
-        $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id) as replies_count');
+        $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id AND subpost.delete_status IS NULL) as replies_count');
         $this->db->from('post');
         $this->db->join('post as parent', 'post.parent_post_id = parent.post_id', 'left');
         $this->db->where('post.parent_post_id', $post_id);
+        $this->db->where('post.delete_status', NULL);
         $query = $this->db->get();
         return $query->result();
     }

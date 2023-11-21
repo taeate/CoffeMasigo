@@ -1,6 +1,8 @@
 <?php $this->load->view('layout/header'); ?>
 
-<div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 320px;">
+<div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px;">
+
+<body>
 
 <!-- 사이드바 -->
 <div class="w-80">
@@ -8,6 +10,9 @@
 </div>
     
     <!-- 리스트 페이지 컨텐츠 -->
+   
+    
+    
     <div id="content" class="contentbox ml-4 z-10" style="flex: 3;" >
 
         <div name="top-box" class="flex flex-col w-full">
@@ -143,6 +148,7 @@
         </div>
     </div>
                 <body class="bg-base-300">
+                    
                 <!-- 리스트 페이지의 내용 -->
                 <div class="bg-base-100 mt-4">
                     <div class="overflow-x-auto shadow-md">
@@ -161,7 +167,7 @@
                                             <div class="font-base">자유</div>
 
                                             <!-- 답글이 있을때만 버튼 보임 -->
-                                            <?php if($post->replies_count > 0): ?>
+                                            <?php if($post->replies_count > 0 ): ?>
                                                 <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
 
                                             <?php endif; ?>
@@ -235,8 +241,9 @@
     <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
     </div>
+    
 </div>
-
+</body>
 
 
 <script>
@@ -277,7 +284,9 @@ function loadReplies(postId, parentContainerId = null) {
                         <div class="text-gray-400">${reply.parent_title} 에 대한 답변</div>
                         <div class="mt-1">${reply.title}</div>
                         
-                        ${reply.replies_count > 0 ? `<a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="event.stopPropagation(); loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>` : ''}
+                        ${(reply.replies_count > 0 && reply.delete_status === null) ? `<a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="event.stopPropagation(); loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>` : ''}
+                        
+
                     </div>
                     <div class="flex-1">${reply.user_id}</div>
                     <div class="flex-1">21</div>
