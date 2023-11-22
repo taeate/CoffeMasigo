@@ -58,6 +58,7 @@ class Post extends CI_Controller {
     
 
     public function detail($post_id) {
+        
         $data = array();
     
         if (!empty($post_id)) {
@@ -173,7 +174,9 @@ class Post extends CI_Controller {
         echo json_encode($replies);
     }
 
-    
+
+
+  
     
 }
 ?>

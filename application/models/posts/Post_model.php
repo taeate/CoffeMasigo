@@ -50,18 +50,25 @@ class Post_model extends CI_Model {
     }
 
     
-
-
     public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
-        
-        $depth = 0;
-        
+        $ref = null;
+        $re_step = 0;
+        $re_level = 0;
     
-        if ($parent_comment_id !== NULL) {
-            // 부모 댓글의 depth 값을 조회합니다.
+        if ($parent_comment_id !== null) {
+            // 부모 댓글 조회
             $parent_comment = $this->db->get_where('comment', array('comment_id' => $parent_comment_id))->row();
-            $depth = $parent_comment ? $parent_comment->depth + 1 : 0;
+            $ref = $parent_comment->ref;
+            $re_step = $parent_comment->re_step + 1;
+            $re_level = $parent_comment->re_level + 1;
+    
+            // 같은 ref를 가진 댓글의 re_step 업데이트
+            $this->db->set('re_step', 're_step - 1', FALSE);
+            $this->db->where('ref', $ref);
+            $this->db->where('re_step >=', $re_step);
+            $this->db->update('comment');
 
+            
         }
     
         $data = array(
@@ -70,10 +77,18 @@ class Post_model extends CI_Model {
             'post_id' => $post_id,
             'create_date' => date('Y-m-d H:i:s'),
             'parent_comment_id' => $parent_comment_id,
-            'depth' => $depth
+            'ref' => $ref ?? $this->db->insert_id(),
+            're_step' => $re_step,
+            're_level' => $re_level
         );
     
         $this->db->insert('comment', $data);
+    
+        // 최상위 댓글인 경우 ref 업데이트
+        if ($parent_comment_id === null) {
+            $comment_id = $this->db->insert_id();
+            $this->db->update('comment', array('ref' => $comment_id), array('comment_id' => $comment_id));
+        }
     }
 
     public function get_comment($post_id){
@@ -81,7 +96,11 @@ class Post_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('comment');
         $this->db->where('post_id', $post_id);
-        $this->db->order_by('create_date','ASC');
+        $this->db->order_by('ref', 'ASC');
+        $this->db->order_by('re_step', 'ASC');
+        $this->db->order_by('re_level', 'ASC');
+        $this->db->order_by('create_date', 'ASC');
+
 
         $query = $this->db->get();
 

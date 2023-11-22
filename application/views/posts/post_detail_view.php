@@ -121,38 +121,36 @@
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
                 
-                    <div name="commnet-answer-area">
+                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
 
-                            <div name="title" class="m-5">
+                            <div name="title" class="flex m-3">
                                 
-                                <div class="flex justify-normal">
-                                    <div class="flex flex-none">
-                                        <div class="text-base font-bold"><?php echo $user_id; ?></div>    
-                                        <div class="ml-2"><?php echo $createdate; ?><br></div>    
+                                <div class="justify-normal ml-">
+                                    <div class="flex">
+                                    <?php if ($comment->re_level >= 1): ?>
+                                        <div class="mr-2">└</div>
+                                    <?php endif; ?>
+
+                                    <div class="font-bold">
+                                        <?php if($user_id == !null) :?>
+                                        <?php echo $user_id; ?>
+                                        <?php else: ?>
+                                        <div>Guest</div>
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="grow"></div>
-                                </div>
-                                <div class="flex">                                   
-                                     <div class="mt-4"><?php echo $content; ?><br></div>                                     
-                                </div>
-                                <div class="flex justify-between">
-                                
-                                    <button class="reply-btn mt-4 text-sm" data-comment-id="<?= $comment_id ?>">댓글쓰기</button>   
-                                    
-                                    
-                                    <div class="mt-4 ml-4 text-sm">
-                                        <a href="" class="text-red-500">댓글보기</a>
+
+                                    <div class="ml-2"><?php echo $createdate; ?></div>
+                                    <div>
+                                        <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
                                     </div>
-                                    <div class="flex ml-auto">
-                                    
-                                        <a class="mt-4 ml-4 text-sm">삭제하기</a>
                                     </div>
+                                    <div class="mt-2"><?php echo $content; ?><br></div>                  
                                 </div>
                                 
                             </div>
 
+                        </div>
 
-                     </div>
                      
                     <hr>
 
@@ -184,20 +182,19 @@
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    var activeCommentForm = null; // 활성화된 댓글 폼을 추적합니다.
+    var activeCommentForm = null; // 활성화된 댓글 폼을 추적
 
     document.querySelectorAll('.reply-btn').forEach(button => {
         button.addEventListener('click', function() {
             
+            
             var commentId = this.getAttribute('data-comment-id'); // 댓글 ID를 옴
-            console.log(commentId);
-            var commentContainer = this.closest('[name="commnet-answer-area"]');
 
-            // 현재 댓글 컨테이너를 찾습니다.
-            var commentContainer = this.closest('[name="commnet-answer-area"]');
+            // 현재 댓글 컨테이너를 찾기
+            var commentContainer = this.closest('[name="comment-answer-area"]');
 
-            // 활성화된 폼이 있고, 현재 댓글 컨테이너에 속하지 않는 경우, 제거합니다.
-            if (activeCommentForm && activeCommentForm.closest('[name="commnet-answer-area"]') !== commentContainer) {
+            // 활성화된 폼이 있고, 현재 댓글 컨테이너에 속하지 않는 경우, 제거
+            if (activeCommentForm && activeCommentForm.closest('[name="comment-answer-area"]') !== commentContainer) {
                 activeCommentForm.remove();
                 activeCommentForm = null;
             }
