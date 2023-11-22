@@ -81,9 +81,18 @@ class Post extends CI_Controller {
     
         // 댓글 저장
         if ($this->input->post()) {
+
             $comment_content = $this->input->post('comment');
             $user_id = $this->session->userdata('user_id');
-            $this->Post_model->create_comment($post_id, $comment_content, $user_id);
+            $parent_comment_id = $this->input->post('parent_comment_id'); // 대댓글 ID를 받음
+
+
+            // 대댓글 id 가 있으면 대댓글로 , 없으면 일반 댓글로
+            if (!empty($parent_comment_id)) {
+                $this->Post_model->create_comment($parent_comment_id, $post_id, $comment_content, $user_id);
+            } else {
+                $this->Post_model->create_comment(NULL, $post_id, $comment_content, $user_id); // NULL을 첫 번째 인자로 전달
+            }
     
             // 페이지 새로고침 또는 리디렉트
             redirect('posts/free/'.$post_id); // 상세 페이지로 리디렉트하여 새 댓글 표시

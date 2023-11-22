@@ -1,4 +1,5 @@
 <?php $this->load->view('layout/header'); ?>
+<img class="w-full h-96" src="/application/views/images/sksk.jpg" alt="">
 
 <div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px;">
 

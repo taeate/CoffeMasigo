@@ -52,20 +52,28 @@ class Post_model extends CI_Model {
     
 
 
-    public function create_comment($post_id,$comment_content, $user_id) {
-
-        $data = array(
-
+    public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
         
+        $depth = 0;
+        
+    
+        if ($parent_comment_id !== NULL) {
+            // 부모 댓글의 depth 값을 조회합니다.
+            $parent_comment = $this->db->get_where('comment', array('comment_id' => $parent_comment_id))->row();
+            $depth = $parent_comment ? $parent_comment->depth + 1 : 0;
+
+        }
+    
+        $data = array(
             'comment_content' => $comment_content,
             'user_id' => $user_id,
             'post_id' => $post_id,
             'create_date' => date('Y-m-d H:i:s'),
-          
+            'parent_comment_id' => $parent_comment_id,
+            'depth' => $depth
         );
-
-        $this->db->insert('comment', $data);
     
+        $this->db->insert('comment', $data);
     }
 
     public function get_comment($post_id){

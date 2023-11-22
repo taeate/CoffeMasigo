@@ -85,7 +85,9 @@
                             <?php endif; ?>
                         
                         </div>
-                        <form class="ml-8 mr-8 mt-2" method="post">
+
+                        <!-- 댓글 작성 폼 -->
+                        <form class="comment-form ml-8 mr-8 mt-2" method="post" id="">
                             <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                                 <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                                     <label for="comment" class="sr-only">Your comment</label>
@@ -114,11 +116,13 @@
                          
                     
                     <?php foreach($comment_info as $comment) : ?>
+                        <?php $comment_id = $comment->comment_id; ?>
                         <?php $user_id = $comment->user_id; ?>
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
                 
                     <div name="commnet-answer-area">
+
                             <div name="title" class="m-5">
                                 
                                 <div class="flex justify-normal">
@@ -132,7 +136,10 @@
                                      <div class="mt-4"><?php echo $content; ?><br></div>                                     
                                 </div>
                                 <div class="flex justify-between">
-                                    <div class="mt-4 text-sm">댓글쓰기</div>
+                                
+                                    <button class="reply-btn mt-4 text-sm" data-comment-id="<?= $comment_id ?>">댓글쓰기</button>   
+                                    
+                                    
                                     <div class="mt-4 ml-4 text-sm">
                                         <a href="" class="text-red-500">댓글보기</a>
                                     </div>
@@ -141,15 +148,17 @@
                                         <a class="mt-4 ml-4 text-sm">삭제하기</a>
                                     </div>
                                 </div>
-
+                                
                             </div>
-                            
-                    </div>
+
+
+                     </div>
+                     
                     <hr>
 
 
               
-             <?php endforeach; ?>
+                    <?php endforeach; ?>
 
                     
 
@@ -167,3 +176,57 @@
     <?php $this->load->view('layout/rightbar'); ?>
     </div>
 </div>
+
+<script>
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    var activeCommentForm = null; // 활성화된 댓글 폼을 추적합니다.
+
+    document.querySelectorAll('.reply-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            
+            var commentId = this.getAttribute('data-comment-id'); // 댓글 ID를 옴
+            console.log(commentId);
+            var commentContainer = this.closest('[name="commnet-answer-area"]');
+
+            // 현재 댓글 컨테이너를 찾습니다.
+            var commentContainer = this.closest('[name="commnet-answer-area"]');
+
+            // 활성화된 폼이 있고, 현재 댓글 컨테이너에 속하지 않는 경우, 제거합니다.
+            if (activeCommentForm && activeCommentForm.closest('[name="commnet-answer-area"]') !== commentContainer) {
+                activeCommentForm.remove();
+                activeCommentForm = null;
+            }
+
+        
+
+            if (!activeCommentForm) {
+            var originalCommentForm = document.querySelector('.comment-form');
+            activeCommentForm = originalCommentForm.cloneNode(true);
+            commentContainer.after(activeCommentForm);
+            activeCommentForm.classList.remove('hidden');
+
+            // 폼에 숨겨진 입력 필드 추가
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'parent_comment_id');
+            hiddenInput.value = commentId;
+            activeCommentForm.appendChild(hiddenInput);
+
+        }
+
+            
+        });
+    });
+});
+
+
+
+
+
+
+</script>
