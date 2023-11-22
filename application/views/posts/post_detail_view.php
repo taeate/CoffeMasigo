@@ -123,6 +123,7 @@
                 
                         <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
 
+
                             <div name="title" class="flex m-3">
                                 
                                 <div class="justify-normal ml-">
@@ -144,7 +145,7 @@
                                         <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
                                     </div>
                                     </div>
-                                    <div class="mt-2"><?php echo $content; ?><br></div>                  
+                                    <div class="mt-2 ml-2"><?php echo $content; ?><br></div>                  
                                 </div>
                                 
                             </div>

@@ -50,25 +50,33 @@ class Post_model extends CI_Model {
     }
 
     
+
+
     public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
+        
         $ref = null;
         $re_step = 0;
         $re_level = 0;
+    
+        
     
         if ($parent_comment_id !== null) {
             // 부모 댓글 조회
             $parent_comment = $this->db->get_where('comment', array('comment_id' => $parent_comment_id))->row();
             $ref = $parent_comment->ref;
-            $re_step = $parent_comment->re_step + 1;
             $re_level = $parent_comment->re_level + 1;
-    
-            // 같은 ref를 가진 댓글의 re_step 업데이트
-            $this->db->set('re_step', 're_step - 1', FALSE);
+        
+            // 부모 댓글의 re_step보다 큰 댓글의 re_step 업데이트
+            $this->db->set('re_step', 're_step + 1', FALSE);
             $this->db->where('ref', $ref);
-            $this->db->where('re_step >=', $re_step);
+            $this->db->where('re_step >', $parent_comment->re_step);
             $this->db->update('comment');
-
-            
+        
+            // 새 대댓글의 re_step 설정
+            $re_step = $parent_comment->re_step + 1;
+        }
+        else{
+            $ref = null; // ref는 최상위 댓글의 ID로 설정됩니다.
         }
     
         $data = array(
@@ -77,13 +85,14 @@ class Post_model extends CI_Model {
             'post_id' => $post_id,
             'create_date' => date('Y-m-d H:i:s'),
             'parent_comment_id' => $parent_comment_id,
-            'ref' => $ref ?? $this->db->insert_id(),
+            'ref' => $ref,
             're_step' => $re_step,
             're_level' => $re_level
+
         );
     
         $this->db->insert('comment', $data);
-    
+
         // 최상위 댓글인 경우 ref 업데이트
         if ($parent_comment_id === null) {
             $comment_id = $this->db->insert_id();
@@ -92,25 +101,20 @@ class Post_model extends CI_Model {
     }
 
     public function get_comment($post_id){
-
         $this->db->select('*');
         $this->db->from('comment');
         $this->db->where('post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
-        $this->db->order_by('re_step', 'ASC');
         $this->db->order_by('re_level', 'ASC');
-        $this->db->order_by('create_date', 'ASC');
-
-
+        $this->db->order_by('re_step', 'ASC');
+    
         $query = $this->db->get();
-
-        // 쿼리 결과가 존재하면 결과 반환, 그렇지 않으면 빈 배열 반환
+    
         if ($query->num_rows() > 0) {
             return $query->result();
         } else {
             return array();
         }
-
     }
 
     public function count_comment($post_id){
