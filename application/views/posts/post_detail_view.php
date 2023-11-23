@@ -121,12 +121,12 @@
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
                 
-                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
+                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 4) ?>">
 
 
                             <div name="title" class="flex m-3">
                                 
-                                <div class="justify-normal ml-">
+                                <div class="justify-normal ml-8">
                                     <div class="flex">
                                     <?php if ($comment->re_level >= 1): ?>
                                         <div class="mr-2">└</div>

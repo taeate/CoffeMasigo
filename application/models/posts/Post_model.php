@@ -53,30 +53,30 @@ class Post_model extends CI_Model {
 
 
     public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
-        
+
+        // 초기화
         $ref = null;
         $re_step = 0;
         $re_level = 0;
     
-        
-    
         if ($parent_comment_id !== NULL) {
-
             // 부모 댓글 조회
             $parent_comment = $this->db->get_where('comment', array('comment_id' => $parent_comment_id))->row();
             $ref = $parent_comment->ref ? $parent_comment->ref : $parent_comment_id;
             $re_level = $parent_comment->re_level + 1;
-
+    
             // re_step 값 계산
             $this->db->select_max('re_step');
             $this->db->where('ref', $ref);
             $this->db->where('re_level', $re_level);
             $max_re_step = $this->db->get('comment')->row()->re_step;
             $re_step = $max_re_step + 1;
-
-        }
-        else{
-            $ref = null; // ref는 최상위 댓글의 ID로 설정
+            
+        } else {
+            // 최상위 댓글의 경우
+            $ref = null;
+            $re_level = 0;
+            $re_step = 0; // 최상위 댓글은 항상 re_step = 0
         }
     
         $data = array(
@@ -88,11 +88,10 @@ class Post_model extends CI_Model {
             'ref' => $ref,
             're_step' => $re_step,
             're_level' => $re_level
-
         );
     
         $this->db->insert('comment', $data);
-
+    
         // 최상위 댓글인 경우 ref 업데이트
         if ($parent_comment_id === null) {
             $comment_id = $this->db->insert_id();
@@ -107,6 +106,7 @@ class Post_model extends CI_Model {
         $this->db->where('post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
+
     
         $query = $this->db->get();
     
