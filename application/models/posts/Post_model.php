@@ -60,23 +60,23 @@ class Post_model extends CI_Model {
     
         
     
-        if ($parent_comment_id !== null) {
+        if ($parent_comment_id !== NULL) {
+
             // 부모 댓글 조회
             $parent_comment = $this->db->get_where('comment', array('comment_id' => $parent_comment_id))->row();
-            $ref = $parent_comment->ref;
+            $ref = $parent_comment->ref ? $parent_comment->ref : $parent_comment_id;
             $re_level = $parent_comment->re_level + 1;
-        
-            // 부모 댓글의 re_step보다 큰 댓글의 re_step 업데이트
-            $this->db->set('re_step', 're_step + 1', FALSE);
+
+            // re_step 값 계산
+            $this->db->select_max('re_step');
             $this->db->where('ref', $ref);
-            $this->db->where('re_step >', $parent_comment->re_step);
-            $this->db->update('comment');
-        
-            // 새 대댓글의 re_step 설정
-            $re_step = $parent_comment->re_step + 1;
+            $this->db->where('re_level', $re_level);
+            $max_re_step = $this->db->get('comment')->row()->re_step;
+            $re_step = $max_re_step + 1;
+
         }
         else{
-            $ref = null; // ref는 최상위 댓글의 ID로 설정됩니다.
+            $ref = null; // ref는 최상위 댓글의 ID로 설정
         }
     
         $data = array(
@@ -101,11 +101,11 @@ class Post_model extends CI_Model {
     }
 
     public function get_comment($post_id){
+
         $this->db->select('*');
         $this->db->from('comment');
         $this->db->where('post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
-        $this->db->order_by('re_level', 'ASC');
         $this->db->order_by('re_step', 'ASC');
     
         $query = $this->db->get();
