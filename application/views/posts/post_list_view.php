@@ -243,10 +243,10 @@
            
 
     </div>
-
+<!-- 
     <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
-    </div>
+    </div> -->
     
 </div>
 </body>
@@ -259,6 +259,8 @@ function loadReplies(postId) {
 
 console.log('실행');
 
+
+
     $.ajax({
         url:'/posts/post/get_replies',
         data: {post_id: postId},
@@ -268,21 +270,24 @@ console.log('실행');
             if(response.status) {
                 var repliesHtml = '';
                 response.data.forEach(function(reply) {
-                repliesHtml += '<div class="flex flex-col border-b">';
-                repliesHtml += '    <div class="flex flex-1 p-4 space-x-2 space-y-2">';
-                repliesHtml += '        <div class="ml-' + (reply.re_level * 12) + ' flex-[0.3] flex items-center">';
+                repliesHtml +=   '<div class="overflow-x-auto shadow-md">'
+                repliesHtml += '    <div class="flex flex-col border-b bg-base-200">';
+                repliesHtml += '    <div class="flex flex-1 p-1 ml-36 mt-2 mb-2">';
+                repliesHtml += '        <div class="ml-' + (reply.re_level * 12) + ' flex-[0.1] flex items-center">';
                 repliesHtml += '            <div>└</div>'; // 들여쓰기 표시
                 repliesHtml += '        </div>';
-                repliesHtml += '        <div class="flex-[6]">';
+                repliesHtml += '        <div class="flex-[3]">';
                 repliesHtml += '            ' + reply.title + ''; // 답글 제목
                 repliesHtml += '            <div class="flex">';
                 repliesHtml += '                <div>자유</div>'; // 카테고리, 필요에 따라 수정
+                repliesHtml += '        <div class="ml-2">' + reply.user_id + '</div>';
+                repliesHtml += '        <div class="ml-2">조회 ' + reply.views + '</div>'; // 조회수
+                repliesHtml += '        <div class="ml-2 text-gray-400">' + reply.create_date + '</div>';
                 repliesHtml += '            </div>';
                 repliesHtml += '        </div>';
-                repliesHtml += '        <div class="flex-1">' + reply.user_id + '</div>';
-                repliesHtml += '        <div class="flex-1">조회 ' + reply.views + '</div>'; // 조회수
-                repliesHtml += '        <div class="flex-1">' + reply.create_date + '</div>';
+
                 repliesHtml += '    </div>';
+                repliesHtml += '</div>';
                 repliesHtml += '</div>';
             });
 
