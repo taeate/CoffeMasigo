@@ -167,24 +167,28 @@
                                         <div class="flex">
                                             <div class="font-base">자유</div>
 
-                                            <!-- 답글이 있을때만 버튼 보임 -->
-                                            <?php if($post->replies_count > 0 ): ?>
-                                                <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                    <!-- 답글이 있을 때만 버튼이 보임 -->
+                                                <?php if($post->replies > 1): ?>
+                                                    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                
+                                                <?php endif; ?>
 
-                                            <?php endif; ?>
-
+                                             
                                         </div>
                                     </div>
                                     <div class="flex-[2]"><?php echo $post->user_id ?></div>
                                     <div class="flex-1"><?php echo $post->views ?>조회 23</div>
                                     <div class="flex-1"><?php echo $post->create_date?></div>
+                                    
                                 </div>
+                                <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
                                 
-                                <div id="replies-container-<?=$post->post_id?>"></div> 
+                                
+                                
                             </div>
                         <?php endforeach; ?>
                         <!-- 메인 글 끝-->
-
+                                               
 
                         <!-- 검색 결과 -->
                         <?php if(!empty($search_data)): ?>
@@ -206,6 +210,7 @@
                                         <div class="flex-1"><?php echo $post['create_date']; ?></div>
                                     </div>
                                     <div id="replies-container-<?=$post['post_id']?>"></div> 
+                                    
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -250,87 +255,52 @@
 <script>
 
 
+function loadReplies(postId) {
 
-function loadReplies(postId, parentContainerId = null) {
+console.log('실행');
 
-    console.log("loadReplies called with postId:", postId); // 현재 postId 확인
-    let repliesContainer = parentContainerId ? document.getElementById(parentContainerId) : document.getElementById(`replies-container-${postId}`);
-    console.log("Using URL:", `posts/post/fetch_replies/${postId}`); // 사용되는 URL 확인
-
-
-    if (parentContainerId) {
-        // 중첩된 답글을 로드하는 경우
-        repliesContainer = document.getElementById(parentContainerId);
-    } else {
-        // 최상위 답글을 로드하는 경우
-        repliesContainer = document.getElementById(`replies-container-${postId}`);
-    }
-    repliesContainer.innerHTML = ''; // 기존 내용 초기화
-
-    fetch(`/posts/post/fetch_replies/${postId}`)
-    .then(response => response.json())
-    .then(replies => {
-        replies.forEach(reply => {
-           
-            const replyElement = document.createElement('div');
-            replyElement.className = 'flex flex-col border-t';
-            replyElement.innerHTML = `
-                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200" onclick="window.location.href='/posts/free/${reply.post_id}'">
+    $.ajax({
+        url:'/posts/post/get_replies',
+        data: {post_id: postId},
+        dataType: 'json',
+        success: function(response) {
             
-                    <div class="ml-4 flex-[0.8] flex items-center hover:gray-300">
-                     
-                    </div>
-                    └
-                    <div class="flex-[6]">
-                        <div class="text-gray-400">${reply.parent_title} 에 대한 답변</div>
-                        <div class="mt-1">${reply.title}</div>
-                        
-                        ${(reply.replies_count > 0 && reply.delete_status === null) ? `<a href="#" class="view-replies text-red-500 hover:text-blue-500 hover:font-bold hover:cursor-pointer" onclick="event.stopPropagation(); loadReplies(${reply.post_id}, 'nested-replies-container-${reply.post_id}')">답글보기</a>` : ''}
-                        
+            if(response.status) {
+                var repliesHtml = '';
+                response.data.forEach(function(reply) {
+                repliesHtml += '<div class="flex flex-col border-b">';
+                repliesHtml += '    <div class="flex flex-1 p-4 space-x-2 space-y-2">';
+                repliesHtml += '        <div class="ml-' + (reply.re_level * 12) + ' flex-[0.3] flex items-center">';
+                repliesHtml += '            <div>└</div>'; // 들여쓰기 표시
+                repliesHtml += '        </div>';
+                repliesHtml += '        <div class="flex-[6]">';
+                repliesHtml += '            ' + reply.title + ''; // 답글 제목
+                repliesHtml += '            <div class="flex">';
+                repliesHtml += '                <div>자유</div>'; // 카테고리, 필요에 따라 수정
+                repliesHtml += '            </div>';
+                repliesHtml += '        </div>';
+                repliesHtml += '        <div class="flex-1">' + reply.user_id + '</div>';
+                repliesHtml += '        <div class="flex-1">조회 ' + reply.views + '</div>'; // 조회수
+                repliesHtml += '        <div class="flex-1">' + reply.create_date + '</div>';
+                repliesHtml += '    </div>';
+                repliesHtml += '</div>';
+            });
 
-                    </div>
-                    <div class="flex-1">${reply.user_id}</div>
-                    <div class="flex-1">21</div>
-                    <div class="flex-1">${reply.create_date}</div>
-                </div>
-            `;
-            
 
-            // 중첩된 답글을 위한 컨테이너 추가
-            const nestedRepliesContainer = document.createElement('div');
-            nestedRepliesContainer.id = `nested-replies-container-${reply.post_id}`;
-            nestedRepliesContainer.className = 'nested-replies';
-            
-            replyElement.appendChild(nestedRepliesContainer);
-            repliesContainer.appendChild(replyElement);
-
-     
-       
-        });
-    })
-    .catch(error => console.error('Error:', error));
+                $('#replies-container-' + postId).html(repliesHtml).show();
+            } else {
+                // 오류 처리
+            }
+        }
+    });
+    
+   
 }
 
 
-    
-//     document.addEventListener('DOMContentLoaded', function () {
-    
-//     const viewRepliesButtons = document.querySelectorAll('.view-replies'); // 답글보기 class
 
-//     viewRepliesButtons.forEach(function (button) {
 
-//         button.addEventListener('click', function (event) {
 
-//             event.stopPropagation();
-            
-//             const postId = this.getAttribute('data-post-id');
-
-//             const answerRows = document.querySelectorAll(`.answer-row[data-parent-post-id="${postId}"]`);
-            
-          
-//         });
-//     });
-// });
 
 
 

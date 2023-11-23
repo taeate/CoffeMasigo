@@ -71,22 +71,22 @@ class Join extends CI_Controller {
 	
 		if (!empty($result)){
 			if ($this->input->is_ajax_request()) {
-				// AJAX 요청에 대해서는 JSON 응답을 반환합니다.
+				// AJAX 요청에 대해서는 JSON 응답을 반환
 				$response = ["status" => "unavailable"];
 				$this->output->set_content_type('application/json')
 							 ->set_output(json_encode($response));
 			} else {
-				// AJAX 요청이 아닌 경우에는 폼 검증 메시지를 설정합니다.
+				// AJAX 요청이 아닌 경우에는 폼 검증 메시지를 설정
 				$this->form_validation->set_message('checkUserId', '이미 사용중인 아이디 입니다.');
 				return FALSE; // 폼 검증 실패
 			}
 		} else {
 			if ($this->input->is_ajax_request()) {
-				// AJAX 요청에 대해서는 JSON 응답을 반환합니다.
+				// AJAX 요청에 대해서는 JSON 응답을 반환
 				$this->output->set_content_type('application/json')
 							 ->set_output(json_encode($response));
 			}
-			// AJAX 요청이 아니면, 여기서는 아무것도 반환하지 않습니다.
+			// AJAX 요청이 아니면, 여기서는 아무것도 반환하지 않는다.
 		}
 	}
 	

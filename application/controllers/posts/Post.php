@@ -44,9 +44,11 @@ class Post extends CI_Controller {
         //게시물 목록 가져오기      
         $data['get_list'] = $this->Post_model->get_posts($start,$config['per_page']);
 
+
         foreach ($data['get_list'] as $post) {
-            $post->replies_count = $this->Post_model->get_replies_count($post->post_id);
+            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
         }
+ 
 
          // 페이지네이션 링크 생성
         $data['link'] = $this->pagination->create_links();
@@ -167,11 +169,10 @@ class Post extends CI_Controller {
 
 
 
-    public function fetch_replies($post_id){
-
-        $replies = $this->Post_model->get_replies($post_id);
-
-        echo json_encode($replies);
+    public function get_replies() {
+        $post_id = $this->input->get('post_id');
+        $replies = $this->Post_model->get_reply_to_post($post_id);
+        echo json_encode([ 'status' => TRUE, 'data' =>$replies]);
     }
 
 

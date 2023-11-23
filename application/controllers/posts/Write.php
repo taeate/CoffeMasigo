@@ -44,7 +44,7 @@ class Write extends CI_Controller {
     
                   
                 
-                $this->Write_model->save_reply($title, $content, $user_id, $post_id);
+                $this->Write_model->save_answer_post($title, $content, $user_id, $post_id);
     
                 
                 redirect('/posts/all');
