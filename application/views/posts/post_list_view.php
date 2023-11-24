@@ -1,19 +1,16 @@
 <?php $this->load->view('layout/header'); ?>
-<!-- <img class="w-full h-96" src="/application/views/images/sksk.jpg" alt=""> -->
-
-<div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px;">
 
 <body>
 
-<!-- 사이드바 -->
-<div class="w-80">
-    <?php $this->load->view('layout/sidebar'); ?>
-</div>
+<div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px; margin-bottom: 200px;">
+
+
+    <!-- 사이드바 -->
+    <div class="w-80">
+        <?php $this->load->view('layout/sidebar'); ?>
+    </div>
     
     <!-- 리스트 페이지 컨텐츠 -->
-   
-    
-    
     <div id="content" class="contentbox ml-4 z-10" style="flex: 3;" >
 
         <div name="top-box" class="flex flex-col w-full">
@@ -39,10 +36,17 @@
                     <div name="order-by">
                         <div class="flex">
                             <div>
-                                <button onclick="LatestOrderBy()">최신</button>
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="LatestOrderBy()">
+                                <i class="fa-solid fa-clock-rotate-left"></i>최신</button>
                             </div>
-                            <div class="ml-4">추천수</div>
-                            <div class="ml-4">조회수</div>
+                            <div class="ml-4">
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ThumbOrderBy()">
+                                <i class="fa-solid fa-thumbs-up"></i>추천수</button>
+                            </div>
+                                <div class="ml-4">
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ViewsOrderBy()">
+                                <i class="fa-solid fa-eye"></i>조회수</button>
+                            </div>
                         </div>
                     </div>
 
@@ -166,7 +170,7 @@
                                 <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
                                         <div><i class="fa-solid fa-caret-up fa-xl"></i></div>
-                                        <div><?php echo $post->thumb; ?></div>
+                                        <div class=""><?php echo $post->thumb; ?></div>
                                     </div>
                                     <div class="flex-[4] m-auto">
                                         <div class="flex">
@@ -259,12 +263,42 @@
     <!-- <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
     </div> -->
+
+    
     
 </div>
 </body>
 
-
+<?php $this->load->view('layout/footer'); ?>
 <script>
+
+function createPostHtml(post) {
+    var postHtml = '<div class="flex flex-col border-b answer-row">';
+    postHtml += '    <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
+    postHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
+    postHtml += '            <div><i class="fa-solid fa-caret-up fa-xl"></i></div>';
+    postHtml += '            <div>' + post.thumb + '</div>';
+    postHtml += '        </div>';
+    postHtml += '        <div class="flex-[4] m-auto">';
+    postHtml += '            <div class="flex">';
+    postHtml += '                <div>' + post.title + '</div>';
+    postHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+    postHtml += '            </div>';
+    postHtml += '            <div class="flex">';
+    postHtml += '                <div class="font-base text-gray-500">자유</div>';
+    if (post.replies > 1) {
+        postHtml += '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + post.post_id + '); return false;">답글보기</a>';
+    }
+    postHtml += '            </div>';
+    postHtml += '        </div>';
+    postHtml += '        <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i>' + post.user_id + '</div>';
+    postHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye mr-2"></i>' + post.views + '</div>';
+    postHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + post.create_date + '</div>';
+    postHtml += '    </div>';
+    postHtml += '    <div id="replies-container-' + post.post_id + '" style="display: none;"></div>';
+    postHtml += '</div>';
+    return postHtml;
+}
 
 function LatestOrderBy() {
 
@@ -277,30 +311,7 @@ function LatestOrderBy() {
         success: function(posts) {
             var postsHtml = '';
             posts.forEach(function(post) {
-                postsHtml += '<div class="flex flex-col border-b answer-row">';
-                postsHtml += '    <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
-                postsHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
-                postsHtml += '            <div><i class="fa-solid fa-caret-up fa-xl"></i></div>';
-                postsHtml += '            <div>' + post.thumb + '</div>';
-                postsHtml += '        </div>';
-                postsHtml += '        <div class="flex-[4] m-auto">';
-                postsHtml += '            <div class="flex">';
-                postsHtml += '                <div>' + post.title + '</div>';
-                postsHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
-                postsHtml += '            </div>';
-                postsHtml += '            <div class="flex">';
-                postsHtml += '                <div class="font-base text-gray-500">자유</div>';
-                if (post.replies > 1) {
-                    postsHtml += '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + post.post_id + '); return false;">답글보기</a>';
-                }
-                postsHtml += '            </div>';
-                postsHtml += '        </div>';
-                postsHtml += '        <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i>' + post.user_id + '</div>';
-                postsHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye"></i>' + post.views + '</div>';
-                postsHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + post.create_date + '</div>';
-                postsHtml += '    </div>';
-                postsHtml += '    <div id="replies-container-' + post.post_id + '" style="display: none;"></div>';
-                postsHtml += '</div>';
+               postsHtml +=createPostHtml(post);
             });
 
             // 기존 목록을 새 목록으로 대체
@@ -311,6 +322,60 @@ function LatestOrderBy() {
         }
     });
 }
+
+
+
+function ThumbOrderBy() {
+
+
+// AJAX 요청을 통해 서버에 최신순 정렬 요청
+$.ajax({
+    url: '/posts/post/ThumbOrderBy',
+    type: 'GET',
+    dataType: 'json',
+    success: function(posts) {
+        var postsHtml = '';
+        posts.forEach(function(post) {
+            postsHtml +=createPostHtml(post);
+        });
+
+        // 기존 목록을 새 목록으로 대체
+        document.getElementById('posts-container').innerHTML = postsHtml;
+    },
+    error: function(error) {
+        console.error('Error:', error);
+    }
+});
+}
+
+
+
+
+function ViewsOrderBy() {
+
+
+// AJAX 요청을 통해 서버에 최신순 정렬 요청
+$.ajax({
+    url: '/posts/post/ViewsOrderBy',
+    type: 'GET',
+    dataType: 'json',
+    success: function(posts) {
+        var postsHtml = '';
+        posts.forEach(function(post) {
+            postsHtml +=createPostHtml(post);
+        });
+
+        // 기존 목록을 새 목록으로 대체
+        document.getElementById('posts-container').innerHTML = postsHtml;
+    },
+    error: function(error) {
+        console.error('Error:', error);
+    }
+});
+}
+
+
+
 
 
 function loadReplies(postId) {
@@ -334,13 +399,12 @@ function loadReplies(postId) {
                 repliesHtml += '        <div class="flex-[3]">';
                 repliesHtml += '            ' + reply.title + ''; // 답글 제목
                 repliesHtml += '            <div class="flex">';
-                repliesHtml += '                <div>자유</div>'; // 카테고리, 필요에 따라 수정
+                repliesHtml += '                <div>자유</div>'; 
                 repliesHtml += '        <div class="ml-2">' + reply.user_id + '</div>';
                 repliesHtml += '        <div class="ml-2">조회 ' + reply.views + '</div>'; // 조회수
                 repliesHtml += '        <div class="ml-2 text-gray-400">' + reply.create_date + '</div>';
                 repliesHtml += '            </div>';
                 repliesHtml += '        </div>';
-
                 repliesHtml += '    </div>';
                 repliesHtml += '</div>';
                 repliesHtml += '</div>';

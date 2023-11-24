@@ -63,7 +63,6 @@ class Post_model extends CI_Model {
 
 
     public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
-
         // 초기화
         $ref = null;
         $re_step = 0;
@@ -75,13 +74,16 @@ class Post_model extends CI_Model {
             $ref = $parent_comment->ref ? $parent_comment->ref : $parent_comment_id;
             $re_level = $parent_comment->re_level + 1;
     
-            // re_step 값 계산
-            $this->db->select_max('re_step');
+            // 부모 댓글의 re_step 값 찾기
+            $parent_re_step = $parent_comment->re_step;
+            // 새 댓글의 re_step 값 계산
+            $re_step = $parent_re_step + 1;
+    
+            // 기존 댓글의 re_step 업데이트
+            $this->db->set('re_step', 're_step + 1', FALSE);
             $this->db->where('ref', $ref);
-            $this->db->where('re_level', $re_level);
-            $max_re_step = $this->db->get('comment')->row()->re_step;
-            $re_step = $max_re_step + 1;
-            
+            $this->db->where('re_step >=', $re_step);
+            $this->db->update('comment');
         } else {
             // 최상위 댓글의 경우
             $ref = null;
@@ -108,6 +110,7 @@ class Post_model extends CI_Model {
             $this->db->update('comment', array('ref' => $comment_id), array('comment_id' => $comment_id));
         }
     }
+    
 
     public function get_comment($post_id){
 
@@ -116,6 +119,9 @@ class Post_model extends CI_Model {
         $this->db->where('post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
+    
+ 
+       
 
     
         $query = $this->db->get();
@@ -196,6 +202,20 @@ class Post_model extends CI_Model {
 
     public function get_posts_ordered_by_latest() {
         $this->db->order_by('create_date', 'DESC');
+        $this->db->where('parent_post_id',null);
+        $query = $this->db->get('post');
+        return $query->result(); // 모든 게시글을 반환
+    }
+
+    public function get_posts_ordered_by_thumb() {
+        $this->db->order_by('thumb', 'DESC');
+        $this->db->where('parent_post_id',null);
+        $query = $this->db->get('post');
+        return $query->result(); // 모든 게시글을 반환
+    }
+
+    public function get_posts_ordered_by_views() {
+        $this->db->order_by('views', 'DESC');
         $this->db->where('parent_post_id',null);
         $query = $this->db->get('post');
         return $query->result(); // 모든 게시글을 반환

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-base-300">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cafe Masigo</title>
@@ -22,7 +23,7 @@
 
 </head>
 <nav class="flex fixed top-0 w-full z-50 headerbox">
-<div class="navbar bg-gray-700 h-10 relative">
+<div class="navbar bg-gray-700 h-16 relative">
     <div class="navbar-start">
         <div class="dropdown">
         <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -38,7 +39,7 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a href="/posts" class="btn btn-ghost normal-case text-xl text-white">Cafe Masigo</a>
+        <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">Cafe Masigo</a>
     </div>
     <div class="navbar-end">
     <div class="flex text-white mr-4">
@@ -79,5 +80,5 @@
     </div>
     </div>
 </nav>
-
 </html>
+

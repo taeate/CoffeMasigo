@@ -27,12 +27,7 @@
                 Deleniti laboriosam atque beatae ipsam at repellat dolores distinctio voluptatem iusto nemo hic quidem labore nisi provident, molestiae nostrum voluptatum omnis magni inventore quas libero ullam expedita mollitia? Est, earum.
                 Ea eius quaerat eum delectus perferendis, suscipit incidunt nihil architecto soluta culpa animi rem illo dolorem fuga ut neque nulla minus possimus in odio non illum! Minus enim dignissimos quisquam.
                 Perspiciatis, debitis excepturi! Nihil, hic. Vitae labore ab eaque sint minima commodi cumque natus consequatur impedit facere laboriosam rem quos excepturi ratione odit aut, obcaecati sunt assumenda odio! Beatae, perferendis.
-                Ipsam sint quos temporibus rerum nostrum pariatur alias, veniam labore quidem dolorum optio ullam mollitia minus quis libero laborum obcaecati possimus doloribus maxime expedita. Esse excepturi asperiores quasi quisquam fuga.
-                Perferendis, deserunt repellendus. Inventore veniam rem aliquam voluptate. Voluptatibus magni excepturi, necessitatibus magnam incidunt voluptatem et explicabo asperiores inventore libero ullam ad nobis nihil quisquam quo nostrum id delectus laudantium.
-                Et dicta placeat unde rem blanditiis itaque facere eaque! Adipisci explicabo ullam officia ratione, odio beatae a cumque numquam accusantium fugit omnis iste distinctio, reiciendis provident aliquid ab nemo. Consequuntur?
-                Vel adipisci eveniet quisquam. Eligendi neque dicta deleniti accusantium eum aspernatur ratione dolorum, et commodi animi quo ad molestiae. Ab aspernatur modi itaque quaerat dolorum nesciunt quia facere aliquid consequatur?
-                Ducimus ad obcaecati dolorum consequuntur alias rerum quisquam dolore placeat totam nam. Impedit quia praesentium veniam ea itaque, nam, culpa modi ipsam aliquid, quaerat quasi! Officiis molestias explicabo perferendis pariatur!
-                Iusto exercitationem rerum perferendis iste quidem dolore ab ipsum eveniet sed aperiam. Cum unde tenetur qui sequi enim quia, odio tempora sint adipisci corporis magni necessitatibus consequatur harum, ea iure.
+     
                 </div>
             </div>
 

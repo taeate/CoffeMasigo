@@ -226,6 +226,31 @@ class Post extends CI_Controller {
         echo json_encode($data['get_list']);
     }
 
+
+    public function ThumbOrderBy(){
+
+        $data['get_list'] = $this->Post_model->get_posts_ordered_by_thumb();
+        
+        foreach ($data['get_list'] as &$post) {
+        $post->comment_count = $this->Post_model->count_comment($post->post_id);
+        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+    }
+        
+        echo json_encode($data['get_list']);
+    }
+
+    public function ViewsOrderBy(){
+
+        $data['get_list'] = $this->Post_model->get_posts_ordered_by_views();
+        
+        foreach ($data['get_list'] as &$post) {
+        $post->comment_count = $this->Post_model->count_comment($post->post_id);
+        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+    }
+        
+        echo json_encode($data['get_list']);
+    }
+
   
     
 }

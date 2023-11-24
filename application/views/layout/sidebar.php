@@ -52,7 +52,7 @@
                 <button  class="hover:bg-base-200">
                     <a href="">전체글보기</a>
                 </button>
-                <div>인기글보기</div>
+                
             </div>
         </div>
             

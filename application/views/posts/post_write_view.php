@@ -34,13 +34,6 @@
                                 </label>
                             </div>
 
-                            <div class="form-control ml-4">
-                                <label class="cursor-pointer label">
-                                    <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
-                                    <span class="label-text ml-1">전체공개</span>
-                                </label>
-                            </div>
-
                             </div>
                         </div>
                         <div class="mt-2">
@@ -88,45 +81,52 @@
                         <div class="flex justify-normal mb-2">
                             <div class="flex flex-none">
                                 <div class="mt-2 text-2xl font-bold">게시글작성</div>
-                     
                             </div>
+                            <div class="ml-4 mb-4">
+                                <select class="select select-bordered w-28 h-4 max-w-xs mt-2">
+                                <option disabled selected>채널선택</option>
+                                <option>자유</option>
+                                <option>PYTHON</option>
+                                <option>JAVA</option>
+                                <option>PHP</option>
+                                <option>C++</option>
+                                </select>
+                                </div>  
                             <div class="grow"></div>
                             <div class="flex flex-none">
 
-                            <div class="form-control mr-4">
-                                <label class="cursor-pointer label">
-                                    <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
-                                    <span class="label-text ml-1">공지로등록</span>
-                                </label>
-                            </div>
+                        
 
-                            <div class="form-control ml-4">
+                            <!-- <div class="form-control ml-4">
                                 <label class="cursor-pointer label">
                                     <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
                                     <span class="label-text ml-1">전체공개</span>
                                 </label>
-                            </div>
+                            </div> -->
 
                             </div>
                         </div>
-                        <div class="mt-2">
-                            <select class="select select-bordered w-28 h-4 max-w-xs mt-2">
-                            <option disabled selected>채널선택</option>
-                            <option>자유</option>
-                            <option>PYTHON</option>
-                            <option>JAVA</option>
-                            <option>PHP</option>
-                            <option>C++</option>
-                            </select>
-                        </div>
 
+                    
+                            
                         <form method="POST" class="mt-8">
+                            
+                            <div class="flex mb-4">
+                                <div class="form-control mr-2 ">
+                                    <label class="cursor-pointer label">
+                                        <input name="is_notice" type="checkbox" checked="checked" class="checkbox checkbox-accent" />                                   
+                                    </label>              
+                                </div>
+                                <span class="label-text mt-3">공지로등록</span>
+                               
+                            </div>
+                           
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </div>
                             <div class="mb-6">
-                
+                            
 
                                 <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
                                

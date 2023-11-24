@@ -47,6 +47,7 @@ class Write extends CI_Controller {
     
         // 글 작성 로직
         if ($this->input->post()) {
+            
             $title = $this->input->post('title');
             $content = $this->input->post('content');
             $this->Write_model->set_article($title, $content, $user_id);
