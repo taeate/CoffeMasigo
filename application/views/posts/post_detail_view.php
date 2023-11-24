@@ -49,8 +49,14 @@
                 <hr class="mr-12 ml-12">
                 <div name="button-area" >
                     <div name="delete-update-btn" class="flex justify-end mr-12 mt-4">
+                        <?php 
+                        $user_id = $this->session->userdata('user_id');
+                        if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
+                        ?>
                         <button class="bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
                         <button class="bg-gray-500 text-white w-16 h-8" onclick="window.location.href='/posts/delete/<?=$post_id?>'">삭제</button>
+                        <?php else: ?>
+                        <?php endif; ?>
                     </div>
                     <div name="like-btn" class="flex justify-center">
                         <button class="bg-gray-500 text-white w-28 h-12">추천</button>
@@ -58,7 +64,7 @@
                     
                     <div name="answer-btn" class="flex justify-between ml-12 mr-12 mt-4 mb-4">
                         <div class="">
-                            <a href="/posts/write/answer_post/<?= $post_id ?>" class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
+                            <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()" class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
                         </div>
                         <div class="">
                         <button class="bg-gray-500 text-white w-28 h-12">공유하기</button>
@@ -86,6 +92,7 @@
                         
                         </div>
 
+                        <?php if ($this->session->userdata('user_id')): ?>
                         <!-- 댓글 작성 폼 -->
                         <form class="comment-form ml-8 mr-8 mt-2" method="post" id="">
                             <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
@@ -101,7 +108,11 @@
                                 </div>
                             </div>
                         </form>
-                        
+                        <?php else: ?>
+                            <div class="w-96 m-auto">
+                                <p class="text-red-500 font-bold text-base ml-16 mt-12 mb-12">댓글을 작성하려면 <a href="/login">로그인</a>해주세요.</p>
+                            </div>
+                        <?php endif; ?>
                         
 
                         <div class="flex ml-8 mb-4">
@@ -179,6 +190,34 @@
 <script>
 
 
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const navbar = document.querySelector('nav');
+    const sidebar = document.querySelector('.sidebarbox');
+
+    // 원래 sidebar의 너비 계산
+    const originalSidebarWidth = sidebar.offsetWidth + 'px';
+
+    if (navbar && sidebar) {
+
+        const navbarHeight = navbar.offsetHeight;
+        const sidebarTop = sidebar.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+        window.addEventListener('scroll', function(){
+            if(window.scrollY >= sidebarTop){
+                sidebar.classList.add('fixed');
+                sidebar.style.top = `${navbarHeight}px`;
+                sidebar.style.width = originalSidebarWidth; // 고정 상태에서 원래 너비 적용
+            } else {
+                sidebar.classList.remove('fixed');
+                sidebar.style.top = '';
+                sidebar.style.width = ''; // 너비 스타일 제거
+            }
+        });
+    } 
+});
 
 
 

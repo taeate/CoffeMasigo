@@ -32,8 +32,15 @@
         </div>
         <div>
         <div name="login-write-but" class="flex justify-center mt-8">
-                <a href="/posts/write" class="btn btn-primary w-40 h-12 rounded-lg" >글작성하기</a>
-           </div>
+            <?php if ($this->session->userdata('user_id')): ?>
+                <!-- 로그인한 사용자에게는 글작성 버튼 표시 -->
+                <a href="/posts/write" class="btn btn-primary w-40 h-12 rounded-lg">글작성하기</a>
+            <?php else: ?>
+                <!-- 비로그인 사용자에게는 로그인 버튼 표시 -->
+                <a href="/login"  class="btn btn-primary w-40 h-12 rounded-lg">로그인</a>
+            <?php endif; ?>
+        </div>
+
         </div>
 
         <hr class="mt-8">
@@ -67,3 +74,14 @@
     </div>
 
 </div>
+
+<script>
+function checkLoginBeforeWrite() {
+
+    <?php if(!$this->session->userdata('user_id')): ?>
+        alert('로그인이 필요한 기능입니다.');
+    <?php else: ?>
+        window.location.href = '/posts/write'; // 로그인한 경우 글 작성 페이지로 이동
+    <?php endif; ?>
+}
+</script>

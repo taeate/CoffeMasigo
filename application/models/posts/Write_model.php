@@ -83,6 +83,20 @@ class Write_model extends CI_Model {
         }
     }
 
+    public function get_post_author_id($post_id){        
+        $this->db->select('user_id');
+        $this->db->from('post');
+        $this->db->where('post_id', $post_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row()->user_id; // 작성자 반환
+        } else {
+            return null;
+        }
+
+    }
+
     public function get_before_post($post_id) {
         $query = $this->db->get_where('post', array('post_id' => $post_id));
         

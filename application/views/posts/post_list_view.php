@@ -1,5 +1,5 @@
 <?php $this->load->view('layout/header'); ?>
-<img class="w-full h-96" src="/application/views/images/sksk.jpg" alt="">
+<!-- <img class="w-full h-96" src="/application/views/images/sksk.jpg" alt=""> -->
 
 <div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px;">
 
@@ -25,7 +25,10 @@
                             <div class="text-xl font-bold">전체글</div>
                         </div>
                         <div>
-                            <div>글작성</div>
+                            <div class="mt-2 mb-2 mr-2">
+                                <button onclick="redirectToURL()"><i class="text-blue-600 fa-solid fa-pen fa-xl"></i></button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -157,17 +160,20 @@
                         <!-- 메인 글 -->
                         <?php foreach($get_list as $post): ?>
                             <div class="flex flex-col border-b answer-row" >
-                                <div class="flex flex-1 p-4 space-x-2 hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
-                                    <div class="ml-4 flex-[1] flex flex-col items-center">
-                                        <div>▲</div>
+                                <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                    <div class="ml-4 flex-[1] flex flex-col items-center ">
+                                        <div><i class="fa-solid fa-caret-up fa-xl"></i></div>
                                         <div>12</div>
                                     </div>
-                                    <div class="flex-[6]">
-                                        <?php echo $post->title; ?>
+                                    <div class="flex-[4] m-auto">
                                         <div class="flex">
-                                            <div class="font-base">자유</div>
+                                            <div><?php echo $post->title; ?></div>
+                                            <div class="ml-2 text-red-500">[3]</div>
+                                        </div>
+                                        <div class="flex">
+                                            <div class="font-base text-gray-500">자유</div>
 
-                                                    <!-- 답글이 있을 때만 버튼이 보임 -->
+                                                <!-- 답글이 있을 때만 버튼이 보임 -->
                                                 <?php if($post->replies > 1): ?>
                                                     <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
                                                 
@@ -176,9 +182,14 @@
                                              
                                         </div>
                                     </div>
-                                    <div class="flex-[2]"><?php echo $post->user_id ?></div>
-                                    <div class="flex-1"><?php echo $post->views ?>조회 23</div>
-                                    <div class="flex-1"><?php echo $post->create_date?></div>
+                                    <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i><?php echo $post->user_id ?></div>
+                                    <div class="flex-1 m-auto"><?php echo $post->views ?>
+                                    <i class="fa-solid fa-eye">
+                                        
+                                    </i>
+                                    <span class="text-base">12</span>
+                                    </div>
+                                    <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i><?php echo $post->create_date?></div>
                                     
                                 </div>
                                 <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
@@ -243,8 +254,8 @@
            
 
     </div>
-<!-- 
-    <div class="w-80 ml-4">
+
+    <!-- <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
     </div> -->
     
@@ -304,7 +315,17 @@ console.log('실행');
 
 
 
+function redirectToURL() {
 
+    <?php if(!$this->session->userdata('user_id')): ?>
+        alert('로그인이 필요한 기능입니다.');
+        window.location.href = 'http://localhost/login';
+    <?php else: ?>
+        window.location.href = 'http://localhost/posts/write';
+    <?php endif; ?>
+
+    
+}
 
 
 
@@ -313,14 +334,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const navbar = document.querySelector('nav');
     const search = document.querySelector('.searchbox');
     const sidebar = document.querySelector('.sidebarbox');
-    const rightbar = document.querySelector('.rightbox');
 
     // 원래 sidebar의 너비 계산
     const originalSidebarWidth = sidebar.offsetWidth + 'px';
     const originalSearchWidth = search.offsetWidth + 'px';
-    const originalRightWidth = search.offsetWidth + 'px';
 
-    if (navbar && content && sidebar && rightbar) {
+    if (navbar && content && sidebar) {
 
         const navbarHeight = navbar.offsetHeight;
         const contentTop = content.getBoundingClientRect().top + window.scrollY - navbarHeight;
@@ -329,24 +348,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if(window.scrollY >= contentTop){
                 sidebar.classList.add('fixed');
                 search.classList.add('fixed');
-                rightbar.classList.add('fixed');
                 sidebar.style.top = `${navbarHeight}px`;
-                rightbar.style.top = `${navbarHeight}px`;
                 search.style.top = `${navbarHeight}px`;
 
-                rightbar.style.width = originalSidebarWidth; 
                 sidebar.style.width = originalSidebarWidth; 
                 search.style.width = originalSearchWidth; // 고정 상태에서 원래 너비 적용
             } else {
                 sidebar.classList.remove('fixed');
                 sidebar.style.top = '';
                 sidebar.style.width = ''; // 너비 스타일 제거
-
-
-                rightbar.classList.remove('fixed');
-                rightbar.style.top = '';
-                rightbar.style.width = ''; 
-
 
                  // searchbox 스타일 초기화
                 search.classList.remove('fixed');
@@ -358,4 +368,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     } 
 });
+
 </script>

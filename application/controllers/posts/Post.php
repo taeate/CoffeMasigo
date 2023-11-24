@@ -5,6 +5,7 @@ class Post extends CI_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('posts/Post_model');
+        $this->load->model('posts/Write_model');
         $this->load->database();
         $this->load->helper('url');
         $this->load->library('session'); // 세션 라이브러리 로드
@@ -19,7 +20,7 @@ class Post extends CI_Controller {
         $config['base_url'] = site_url('posts/all/page/');
         $config['first_url'] = site_url('posts/all/page/1');
         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
-        $config['per_page'] = 30; // 페이지당 게시물수
+        $config['per_page'] = 20; // 페이지당 게시물수
         $config['num_links'] = FALSE;
         $config['use_page_numbers'] = TRUE;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
@@ -81,7 +82,8 @@ class Post extends CI_Controller {
             $comments = $this->Post_model->get_comment($post_id);
             $data['comment_info'] = $comments;
         }
-    
+        
+        
         // 댓글 저장
         if ($this->input->post()) {
 
@@ -100,6 +102,12 @@ class Post extends CI_Controller {
             // 페이지 새로고침 또는 리디렉트
             redirect('posts/free/'.$post_id); // 상세 페이지로 리디렉트하여 새 댓글 표시
         }
+
+        // 작성자 확인
+
+        $author_id = $this->Write_model->get_post_author_id($post_id);
+        $data['author_id'] = $author_id;
+    
     
         // 최종적으로 단일 뷰 로드
         $this->load->view('posts/post_detail_view', $data);
