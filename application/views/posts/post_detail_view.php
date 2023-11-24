@@ -17,6 +17,7 @@
                         <?php $views = $detail_info->views; ?>
                         <?php $createdate = $detail_info->create_date; ?>
                         <?php $user_id = $detail_info->user_id; ?>
+                        
 
                         <div class="text-2xl ">
                             <?php echo $title ?><br>
@@ -29,13 +30,15 @@
                             </div>
                             <div class="grow"></div>
                             <div class="flex flex-none">
-                                <div class="mt-4">조회수: <?php echo $views ?></div>
-                                <div class="mt-4 ml-8">댓글: 2</div>
-                                <div class="mt-4 ml-8">조회수: 23</div>
+                                <div class="mt-4">조회: <?php echo $views ?></div>
+                         
+                                <div class="mt-4 ml-8">댓글: <?php echo $comments_count; ?> </div>
+                             
+                                <div class="mt-4 ml-8">추천: 23</div>
                             </div>
                         </div>
                         
-                    <?php endif ?>
+                    <?php endif; ?>
                 </div>
                 <hr class="mr-12 ml-12">
                 <div name="content " class="">
@@ -56,10 +59,10 @@
                         <button class="bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
                         <button class="bg-gray-500 text-white w-16 h-8" onclick="window.location.href='/posts/delete/<?=$post_id?>'">삭제</button>
                         <?php else: ?>
-                        <?php endif; ?>
+                            <?php endif; ?>
                     </div>
                     <div name="like-btn" class="flex justify-center">
-                        <button class="bg-gray-500 text-white w-28 h-12">추천</button>
+                        <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()" class="bg-gray-500 text-white w-28 h-12">추천</button>
                     </div>
                     
                     <div name="answer-btn" class="flex justify-between ml-12 mr-12 mt-4 mb-4">
@@ -219,7 +222,31 @@ document.addEventListener('DOMContentLoaded', function () {
     } 
 });
 
+function thumbUp() {
 
+    var postId = document.getElementById('post-container').getAttribute('data-post-id');
+    
+
+    // AJAX 요청을 통해 서버에 추천 처리 요청
+    $.ajax({
+        url: '/posts/post/thumbUp', 
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            postId: postId,
+        },
+        success: function(response) {
+            if (response.status === 'already_thumbed'){
+                alert('이미 추천한 글입니다.');
+            }else if(response.status === 'success'){
+                alert('글을 추천하셨습니다.');
+            }
+        },
+        error: function(error) {
+             console.error('Error:', error);
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
     var activeCommentForm = null; // 활성화된 댓글 폼을 추적

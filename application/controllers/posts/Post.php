@@ -47,7 +47,9 @@ class Post extends CI_Controller {
 
 
         foreach ($data['get_list'] as $post) {
+            $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+            $post->thumb = $this->Post_model->count_thumb($post->post_id);
         }
  
 
@@ -71,8 +73,15 @@ class Post extends CI_Controller {
 
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
+            
+            // 조회수 증가
+            $this->Post_model->increment_views($post_id);
+
             if ($detail_info) {
+
                 $data['detail_info'] = $detail_info;
+
+
             } else {
                 echo "찾지 못함";
                 return; 
@@ -183,7 +192,39 @@ class Post extends CI_Controller {
         echo json_encode([ 'status' => TRUE, 'data' =>$replies]);
     }
 
+    public function thumbUp(){
 
+        $post_id = $this->input->post('postId');
+        $user_id = $this->session->userdata('user_id');
+
+        if(!$this->Post_model->hasUserAlreadyThumb($post_id, $user_id)){
+            
+            // 사용자가 추천안했다면 증가
+            $this->Post_model->incrementThumb($post_id);
+
+            // 추천 기록추가
+            $this->Post_model->addThumbRecord($post_id, $user_id);
+
+            echo json_encode(array('status' => 'success'));
+        }else{
+
+            echo json_encode(array('status' => 'already_thumbed'));
+        }
+
+    }
+
+
+    public function LatestOrderBy(){
+
+        $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest();
+        
+        foreach ($data['get_list'] as &$post) {
+        $post->comment_count = $this->Post_model->count_comment($post->post_id);
+        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+    }
+        
+        echo json_encode($data['get_list']);
+    }
 
   
     

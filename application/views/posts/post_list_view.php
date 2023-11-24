@@ -38,7 +38,9 @@
 
                     <div name="order-by">
                         <div class="flex">
-                            <div>최신</div>
+                            <div>
+                                <button onclick="LatestOrderBy()">최신</button>
+                            </div>
                             <div class="ml-4">추천수</div>
                             <div class="ml-4">조회수</div>
                         </div>
@@ -156,19 +158,20 @@
                 <!-- 리스트 페이지의 내용 -->
                 <div class="bg-base-100 mt-4">
                     <div class="overflow-x-auto shadow-md">
-
+                  
                         <!-- 메인 글 -->
+                        <div id="posts-container">
                         <?php foreach($get_list as $post): ?>
-                            <div class="flex flex-col border-b answer-row" >
+                            <div  class="flex flex-col border-b answer-row" >
                                 <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
                                         <div><i class="fa-solid fa-caret-up fa-xl"></i></div>
-                                        <div>12</div>
+                                        <div><?php echo $post->thumb; ?></div>
                                     </div>
                                     <div class="flex-[4] m-auto">
                                         <div class="flex">
                                             <div><?php echo $post->title; ?></div>
-                                            <div class="ml-2 text-red-500">[3]</div>
+                                            <div class="ml-2 text-red-500">[<?php echo $post->comment_count; ?>]</div>
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">자유</div>
@@ -176,18 +179,15 @@
                                                 <!-- 답글이 있을 때만 버튼이 보임 -->
                                                 <?php if($post->replies > 1): ?>
                                                     <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
-                                                
                                                 <?php endif; ?>
 
                                              
                                         </div>
                                     </div>
                                     <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i><?php echo $post->user_id ?></div>
-                                    <div class="flex-1 m-auto"><?php echo $post->views ?>
-                                    <i class="fa-solid fa-eye">
-                                        
-                                    </i>
-                                    <span class="text-base">12</span>
+                                    <div class="flex-1 m-auto">
+                                    <i class="fa-solid fa-eye"></i>
+                                    <?php echo $post->views ?>
                                     </div>
                                     <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i><?php echo $post->create_date?></div>
                                     
@@ -198,6 +198,7 @@
                                 
                             </div>
                         <?php endforeach; ?>
+                        </div>
                         <!-- 메인 글 끝-->
                                                
 
@@ -265,11 +266,54 @@
 
 <script>
 
+function LatestOrderBy() {
+
+
+    // AJAX 요청을 통해 서버에 최신순 정렬 요청
+    $.ajax({
+        url: '/posts/post/LatestOrderBy',
+        type: 'GET',
+        dataType: 'json',
+        success: function(posts) {
+            var postsHtml = '';
+            posts.forEach(function(post) {
+                postsHtml += '<div class="flex flex-col border-b answer-row">';
+                postsHtml += '    <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
+                postsHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
+                postsHtml += '            <div><i class="fa-solid fa-caret-up fa-xl"></i></div>';
+                postsHtml += '            <div>' + post.thumb + '</div>';
+                postsHtml += '        </div>';
+                postsHtml += '        <div class="flex-[4] m-auto">';
+                postsHtml += '            <div class="flex">';
+                postsHtml += '                <div>' + post.title + '</div>';
+                postsHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+                postsHtml += '            </div>';
+                postsHtml += '            <div class="flex">';
+                postsHtml += '                <div class="font-base text-gray-500">자유</div>';
+                if (post.replies > 1) {
+                    postsHtml += '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + post.post_id + '); return false;">답글보기</a>';
+                }
+                postsHtml += '            </div>';
+                postsHtml += '        </div>';
+                postsHtml += '        <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i>' + post.user_id + '</div>';
+                postsHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye"></i>' + post.views + '</div>';
+                postsHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + post.create_date + '</div>';
+                postsHtml += '    </div>';
+                postsHtml += '    <div id="replies-container-' + post.post_id + '" style="display: none;"></div>';
+                postsHtml += '</div>';
+            });
+
+            // 기존 목록을 새 목록으로 대체
+            document.getElementById('posts-container').innerHTML = postsHtml;
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 
 function loadReplies(postId) {
-
-console.log('실행');
-
 
 
     $.ajax({

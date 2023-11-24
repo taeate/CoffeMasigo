@@ -141,6 +141,12 @@ class Post_model extends CI_Model {
         return $this->db->count_all_results('post');
     }
 
+    public function increment_views($post_id) {
+        $this->db->set('views', 'views+1', FALSE);
+        $this->db->where('post_id', $post_id);
+        $this->db->update('post');
+    }
+
     public function search($search_info,$start, $limit){
         $this->db->select('*');
         $this->db->from('post');
@@ -150,6 +156,49 @@ class Post_model extends CI_Model {
         $query = $this->db->get();
          
         return $query->result_array();
+    }
+
+    public function hasUserAlreadyThumb($post_id, $user_id) {
+
+        $this->db->where('post_id', $post_id);
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('post_thumb');
+
+        return $query->num_rows() > 0;
+    }
+
+    public function incrementThumb($post_id) {
+        $this->db->set('thumb', 'thumb+1', FALSE);
+        $this->db->where('post_id', $post_id);
+        $this->db->update('post');
+    }
+
+    public function addThumbRecord($post_id, $user_id) {
+        $data = array(
+            'post_id'=> $post_id,
+            'user_id'=> $user_id
+        );
+        $this->db->insert('post_thumb', $data);
+    }
+
+    public function count_thumb($post_id){
+        $this->db->select('thumb');
+        $this->db->from('post');
+        $this->db->where('post_id', $post_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row()->thumb;
+        }else {
+            return 0;
+        }
+    }
+
+    public function get_posts_ordered_by_latest() {
+        $this->db->order_by('create_date', 'DESC');
+        $this->db->where('parent_post_id',null);
+        $query = $this->db->get('post');
+        return $query->result(); // 모든 게시글을 반환
     }
 
 
