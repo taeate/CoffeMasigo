@@ -33,21 +33,25 @@ class Post_model extends CI_Model {
         return $query->result();
     }
 
-    public function get_reply_to_post_count($post_id){
-        $this->db->from('post');
-        $this->db->where('ref', $post_id);
-        return $this->db->count_all_results();
-    }
-
     public function get_reply_to_post($post_id) {
         $this->db->from('post');
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
+        $this->db->order_by('re_level', 'ASC'); // 추가: re_level에 따른 정렬
         $query = $this->db->get();
         return $query->result();
     }
+    
+
+    public function get_reply_to_post_count($post_id){
+        $this->db->from('post');
+        $this->db->where('ref', $post_id);
+        return $this->db->count_all_results();
+    }
+
+ 
     
     public function get_answer_posts() {
 
@@ -76,6 +80,7 @@ class Post_model extends CI_Model {
     
             // 부모 댓글의 re_step 값 찾기
             $parent_re_step = $parent_comment->re_step;
+
             // 새 댓글의 re_step 값 계산
             $re_step = $parent_re_step + 1;
     
