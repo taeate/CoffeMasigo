@@ -314,7 +314,7 @@ function loadPage(pageNumber) {
                 postsHtml += createPostHtml(post);
             });
 
-            // 페이지네이션 링크를 postsHtml에 추가합니다.
+            // 페이지네이션 링크를 postsHtml에 추가
             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
 
             // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용합니다.
@@ -377,11 +377,14 @@ function LatestOrderBy() {
         url: '/posts/post/LatestOrderBy',
         type: 'GET',
         dataType: 'json',
-        success: function(posts) {
+        success: function(data) {
             var postsHtml = '';
-            posts.forEach(function(post) {
+            data.posts.forEach(function(post) {
                postsHtml += createPostHtml(post);
             });
+
+             // 페이지네이션 링크를 postsHtml에 추가
+             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
 
             // 게시글 목록과 페이지네이션 링크 업데이트
             document.getElementById('posts-container').innerHTML = postsHtml;

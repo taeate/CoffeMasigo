@@ -231,16 +231,54 @@ class Post extends CI_Controller {
 
 
     public function LatestOrderBy(){
+
+         //페이지네이션 설정
+         $config = array();
+         $config['base_url'] = site_url('posts/all/page/');
+         $config['first_url'] = site_url('posts/all/page/1');
+         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
+         $config['per_page'] = 5; // 페이지당 게시물수
+         $config['num_links'] = FALSE;
+         $config['use_page_numbers'] = TRUE;
+         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
+         $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
+         $config['last_link'] = FALSE;
+         $config['first_link'] = FALSE;
+         $config['display_pages'] = FALSE;
+         
+ 
+         //초기화
+         $this->pagination->initialize($config);
+ 
+         //현재페이지 번호 계싼
+         $page = $this->uri->segment(4) ? $this->uri->segment(4) : 1;
+ 
+ 
+         //오프셋계산
+         $start = ($page - 1) * $config['per_page'];
+ 
+ 
+          // 페이지네이션 링크 생성
+         $data['link'] = $this->pagination->create_links();
         
 
-        $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest();
+        $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest($start,$config['per_page']);
         
         foreach ($data['get_list'] as &$post) {
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
-        
-        echo json_encode($data['get_list']);
+
+        if ($this->input->is_ajax_request()) {
+    
+            $response = [
+                'posts' => $data['get_list'],
+                'paginationLinks' => $this->pagination->create_links()
+            ];
+
+            echo json_encode($response);
+
+        } 
     }
 
 
