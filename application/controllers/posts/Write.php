@@ -38,23 +38,32 @@ class Write extends CI_Controller {
     public function index(){
 
         $user_id = $this->session->userdata('user_id');
+        
 
         if (!$user_id) {
             // 비회원일 경우 로그인 페이지로 리디렉션하기 전에 메시지 설정
             $this->session->set_flashdata('message', '로그인 후 이용 가능합니다.');
             redirect('login');
         }
+
+        $user_role = $this->db->select('role')
+        ->where('user_id', $user_id)
+        ->get('user')
+        ->row()
+        ->role;
     
         // 글 작성 로직
         if ($this->input->post()) {
             
             $title = $this->input->post('title');
             $content = $this->input->post('content');
-            $this->Write_model->set_article($title, $content, $user_id);
+            $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
+            $this->Write_model->set_article($title, $content, $user_id,$is_notice);
             redirect('/posts');
         }
     
         $data['post_data'] = null;
+        $data['user_role'] = $user_role;
         $this->load->view('posts/post_write_view', $data);
     }
 

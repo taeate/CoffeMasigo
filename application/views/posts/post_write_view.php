@@ -110,17 +110,17 @@
                     
                             
                         <form method="POST" class="mt-8">
-                            
+                            <?php if($user_role == 'admin'): ?>
                             <div class="flex mb-4">
                                 <div class="form-control mr-2 ">
                                     <label class="cursor-pointer label">
-                                        <input name="is_notice" type="checkbox" checked="checked" class="checkbox checkbox-accent" />                                   
+                                        <input name="is_notice" type="checkbox"  class="checkbox checkbox-accent" />                                   
                                     </label>              
                                 </div>
                                 <span class="label-text mt-3">공지로등록</span>
                                
                             </div>
-                           
+                           <?php endif; ?>
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -179,6 +179,10 @@
 
 
 <script>
+
+
+
+
   ClassicEditor.create( document.querySelector( '#content' ), {
     
     language: "ko"

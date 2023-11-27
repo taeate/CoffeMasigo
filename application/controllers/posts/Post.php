@@ -20,7 +20,7 @@ class Post extends CI_Controller {
         $config['base_url'] = site_url('posts/all/page/');
         $config['first_url'] = site_url('posts/all/page/1');
         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
-        $config['per_page'] = 20; // 페이지당 게시물수
+        $config['per_page'] = 5; // 페이지당 게시물수
         $config['num_links'] = FALSE;
         $config['use_page_numbers'] = TRUE;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
@@ -229,6 +229,7 @@ class Post extends CI_Controller {
 
     public function ThumbOrderBy(){
 
+
         $data['get_list'] = $this->Post_model->get_posts_ordered_by_thumb();
         
         foreach ($data['get_list'] as &$post) {
@@ -251,7 +252,31 @@ class Post extends CI_Controller {
         echo json_encode($data['get_list']);
     }
 
+    
+    public function is_notice_hidden() {
+
+
+        $data['get_list'] = $this->Post_model->get_posts_not_notice();
+
+        foreach ($data['get_list'] as &$post) {
+            $post->comment_count = $this->Post_model->count_comment($post->post_id);
+            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+        }
+        echo json_encode($data);
+    }
+
+    public function get_posts_json() {
   
+    
+        $data['get_list'] = $this->Post_model->get_posts();
+
+        foreach ($data['get_list'] as &$post) {
+            $post->comment_count = $this->Post_model->count_comment($post->post_id);
+            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+        }
+        
+        echo json_encode($data);
+    }
     
 }
 ?>

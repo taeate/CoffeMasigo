@@ -3,11 +3,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Post_model extends CI_Model {
 
-    public function get_posts($start,$limit){
+    public function get_posts($start = 0, $limit = 5){
       
         $this->db->select('*');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
+        $this->db->order_by('is_notice','DESC');
+        $this->db->limit($limit, $start);
+        $query = $this->db->get('post');
+        return $query->result();
+
+
+    }
+
+    public function get_posts_not_notice($start = 0, $limit = 5){
+      
+        $this->db->select('*');
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->where('is_notice', 0);
         $this->db->limit($limit, $start);
         $query = $this->db->get('post');
         return $query->result();
@@ -206,6 +220,7 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_ordered_by_latest() {
+        $this->db->order_by('is_notice','DESC');
         $this->db->order_by('create_date', 'DESC');
         $this->db->where('parent_post_id',null);
         $query = $this->db->get('post');
@@ -213,6 +228,7 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_ordered_by_thumb() {
+        $this->db->order_by('is_notice','DESC');
         $this->db->order_by('thumb', 'DESC');
         $this->db->where('parent_post_id',null);
         $query = $this->db->get('post');
@@ -220,6 +236,7 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_ordered_by_views() {
+        $this->db->order_by('is_notice','DESC');
         $this->db->order_by('views', 'DESC');
         $this->db->where('parent_post_id',null);
         $query = $this->db->get('post');

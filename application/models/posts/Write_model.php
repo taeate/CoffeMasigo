@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Write_model extends CI_Model {
 
-    public function set_article($title, $content, $user_id) {
+    public function set_article($title, $content, $user_id, $is_notice) {
 
         $data = array(
             'title'=> $title,
@@ -12,7 +12,8 @@ class Write_model extends CI_Model {
             'ref' => null,
             're_step' => 0,
             're_level' => 0,
-            'delete_status' => FALSE
+            'delete_status' => FALSE,
+            'is_notice' => $is_notice
         );
 
         $this->db->insert('post', $data);

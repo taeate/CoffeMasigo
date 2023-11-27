@@ -43,13 +43,17 @@
                                 <button class="btn btn-sm btn-accent hover:text-white" onclick="ThumbOrderBy()">
                                 <i class="fa-solid fa-thumbs-up"></i>추천수</button>
                             </div>
-                                <div class="ml-4">
+                            <div class="ml-4">
                                 <button class="btn btn-sm btn-accent hover:text-white" onclick="ViewsOrderBy()">
                                 <i class="fa-solid fa-eye"></i>조회수</button>
                             </div>
+                            <!-- <div class="ml-4">
+                                <button class="btn btn-sm btn-accent hover:text-white"  onclick="toggleNotices()">공지숨기기</button>
+                            </div> -->
+                            
                         </div>
                     </div>
-
+                        
                     <div name="select-box" class="ml-auto">
                         <select id="countries" class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected>지난 1일</option>
@@ -152,20 +156,55 @@
                 <div class="stat-title ">3위</div>
                 <div class="stat-value text-xl">starbuck</div>
 
-                <!-- <div class="stat-desc text-secondary">31 tasks remaining</div> -->
+                <!-- <div class="stat-desc text-secondary">31 tasks remaining</div>   $data['user_role'] = $user_role;-->
             </div>
             
         </div>
     </div>
-                <body class="bg-base-300">
+            <body class="bg-base-300">
                     
                 <!-- 리스트 페이지의 내용 -->
                 <div class="bg-base-100 mt-4">
+
                     <div class="overflow-x-auto shadow-md">
-                  
                         <!-- 메인 글 -->
                         <div id="posts-container">
                         <?php foreach($get_list as $post): ?>
+                            <?php if($post->is_notice == 1): ?>
+                                <div  class="flex flex-col border-b answer-row" >
+                                <div class="flex flex-1 p-4 border-b border-gray-300 bg-blue-100 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                    <div class="ml-4 flex-[1] flex flex-col items-center ">
+                                        <div class="m-auto"><i class="fa-solid fa-flag fa-xl"></i></div>
+                                        <div class=""></div>
+                                    </div>
+                                    <div class="flex-[4] m-auto">
+                                        <div class="flex">
+                                            <div class="text-blue-500 font-bold"><?php echo $post->title; ?></div>
+                                            <div class="ml-1 text-red-500">[<?php echo $post->comment_count; ?>]</div>
+                                        </div>
+                                        <div class="flex">
+                                            <div class="font-base text-gray-500">자유</div>
+
+                                                <!-- 답글이 있을 때만 버튼이 보임 -->
+                                                <?php if($post->replies > 1): ?>
+                                                    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                <?php endif; ?>
+
+                                             
+                                        </div>
+                                    </div>
+                                    <div class="flex-[2] m-auto text-blue-500 font-bold"><i class="fa-solid fa-user mr-2"></i><?php echo $post->user_id ?></div>
+                                    <div class="flex-1 m-auto">
+                                    <i class="fa-solid fa-eye"></i>
+                                    <?php echo $post->views ?>
+                                    </div>
+                                    <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i><?php echo $post->create_date?></div>
+                                    
+                                </div>
+                                <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
+                                
+                            <?php else: ?>
+                          
                             <div  class="flex flex-col border-b answer-row" >
                                 <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
@@ -197,11 +236,10 @@
                                     
                                 </div>
                                 <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
-                                
-                                
-                                
                             </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
+                        
                         </div>
                         <!-- 메인 글 끝-->
                                                
@@ -241,22 +279,18 @@
                     </div>
                     
                         
-                        <div class="mt-6 mb-6">
-                            <div class="flex justify-center">
-                                                    
-                                <div class="pagination mb-4">
-                                <?php echo $link; ?>
-
-                                                    
-                                </div>
-                                                    
+                    <div class="mt-6 mb-6">
+                        <div class="flex justify-center">
+                                                
+                            <div class="pagination mb-4">
+                            <?php echo $link; ?>                 
                             </div>
+                                                
                         </div>
-                    
+                    </div>
                 </div>
             </body>
             
-           
 
     </div>
 
@@ -268,20 +302,31 @@
     
 </div>
 </body>
-
-<?php $this->load->view('layout/footer'); ?>
+<!-- <?php $this->load->view('layout/footer'); ?> -->
 <script>
 
 function createPostHtml(post) {
-    var postHtml = '<div class="flex flex-col border-b answer-row">';
+    
+    var postStyle = post.is_notice == 1 ? "bg-blue-100 border-b border-gray-300"  : "hover:bg-gray-200"; // 공지사항인 경우 다른 배경 적용
+    var titleStyle = post.is_notice == 1 ? " text-blue-500 font-bold" : "";
+    var headerStyle = post.is_notice == 1 ? "<div class='m-auto'><i class='fa-solid fa-flag fa-xl'></i></div>" : "<div><i class='fa-solid fa-caret-up fa-xl'></i></div>";
+    var thumbhide = post.is_notice == 1 ? " " : "";
+
+    
+    var postHtml = '<div class="flex flex-col border-b answer-row ' + postStyle + '">';
     postHtml += '    <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
     postHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
-    postHtml += '            <div><i class="fa-solid fa-caret-up fa-xl"></i></div>';
-    postHtml += '            <div>' + post.thumb + '</div>';
+    postHtml += '            '+headerStyle+'';
+
+    // post.is_notice가 1이 아닐 때만 post.thumb을 추가
+    if (post.is_notice != 1) {
+        postHtml += '        <div>' + post.thumb + '</div>';
+    }
+    
     postHtml += '        </div>';
     postHtml += '        <div class="flex-[4] m-auto">';
     postHtml += '            <div class="flex">';
-    postHtml += '                <div>' + post.title + '</div>';
+    postHtml += '                <div class="'+titleStyle+'">' + post.title + '</div>';
     postHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
@@ -291,7 +336,7 @@ function createPostHtml(post) {
     }
     postHtml += '            </div>';
     postHtml += '        </div>';
-    postHtml += '        <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i>' + post.user_id + '</div>';
+    postHtml += '        <div class="flex-[2] m-auto '+titleStyle+' "><i class="fa-solid fa-user mr-2"></i>' + post.user_id + '</div>';
     postHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye mr-2"></i>' + post.views + '</div>';
     postHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + post.create_date + '</div>';
     postHtml += '    </div>';
@@ -372,6 +417,36 @@ $.ajax({
         console.error('Error:', error);
     }
 });
+}
+
+
+var showNotices = true; // 초기 상태는 공지사항을 보여주는 것으로 설정
+
+function toggleNotices() {
+    showNotices = !showNotices; // 상태 토글
+    is_notice_hidden(showNotices); // 변경된 상태로 함수 호출
+}
+
+function is_notice_hidden(showNotices) {
+
+    var url = showNotices ? '/posts/post/get_posts_json' : '/posts/post/is_notice_hidden'; 
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var postsHtml = '';
+            data.get_list.forEach(function(post) {
+                postsHtml += createPostHtml(post);
+            });
+
+            document.getElementById('posts-container').innerHTML = postsHtml;
+        },
+        error: function(xhr, status, error) {
+    console.error('AJAX Error:', xhr.status, xhr.responseText);
+}
+    });
 }
 
 
