@@ -12,28 +12,6 @@ class Write extends CI_Controller {
         $this->load->library('session'); // 세션 라이브러리 로드
     }
     
-    // public function index(){
-
-    //     if ($this->input->post()) {
-
-    //         $title = $this->input->post('title');
-    //         $content = $this->input->post('content');
-    //         $user_id = $this->session->userdata('user_id');
-
-    //         if(!$this->session->userdata('user_id')){
-    //             redirect('login');
-    //         }
-
-    //         $this->Write_model->set_article($title, $content, $user_id);
-
-    //         redirect('/posts');
-    //     }
-
-    //     $data['post_data'] = null;
-
-    //     $this->load->view('posts/post_write_view',$data);
-    
-    // }
 
     public function index(){
 

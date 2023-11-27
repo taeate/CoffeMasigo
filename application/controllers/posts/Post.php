@@ -57,8 +57,23 @@ class Post extends CI_Controller {
         $data['link'] = $this->pagination->create_links();
 
         $data['get_answer_list'] = $this->Post_model->get_answer_posts();
+
+
+        if ($this->input->is_ajax_request()) {
+  
+            $response = [
+                'posts' => $data['get_list'],
+                'paginationLinks' => $this->pagination->create_links()
+            ];
     
-        $this->load->view('posts/post_list_view', $data);
+            echo json_encode($response);
+
+        } else {
+         
+            $this->load->view('posts/post_list_view', $data);
+        }
+    
+    
     }
     
 
@@ -193,6 +208,7 @@ class Post extends CI_Controller {
     }
 
     public function thumbUp(){
+        
 
         $post_id = $this->input->post('postId');
         $user_id = $this->session->userdata('user_id');
@@ -215,6 +231,7 @@ class Post extends CI_Controller {
 
 
     public function LatestOrderBy(){
+        
 
         $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest();
         
@@ -274,7 +291,7 @@ class Post extends CI_Controller {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
         }
-        
+
         echo json_encode($data);
     }
     

@@ -67,6 +67,7 @@
                 </button>
                 <div>가입인사</div>
                 <div>사건사고</div>
+                <div>QNA</div>
             </div>
         </div>
             

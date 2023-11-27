@@ -172,7 +172,7 @@
                         <?php foreach($get_list as $post): ?>
                             <?php if($post->is_notice == 1): ?>
                                 <div  class="flex flex-col border-b answer-row" >
-                                <div class="flex flex-1 p-4 border-b border-gray-300 bg-blue-100 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                <div class="flex flex-1 p-2 border-b border-gray-300 bg-blue-100 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
                                         <div class="m-auto"><i class="fa-solid fa-flag fa-xl"></i></div>
                                         <div class=""></div>
@@ -206,7 +206,7 @@
                             <?php else: ?>
                           
                             <div  class="flex flex-col border-b answer-row" >
-                                <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                <div class="flex flex-1 p-2 hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
                                         <div><i class="fa-solid fa-caret-up fa-xl"></i></div>
                                         <div class=""><?php echo $post->thumb; ?></div>
@@ -281,11 +281,9 @@
                         
                     <div class="mt-6 mb-6">
                         <div class="flex justify-center">
-                                                
                             <div class="pagination mb-4">
-                            <?php echo $link; ?>                 
+                                <?php echo $link; ?>                 
                             </div>
-                                                
                         </div>
                     </div>
                 </div>
@@ -305,6 +303,35 @@
 <!-- <?php $this->load->view('layout/footer'); ?> -->
 <script>
 
+function loadPage(pageNumber) {
+    $.ajax({
+        url: '/posts/all/page/' + pageNumber,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var postsHtml = '';
+            data.posts.forEach(function(post) {
+                postsHtml += createPostHtml(post);
+            });
+
+            // 페이지네이션 링크를 postsHtml에 추가합니다.
+            postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+
+            // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용합니다.
+            $('#posts-container').html(postsHtml);
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+$(document).on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    var page = $(this).attr('href').split('page/')[1];
+    loadPage(page);
+});
+
 function createPostHtml(post) {
     
     var postStyle = post.is_notice == 1 ? "bg-blue-100 border-b border-gray-300"  : "hover:bg-gray-200"; // 공지사항인 경우 다른 배경 적용
@@ -314,11 +341,10 @@ function createPostHtml(post) {
 
     
     var postHtml = '<div class="flex flex-col border-b answer-row ' + postStyle + '">';
-    postHtml += '    <div class="flex flex-1 p-4  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
+    postHtml += '    <div class="flex flex-1 p-2  hover:bg-gray-200 cursor-pointer" onclick="window.location.href=\'/posts/free/' + post.post_id + '\'">';
     postHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
     postHtml += '            '+headerStyle+'';
 
-    // post.is_notice가 1이 아닐 때만 post.thumb을 추가
     if (post.is_notice != 1) {
         postHtml += '        <div>' + post.thumb + '</div>';
     }
@@ -342,13 +368,11 @@ function createPostHtml(post) {
     postHtml += '    </div>';
     postHtml += '    <div id="replies-container-' + post.post_id + '" style="display: none;"></div>';
     postHtml += '</div>';
+
     return postHtml;
 }
 
 function LatestOrderBy() {
-
-
-    // AJAX 요청을 통해 서버에 최신순 정렬 요청
     $.ajax({
         url: '/posts/post/LatestOrderBy',
         type: 'GET',
@@ -356,11 +380,12 @@ function LatestOrderBy() {
         success: function(posts) {
             var postsHtml = '';
             posts.forEach(function(post) {
-               postsHtml +=createPostHtml(post);
+               postsHtml += createPostHtml(post);
             });
 
-            // 기존 목록을 새 목록으로 대체
+            // 게시글 목록과 페이지네이션 링크 업데이트
             document.getElementById('posts-container').innerHTML = postsHtml;
+        
         },
         error: function(error) {
             console.error('Error:', error);
