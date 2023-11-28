@@ -186,7 +186,7 @@ class Post_model extends CI_Model {
 
     public function hasUserAlreadyThumb($post_id, $user_id) {
 
-        $this->db->where('post_id', $post_id);
+        $this->db->where( 'post_id', $post_id);
         $this->db->where('user_id', $user_id);
         $query = $this->db->get('post_thumb');
 
@@ -197,7 +197,9 @@ class Post_model extends CI_Model {
         $this->db->set('thumb', 'thumb+1', FALSE);
         $this->db->where('post_id', $post_id);
         $this->db->update('post');
+       
     }
+    
 
     public function addThumbRecord($post_id, $user_id) {
         $data = array(
@@ -232,7 +234,7 @@ class Post_model extends CI_Model {
 
 
 
-    public function get_posts_ordered_by_latest($start = 0, $limit = 15) {
+    public function get_posts_ordered_by_latest($start = 0, $limit = 20) {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id',null);
         $this->db->order_by('is_notice','DESC');
@@ -252,7 +254,7 @@ class Post_model extends CI_Model {
     }
     
 
-    public function get_posts_ordered_by_thumb($start = 0, $limit = 15) {
+    public function get_posts_ordered_by_thumb($start = 0, $limit = 20) {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
@@ -273,7 +275,7 @@ class Post_model extends CI_Model {
         return $this->db->count_all_results();
     }
 
-    public function get_posts_ordered_by_views($start = 0, $limit = 15) {
+    public function get_posts_ordered_by_views($start = 0, $limit = 20) {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id',null);
         $this->db->order_by('is_notice','DESC');

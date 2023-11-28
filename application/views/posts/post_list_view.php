@@ -174,7 +174,7 @@
                                 <div  class="flex flex-col border-b answer-row" >
                                 <div class="flex flex-1 p-2 border-b border-gray-300 bg-blue-100 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
-                                        <div class="m-auto"><i class="fa-solid fa-flag fa-xl"></i></div>
+                                        <div class="m-auto"><i class="fa-solid fa-flag fa-xl text-blue-400"></i></div>
                                         <div class=""></div>
                                     </div>
                                     <div class="flex-[4] m-auto">
@@ -208,7 +208,7 @@
                             <div  class="flex flex-col border-b answer-row" >
                                 <div class="flex flex-1 p-2 hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
-                                        <div><i class="fa-solid fa-caret-up fa-xl"></i></div>
+                                        <div><i class="fa-solid fa-caret-up fa-xl text-gray-400"></i></div>
                                         <div class=""><?php echo $post->thumb; ?></div>
                                     </div>
                                     <div class="flex-[4] m-auto">
@@ -351,7 +351,7 @@ function createPostHtml(post) {
     
     var postStyle = post.is_notice == 1 ? "bg-blue-100 border-b border-gray-300"  : "hover:bg-gray-200"; // 공지사항인 경우 다른 배경 적용
     var titleStyle = post.is_notice == 1 ? " text-blue-500 font-bold" : "";
-    var headerStyle = post.is_notice == 1 ? "<div class='m-auto'><i class='fa-solid fa-flag fa-xl'></i></div>" : "<div><i class='fa-solid fa-caret-up fa-xl'></i></div>";
+    var headerStyle = post.is_notice == 1 ? "<div class='m-auto'><i class='fa-solid fa-flag fa-xl text-blue-400'></i></div>" : "<div><i class='fa-solid fa-caret-up fa-xl text-gray-400'></i></div>";
     var thumbhide = post.is_notice == 1 ? " " : "";
 
     
