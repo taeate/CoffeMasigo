@@ -63,6 +63,8 @@ $route['posts/delete/(:num)'] = 'posts/write/post_delete/$1';
 $route['posts/all/page/(:num)'] = 'posts/post/index/$1';
 $route['posts/search'] = 'posts/post/search';
 $route['posts/all/thumb/page/(:num)'] = 'posts/post/ThumbOrderBy/$1';
+$route['posts/all/newest/page/(:num)'] = 'posts/post/LatestOrderBy/$1';
+$route['posts/all/views/page/(:num)'] = 'posts/post/ViewsOrderBy/$1';
 
 
 

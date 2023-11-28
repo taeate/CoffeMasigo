@@ -20,7 +20,7 @@ class Post extends CI_Controller {
         $config['base_url'] = site_url('posts/all/page/');
         $config['first_url'] = site_url('posts/all/page/1');
         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
-        $config['per_page'] = 5; // 페이지당 게시물수
+        $config['per_page'] = 15; // 페이지당 게시물수
         $config['num_links'] = FALSE;
         $config['use_page_numbers'] = TRUE;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
@@ -231,13 +231,13 @@ class Post extends CI_Controller {
 
 
     public function LatestOrderBy(){
-
+        
          //페이지네이션 설정
          $config = array();
-         $config['base_url'] = site_url('posts/all/page/');
-         $config['first_url'] = site_url('posts/all/page/1');
-         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
-         $config['per_page'] = 5; // 페이지당 게시물수
+         $config['base_url'] = site_url('posts/all/newest/page/');
+         $config['first_url'] = site_url('posts/all/newest/page/1');    
+         $config['total_rows'] = $this->Post_model->count_posts_ordered_by_latest(); // 총 게시물수
+         $config['per_page'] = 15; // 페이지당 게시물수
          $config['num_links'] = FALSE;
          $config['use_page_numbers'] = TRUE;
          $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
@@ -251,7 +251,7 @@ class Post extends CI_Controller {
          $this->pagination->initialize($config);
  
          //현재페이지 번호 계싼
-         $page = $this->uri->segment(4) ? $this->uri->segment(4) : 1;
+         $page = $this->uri->segment(5) ? $this->uri->segment(5) : 1;
  
  
          //오프셋계산
@@ -289,7 +289,7 @@ class Post extends CI_Controller {
          $config['base_url'] = site_url('posts/all/thumb/page/');
          $config['first_url'] = site_url('posts/all/thumb/page/1');    
          $config['total_rows'] = $this->Post_model->count_posts_ordered_by_thumb(); // 총 게시물수
-         $config['per_page'] = 5; // 페이지당 게시물수
+         $config['per_page'] = 15; // 페이지당 게시물수
          $config['num_links'] = FALSE;
          $config['use_page_numbers'] = TRUE;
          $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
@@ -338,16 +338,54 @@ class Post extends CI_Controller {
 
     public function ViewsOrderBy(){
 
-        $data['get_list'] = $this->Post_model->get_posts_ordered_by_views();
+         //페이지네이션 설정
+         $config = array();
+         $config['base_url'] = site_url('posts/all/views/page/');
+         $config['first_url'] = site_url('posts/all/views/page/1');    
+         $config['total_rows'] = $this->Post_model->count_posts_ordered_by_views(); // 총 게시물수
+         $config['per_page'] = 15; // 페이지당 게시물수
+         $config['num_links'] = FALSE;
+         $config['use_page_numbers'] = TRUE;
+         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
+         $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
+         $config['last_link'] = FALSE;
+         $config['first_link'] = FALSE;
+         $config['display_pages'] = FALSE;
+         
+ 
+         //초기화
+         $this->pagination->initialize($config);
+ 
+         //현재페이지 번호 계싼
+         $page = $this->uri->segment(5) ? $this->uri->segment(5) : 1;
+ 
+ 
+         //오프셋계산
+         $start = ($page - 1) * $config['per_page'];
+ 
+ 
+          // 페이지네이션 링크 생성
+         $data['link'] = $this->pagination->create_links();
+
+
+        $data['get_list'] = $this->Post_model->get_posts_ordered_by_views($start,$config['per_page']);
+        
         
         foreach ($data['get_list'] as &$post) {
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
 
-    
+        if ($this->input->is_ajax_request()) {
         
-        echo json_encode($data['get_list']);
+            $response = [
+                'posts' => $data['get_list'],
+                'paginationLinks' => $this->pagination->create_links()
+            ];
+
+            echo json_encode($response);
+            
+        }
     }
 
     
@@ -362,6 +400,7 @@ class Post extends CI_Controller {
         }
         echo json_encode($data);
     }
+
 
     public function get_posts_json() {
   

@@ -311,6 +311,14 @@ function loadPage(page, sort) {
         url = '/posts/all/thumb/page/' + page;
     }
 
+    if (sort === 'newest') {
+        url = '/posts/all/newest/page/' + page;
+    }
+
+    if (sort === 'views') {
+        url = '/posts/all/views/page/' + page;
+    }
+
     $.ajax({
         url: url,
         type: 'GET',
@@ -402,6 +410,13 @@ function LatestOrderBy() {
             console.error('Error:', error);
         }
     });
+
+    // 페이지네이션 링크 클릭 이벤트 설정
+    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var page = $(this).attr('href').split('page/')[1];
+        loadPage(page, 'newest');
+    });
 }
 
 
@@ -429,7 +444,7 @@ $.ajax({
         console.error('Error:', error);
     }
 });
-// 정렬후에 다음버튼이 있는데 다음버튼 누르면 http://localhost/posts/all/sort=thumb/page/2 url 이 생긴다 
+
 // 페이지네이션 링크 클릭 이벤트 설정
 $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
     e.preventDefault();
@@ -451,11 +466,13 @@ $.ajax({
     url: '/posts/post/ViewsOrderBy',
     type: 'GET',
     dataType: 'json',
-    success: function(posts) {
+    success: function(data) {
         var postsHtml = '';
-        posts.forEach(function(post) {
+        data.posts.forEach(function(post) {
             postsHtml +=createPostHtml(post);
         });
+
+        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
 
         // 기존 목록을 새 목록으로 대체
         document.getElementById('posts-container').innerHTML = postsHtml;
@@ -464,6 +481,13 @@ $.ajax({
         console.error('Error:', error);
     }
 });
+
+    // 페이지네이션 링크 클릭 이벤트 설정
+    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            var page = $(this).attr('href').split('page/')[1];
+            loadPage(page, 'views');
+    });
 }
 
 
