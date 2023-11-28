@@ -303,9 +303,16 @@
 <!-- <?php $this->load->view('layout/footer'); ?> -->
 <script>
 
-function loadPage(pageNumber) {
+function loadPage(page, sort) {
+
+    var url = '/posts/all/page/' +page
+
+    if (sort === 'thumb') {
+        url = '/posts/all/thumb/page/' + page;
+    }
+
     $.ajax({
-        url: '/posts/all/page/' + pageNumber,
+        url: url,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -388,6 +395,7 @@ function LatestOrderBy() {
 
             // 게시글 목록과 페이지네이션 링크 업데이트
             document.getElementById('posts-container').innerHTML = postsHtml;
+            
         
         },
         error: function(error) {
@@ -406,11 +414,13 @@ $.ajax({
     url: '/posts/post/ThumbOrderBy',
     type: 'GET',
     dataType: 'json',
-    success: function(posts) {
+    success: function(data) {
         var postsHtml = '';
-        posts.forEach(function(post) {
+        data.posts.forEach(function(post) {
             postsHtml +=createPostHtml(post);
         });
+
+        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
 
         // 기존 목록을 새 목록으로 대체
         document.getElementById('posts-container').innerHTML = postsHtml;
@@ -419,6 +429,15 @@ $.ajax({
         console.error('Error:', error);
     }
 });
+// 정렬후에 다음버튼이 있는데 다음버튼 누르면 http://localhost/posts/all/sort=thumb/page/2 url 이 생긴다 
+// 페이지네이션 링크 클릭 이벤트 설정
+$(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    var page = $(this).attr('href').split('page/')[1];
+    loadPage(page, 'thumb');
+});
+
+
 }
 
 

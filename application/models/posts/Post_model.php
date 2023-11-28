@@ -9,6 +9,7 @@ class Post_model extends CI_Model {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
+        $this->db->order_by('create_date','DESC');
         $this->db->limit($limit, $start);
         $query = $this->db->get('post');
         return $query->result();
@@ -219,6 +220,8 @@ class Post_model extends CI_Model {
         }
     }
 
+
+
     public function get_posts_ordered_by_latest($start = 0, $limit = 5) {
         $this->db->order_by('is_notice','DESC');
         $this->db->order_by('create_date', 'DESC');
@@ -228,12 +231,25 @@ class Post_model extends CI_Model {
         return $query->result(); // 모든 게시글을 반환
     }
 
-    public function get_posts_ordered_by_thumb() {
+    public function count_posts_ordered_by_thumb(){
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->order_by('is_notice','DESC');
+        $this->db->order_by('thumb', 'DESC');
+        $this->db->from('post');
+        return $this->db->count_all_results();
+    }
+    
+
+    public function get_posts_ordered_by_thumb($start = 0, $limit = 5) {
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
         $this->db->order_by('thumb', 'DESC');
         $this->db->where('parent_post_id',null);
+        $this->db->limit($limit,$start);
         $query = $this->db->get('post');
-        return $query->result(); // 모든 게시글을 반환
+        return $query->result(); 
     }
 
     public function get_posts_ordered_by_views() {
