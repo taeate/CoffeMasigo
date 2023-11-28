@@ -10,10 +10,17 @@ class Write extends CI_Controller {
         $this->load->helper('url');
         $this->load->helper('alert');
         $this->load->library('session'); // 세션 라이브러리 로드
+        $this->load->library('form_validation');
     }
     
 
+
     public function index(){
+
+
+        $this->form_validation->set_rules('title', '제목', 'required', array('required' => '제목을 입력해주세요.'));
+        $this->form_validation->set_rules('content', '내용', 'required', array('required' => '내용을 입력해주세요.'));
+        $this->form_validation->set_error_delimiters('<div class="ml-1 mb-1 text-red-500">', '</div>');
 
         $user_id = $this->session->userdata('user_id');
         
@@ -32,17 +39,32 @@ class Write extends CI_Controller {
     
         // 글 작성 로직
         if ($this->input->post()) {
+
+            if ($this->form_validation->run() == FALSE) {
+                $this->session->set_flashdata('message', validation_errors());
+                $data['post_data'] = null;
+                $data['user_role'] = $user_role;
+                $this->load->view('posts/post_write_view', $data);
+
+            } else{
+                    
+                $title = $this->input->post('title');
+                $content = $this->input->post('content');
+                $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
+                $this->Write_model->set_article($title, $content, $user_id,$is_notice);
+                redirect('/posts');
+
+            }
+           
+         } else {
+             // 폼이 처음 로드될 때
+            $data['post_data'] = null;
+            $data['user_role'] = $user_role;
+            $this->load->view('posts/post_write_view', $data);
+         
+         }
             
-            $title = $this->input->post('title');
-            $content = $this->input->post('content');
-            $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
-            $this->Write_model->set_article($title, $content, $user_id,$is_notice);
-            redirect('/posts');
-        }
-    
-        $data['post_data'] = null;
-        $data['user_role'] = $user_role;
-        $this->load->view('posts/post_write_view', $data);
+
     }
 
     

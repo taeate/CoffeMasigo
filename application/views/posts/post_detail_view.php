@@ -18,6 +18,8 @@
                         <?php $createdate = $detail_info->create_date; ?>
                         <?php $user_id = $detail_info->user_id; ?>
                         
+                        
+                        
 
                         <div class="text-2xl ">
                             <?php echo $title ?><br>
@@ -34,7 +36,7 @@
                          
                                 <div class="mt-4 ml-8">댓글: <?php echo $comments_count; ?> </div>
                              
-                                <div class="mt-4 ml-8">추천: 23</div>
+                                <div class="mt-4 ml-8">추천: <?php echo $count_thumb; ?></div>
                             </div>
                         </div>
                         
@@ -225,6 +227,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function thumbUp() {
+
+    <?php if(!$this->session->userdata('user_id')): ?>
+        alert('로그인이 필요한 기능입니다.');
+    <?php else: ?>
+        window.location.href = '/posts/free/<?php $post->post_id?>'; // 로그인한 경우 글 작성 페이지로 이동
+    <?php endif; ?>
 
     var postId = document.getElementById('post-container').getAttribute('data-post-id');
     

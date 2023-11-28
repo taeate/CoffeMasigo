@@ -86,6 +86,8 @@ class Post extends CI_Controller {
             // 댓글수
             $data['comments_count'] = $this->Post_model->count_comment($post_id);
 
+            $data['count_thumb'] = $this->Post_model->count_thumb($post_id);
+
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
             
@@ -209,6 +211,13 @@ class Post extends CI_Controller {
 
     public function thumbUp(){
         
+        $user_id = $this->session->userdata('user_id');
+
+        if (!$user_id) {
+            // 비회원일 경우 로그인 페이지로 리디렉션하기 전에 메시지 설정
+            $this->session->set_flashdata('message', '로그인 후 이용 가능합니다.');
+            redirect('/');
+        }
 
         $post_id = $this->input->post('postId');
         $user_id = $this->session->userdata('user_id');
