@@ -50,14 +50,16 @@
                         <form method="POST" class="mt-8">
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
-                                <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " required>
+                                <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " value="<?php echo set_value('title'); ?>">
+                                <?php echo form_error('title'); ?>
                             </div>
                             <div class="mb-6">
                 
 
                                 <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
                                
-                                <textarea class="h-36" type="text" name="content" id="content" required></textarea>
+                                <textarea class="h-36 form-control ckeditor" type="text" name="content" id="content" value="<?php echo set_value('content'); ?>"></textarea>
+                                <?php echo form_error('content'); ?>
 
                                 
                             </div>
@@ -139,7 +141,8 @@
                             <div class="flex justify-between">
                                 <div class="mt-2">
                                     <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                    <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+                                    <input type="file" id="file" name="file[]" class="file-input file-input-bordered w-full max-w-xs" />
+                                    <div id="uploaded-files"></div>
                                 </div>
                                 <div>
                                     <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">취소</button>
@@ -182,19 +185,77 @@
 <script>
 
 
-
-
   ClassicEditor.create( document.querySelector( '#content' ), {
     
-    language: "ko"
+    language: "ko",
+    simpleUpload: {
+        uploadUrl: '/posts/write/saveImage'
+    },
+    ckfinder : {
+        uploadUrl: "/posts/write/saveImage",
+        withCredentials: true
+    }
+
   } )
+  .then(editor => {
+      // 초기화가 성공적으로 완료됐을 때 실행될 코드
+      console.log(editor);
+    })
+    .catch(error => {
+      // 초기화 중 오류가 발생했을 때 실행될 코드
+      console.error(error);
+    });
+
+
+
+//     $(document).ready(function () {
+//     $('#file').on('change', function (event) {
+//         var files = event.target.files;
+
+//         var formData = new FormData();
+//         for (var i = 0; i < files.length; i++) {
+//             formData.append('file[]', files[i]);
+//         }
+
+//         $.ajax({
+//             url: '/posts/write/upload_files', 
+//             type: 'POST',
+//             data: formData,
+//             contentType: false,
+//             processData: false,
+//             success: function (data) {
+//                 // 업로드된 파일 목록을 표시하는 로직
+//                 if(data.uploaded) {
+//                     data.files.forEach(function(file) {
+//                         $('#uploaded-files').append('<div>' + file.name + ' <button onclick="removeFile(' + file.id + ')">삭제</button></div>');
+//                     });
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 // 오류 처리 로직
+//                 console.log('File upload failed: ' + textStatus);
+//             }
+//         });
+//     });
+// });
+
+// function removeFile(fileId) {
+//     // 파일 삭제 요청을 서버에 보내는 AJAX 코드
+// }
+
+
+
+
+
+
+
 </script>
 <style>
-	.ck.ck-editor {
-    	
-	}
+  
 	.ck-editor__editable {
 	    min-height: 200px;
 	}
+
+    
 </style>
  

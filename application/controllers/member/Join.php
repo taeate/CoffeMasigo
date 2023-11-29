@@ -28,16 +28,41 @@ class Join extends CI_Controller {
 			else {
 				// 검증성공
 
+				$config['upload_path'] = __DIR__ . '../../../../uploads';
+				$config['allowed_types'] = 'gif|jpg|png';
+				$config['max_size'] = 2048; // 최대 2MB
+				$config['encrypt_name'] = TRUE; // 파일 이름 암호화
+
+				$this->load->library('upload', $config);
+
+				if (!isset($_FILES['profile_image']['name']) || $_FILES['profile_image']['name'] == '') {
+					// 사용자가 파일을 업로드하지 않은 경우, 기본 이미지 경로 설정
+					$profile_image_path = 'profile.PNG';
+				} else {
+					// 사용자가 파일을 업로드한 경우, 파일 업로드 처리
+					if (!$this->upload->do_upload('profile_image')) {
+						// 파일 업로드에 실패한 경우, 에러 처리 또는 기본 이미지 설정
+						$profile_image_path = 'profile.PNG';
+					} else {
+						// 파일 업로드 성공, 업로드된 파일 경로 설정
+						$upload_data = $this->upload->data();
+						$profile_image_path = $upload_data['file_name'];
+					}
+				}
+
+
 				// 비밀번호 해싱
 				$password = $this->input->post('password1');
 				$hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
 
 				//데이터베이스에 저장
 				$data = [
 					'username' => $this->input->post('username'),
 					'user_id' => $this->input->post('userid'),
 					'email' => $this->input->post('email'),
-					'password_hash' => $hashed_password
+					'password_hash' => $hashed_password,
+					'profile_image' => $profile_image_path
 				];
 
 				
@@ -52,8 +77,8 @@ class Join extends CI_Controller {
 			}
 
 		
-		// $this->load->view('member/join_view');
-	}
+		}
+	
 
 	public function check_korean($str) {
 		if (!preg_match("/^[가-힣]+$/", $str)) {

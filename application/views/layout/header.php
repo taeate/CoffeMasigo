@@ -61,10 +61,14 @@
         
         <label tabindex="0" class="btn btn-ghost btn-circle avatar w-10 h-20 mr-4">
             <div class="w-500 rounded-full">
-            <img src="/application/views/images/sho.jpg" />
+            <?php if ($this->session->userdata('profile_image')): ?>
+            <img src="<?php echo base_url('uploads/' . $this->session->userdata('profile_image')); ?>" />
+            <?php else: ?>
+            <img src="/uploads/profile.PNG" />
+            <?php endif; ?>
             </div>
-            
         </label>
+        
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 x-[1] p-2 shadow bg-gray-700 text-white rounded-box w-52">
             <li><a>프로필 변경</a></li>
             <li><a>설정</a></li>

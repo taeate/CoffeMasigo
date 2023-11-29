@@ -9,9 +9,28 @@
     
       
 
-      <form id="join_form" class="card-body" method="post" action="<?php echo site_url('member/join'); ?>">
+      <form id="join_form" class="card-body" method="post" action="<?php echo site_url('member/join'); ?>" enctype="multipart/form-data">
         <div class="form-control">
-        <label class="label">
+        <div class="flex justify-center mt-2 mb-4"><span class="text-white">프로필이미지</span></div>
+        <div class="avatar justify-center group">
+          <label for="file-upload" class="btn btn-ghost btn-circle w-28 h-28 rounded-full ring ring-offset-base-100 ring-offset-2 hover:bg-gray-500" style="display: flex; justify-content: center; align-items: center; cursor: pointer;">
+          
+            <div class="w-full h-full rounded-full overflow-hidden">
+              
+              <img id="image-preview" src="" alt="미리보기 이미지" class="w-full h-full object-cover" style="display: none;">
+              
+            </div>
+            
+            
+            <input id="file-upload" type="file" name="profile_image" style="display: none;" onchange="previewImage(this)">
+          </label>
+        </div>
+
+        
+
+
+
+          <label class="label">
             <span class="label-text text-white">이름</span>        
           </label>
           <input type="name" name="username" id="username" placeholder="이름" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('username');?>" />  
@@ -66,7 +85,7 @@
       <h1 class="text-6xl font-bold">Welcome Cafe Masigo!</h1>
       <p class="py-6">Provident qwer voluptatem et in. Quaerat qwer ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi. 
       Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-      zzzzzzzz
+
       </p>
     </div>
   </div>
@@ -74,6 +93,20 @@
 </body>
 
 <script>
+
+function previewImage(input) {
+    const preview = document.getElementById('image-preview');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        preview.style.display = 'block';
+        preview.src = e.target.result;
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
  
 $(document).ready(function(){
 
@@ -233,7 +266,7 @@ $(document).ready(function(){
           }
 
 
-           
+          console.log("이메일 체크 끝");
 
             // 중복 확인을 하지 않았거나 중복 확인에서 사용 불가능한 경우
           if (!isUserIdAvailable || !isEmailAvailable) {
@@ -255,10 +288,13 @@ $(document).ready(function(){
 
           // 모든 유효성 검사를 통과했을 때만 서버에 요청
           if (isValid) {
+            var formData = new FormData($('#join_form')[0]);
               $.ajax({
                   type: 'POST',
                   url: 'member/Join',
-                  data: $(this).serialize(),
+                  data: formData,
+                  processData: false,  // FormData를 사용할 때 필요
+                  contentType: false, // FormData를 사용할 때 필요
                   dataType: 'json',
                   success: function(response) {
 

@@ -38,6 +38,7 @@ class Login extends CI_Controller {
                     'user_id'     => $user->user_id,
                     'username'    => $user->username,
                     'email'       => $user->email,
+                    'profile_image'=> $user->profile_image,
                     'is_logged_in'=> TRUE
                 );
                 $this->session->set_userdata($newdata);

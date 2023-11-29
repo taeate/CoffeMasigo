@@ -7,7 +7,11 @@
                 <div name="profile-image" class="">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
                     <div class="w-500 rounded-full">
-                    <img src="/application/views/images/sho.jpg" />
+                    <?php if ($this->session->userdata('profile_image')): ?>
+                    <img src="<?php echo base_url('uploads/' . $this->session->userdata('profile_image')); ?>" />
+                    <?php else:?>
+                    <img src="/uploads/profile.PNG" />
+                    <?php endif;?>
                     </div>
                     </label>
                 </div>
