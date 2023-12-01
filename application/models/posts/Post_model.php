@@ -286,6 +286,18 @@ class Post_model extends CI_Model {
         return $query->result(); 
     }
 
+    public function comment_orderby_created($post_id,$order)  {
+        $this->db->select('COMMENT.*, USER.profile_image');
+        $this->db->from('COMMENT');
+        $this->db->join('USER', 'USER.user_id = COMMENT.user_id', 'left');
+        $this->db->where('COMMENT.post_id', $post_id);
+        $this->db->order_by('COMMENT.create_date', $order);
+        $query = $this->db->get();
+    
+        error_log(print_r($query->result(), true));
+    
+        return $query->result();
+    }
     
 
 

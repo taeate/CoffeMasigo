@@ -423,6 +423,20 @@ class Post extends CI_Controller {
 
         echo json_encode($data);
     }
+
+
+    public function comment_orderBy_create() {
+
+        $post_id = $this->input->post('post_id');
+        $order = $this->input->post('order'); // 'ASC' 또는 'DESC'
+    
+        $result = $this->Post_model->comment_orderby_created($post_id, $order);
+    
+        // 결과를 JSON 형식으로 출력
+        echo json_encode($result);
+
+ 
+    }
     
 }
 ?>

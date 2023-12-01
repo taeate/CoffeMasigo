@@ -58,8 +58,8 @@
                         $user_id = $this->session->userdata('user_id');
                         if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
                         ?>
-                        <button class="bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
-                        <button class="bg-gray-500 text-white w-16 h-8" onclick="window.location.href='/posts/delete/<?=$post_id?>'">삭제</button>
+                        <button class="btn bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
+                        <button class="btn bg-gray-500 text-white w-16 h-8" onclick="window.location.href='/posts/delete/<?=$post_id?>'">삭제</button>
                         <?php else: ?>
                             <?php endif; ?>
                     </div>
@@ -121,16 +121,16 @@
                         
 
                         <div class="flex ml-8 mb-4">
-                            <a>
+                            <button id="comment_orderBy_create" class="hover:text-blue-500">
                                 등록순
-                            </a>
-                            <a class="ml-2">
+                            </button>
+                            <button id="comment_orderBy_last" class="ml-2 hover:text-blue-500">
                                 최신순
-                            </a>
+                            </button>
                         </div>
                     </div>
                          
-                    
+                    <div id="commentsContainer">
                     <?php foreach($comment_info as $comment) : ?>
                         <?php $comment_id = $comment->comment_id; ?>
                         <?php $user_id = $comment->user_id; ?>
@@ -179,6 +179,7 @@
 
               
                     <?php endforeach; ?>
+                    </div>
 
                     
 
@@ -198,6 +199,85 @@
 </div>
 
 <script>
+
+
+// post_id 설정
+var postId = document.getElementById('post-container').getAttribute('data-post-id'); 
+
+// 등록순 버튼 클릭 이벤트
+document.getElementById('comment_orderBy_create').addEventListener('click', function() {
+    fetchComments('ASC');
+});
+
+// 최신순 버튼 클릭 이벤트
+document.getElementById('comment_orderBy_last').addEventListener('click', function() {
+    fetchComments('DESC');
+});
+
+function fetchComments(order) {
+    $.ajax({
+        url: '/posts/post/comment_orderBy_create', 
+        type: 'post',
+        dataType: 'json',
+        data: {
+            post_id: postId,
+            order: order
+        },
+        success: function(response) {
+            console.log(response)
+            var commentsHtml = '';
+            response.forEach(function(comment){
+                commentsHtml += createCommentHtml(comment);
+            });
+
+            $('#commentsContainer').html(commentsHtml);
+            
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+
+function createCommentHtml(comment) {
+    var html = '';
+
+    html += '<div class="comment-answer-area border-b ml-' + (comment.re_level * 6) + '">';
+    html += '<div name="title" class="flex m-3 ml-12 mt-4 mb-4">';
+    html += '<div class="flex-none w-14 h-14 bg-red-500 rounded-full overflow-hidden">';
+    html += '<img src="/uploads/' + comment.profile_image + '" alt="Profile Image" class="w-full h-full object-cover">';
+    html += '</div>';
+    html += '<div class="flex-grow ml-3">';
+    html += '<div class="flex">';
+
+    if (comment.re_level >= 1) {
+        html += '<div class=""></div>';
+    }
+
+    html += '<div class="font-bold">';
+    if (comment.user_id) {
+        html += comment.user_id;
+    } else {
+        html += '<div>Guest</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="ml-2">' + comment.create_date + '</div>';
+    html += '<div>';
+    html += '<button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="' + comment.comment_id + '">댓글쓰기</button>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="">' + comment.comment_content + '<br></div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    return html;
+}
+
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const shareButton = document.getElementById('shareButton');
@@ -246,10 +326,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     var activeCommentForm = null; // 활성화된 댓글 폼을 추적
-    console.log('d');
+    
     document.querySelectorAll('.reply-btn').forEach(button => {
         button.addEventListener('click', function() {
-            console.log('d');
+            
             
             
             var commentId = this.getAttribute('data-comment-id'); // 댓글 ID를 옴
