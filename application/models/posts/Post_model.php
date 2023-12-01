@@ -292,12 +292,12 @@ class Post_model extends CI_Model {
         $this->db->join('USER', 'USER.user_id = COMMENT.user_id', 'left');
         $this->db->where('COMMENT.post_id', $post_id);
         $this->db->order_by('COMMENT.create_date', $order);
+
         $query = $this->db->get();
-    
-        error_log(print_r($query->result(), true));
     
         return $query->result();
     }
+    
     
 
 

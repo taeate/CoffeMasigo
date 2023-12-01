@@ -138,19 +138,22 @@
                         <?php $createdate = $comment->create_date; ?>
              
                         
-                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 6) ?>">
+                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
 
-                            <div name="title" class="flex m-3 ml-12 mt-4 mb-4">
-
+                            <div name="title" class="flex m-3 ml-12 mt-2 mb-2">
+                                <?php if ($comment->re_level >= 1): ?>
+                                        <div class="mt-3 mr-2"> ↳</div>
+                                    <?php else:?>
+                                        <div class="mt-3 mr-2"> </div>
+                                    <?php endif; ?>
+                                    
                                 <div class="flex-none w-14 h-14 bg-red-500 rounded-full overflow-hidden">
                                     <img src="/uploads/<?php echo $comment->profile_image; ?>" alt="Profile Image" class="w-full h-full object-cover">
                                 </div>
 
                                 <div class="flex-grow ml-3">
                                     <div class="flex">
-                                    <?php if ($comment->re_level >= 1): ?>
-                                        <div class=""></div>
-                                    <?php endif; ?>
+                                  
 
                                     <div class="font-bold">
                                         <?php if($user_id == !null) :?>
@@ -166,7 +169,7 @@
                                     </div>
                                     </div>
                              
-                                    <div class=""><?php echo $content; ?><br></div>                  
+                                    <div class="text-sm"><?php echo $content; ?><br></div>                  
                                 </div>
                                 
                             </div>
@@ -238,6 +241,8 @@ function fetchComments(order) {
         }
     });
 }
+
+
 
 
 function createCommentHtml(comment) {
