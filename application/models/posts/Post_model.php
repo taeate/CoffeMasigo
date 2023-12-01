@@ -134,9 +134,10 @@ class Post_model extends CI_Model {
 
     public function get_comment($post_id){
 
-        $this->db->select('*');
+        $this->db->select('comment.*, user.profile_image');
         $this->db->from('comment');
-        $this->db->where('post_id', $post_id);
+        $this->db->join('user','user.user_id = comment.user_id');
+        $this->db->where('comment.post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
     
@@ -284,6 +285,8 @@ class Post_model extends CI_Model {
         $query = $this->db->get('post');
         return $query->result(); 
     }
+
+    
 
 
 }

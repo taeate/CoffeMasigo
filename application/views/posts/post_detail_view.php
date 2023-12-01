@@ -64,7 +64,7 @@
                             <?php endif; ?>
                     </div>
                     <div name="like-btn" class="flex justify-center">
-                        <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()" class="bg-gray-500 text-white w-28 h-12">추천</button>
+                        <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()" class="btn bg-gray-500 text-white w-28 h-12">추천  <?php echo $count_thumb; ?></button>
                     </div>
                     
                     <div name="answer-btn" class="flex justify-between ml-12 mr-12 mt-4 mb-4">
@@ -72,7 +72,7 @@
                             <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()" class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
                         </div>
                         <div class="">
-                        <button class="bg-gray-500 text-white w-28 h-12">공유하기</button>
+                        <button id="shareButton" class="btn bg-gray-500 text-white w-28 h-12">공유하기</button>
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
 
                         <div class="flex ml-8 mb-4">
                             <a>
-                                인기순
+                                등록순
                             </a>
                             <a class="ml-2">
                                 최신순
@@ -136,16 +136,20 @@
                         <?php $user_id = $comment->user_id; ?>
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
-                
-                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 4) ?>">
+             
+                        
+                        <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 6) ?>">
 
+                            <div name="title" class="flex m-3 ml-12 mt-4 mb-4">
 
-                            <div name="title" class="flex m-3">
-                                
-                                <div class="justify-normal ml-8">
+                                <div class="flex-none w-14 h-14 bg-red-500 rounded-full overflow-hidden">
+                                    <img src="/uploads/<?php echo $comment->profile_image; ?>" alt="Profile Image" class="w-full h-full object-cover">
+                                </div>
+
+                                <div class="flex-grow ml-3">
                                     <div class="flex">
                                     <?php if ($comment->re_level >= 1): ?>
-                                        <div class="mr-2">└</div>
+                                        <div class=""></div>
                                     <?php endif; ?>
 
                                     <div class="font-bold">
@@ -161,7 +165,8 @@
                                         <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
                                     </div>
                                     </div>
-                                    <div class="mt-2 ml-2"><?php echo $content; ?><br></div>                  
+                             
+                                    <div class=""><?php echo $content; ?><br></div>                  
                                 </div>
                                 
                             </div>
@@ -187,19 +192,31 @@
         </body>
         
     </div>
-    <div class="w-80 ml-4">
+    <!-- <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
-    </div>
+    </div> -->
 </div>
-
-<?php $this->load->view('layout/footer'); ?>
 
 <script>
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const shareButton = document.getElementById('shareButton');
+
+    shareButton.addEventListener('click', function() {
+        // 현재 페이지의 URL을 복사
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            // 복사 성공 시 알림 표시
+            alert('URL이 복사되었습니다.');
+        }).catch(err => {
+            // 복사 실패 시 오류 처리
+            console.error('URL 복사에 실패했습니다.', err);
+        });
+    });
+});
 
 
-
-
+    
 document.addEventListener('DOMContentLoaded', function () {
     const navbar = document.querySelector('nav');
     const sidebar = document.querySelector('.sidebarbox');
@@ -226,43 +243,13 @@ document.addEventListener('DOMContentLoaded', function () {
     } 
 });
 
-function thumbUp() {
-
-    <?php if(!$this->session->userdata('user_id')): ?>
-        alert('로그인이 필요한 기능입니다.');
-    <?php else: ?>
-        window.location.href = '/posts/free/<?php $post->post_id?>'; // 로그인한 경우 글 작성 페이지로 이동
-    <?php endif; ?>
-
-    var postId = document.getElementById('post-container').getAttribute('data-post-id');
-    
-
-    // AJAX 요청을 통해 서버에 추천 처리 요청
-    $.ajax({
-        url: '/posts/post/thumbUp', 
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            postId: postId,
-        },
-        success: function(response) {
-            if (response.status === 'already_thumbed'){
-                alert('이미 추천한 글입니다.');
-            }else if(response.status === 'success'){
-                alert('글을 추천하셨습니다.');
-            }
-        },
-        error: function(error) {
-             console.error('Error:', error);
-        }
-    });
-}
 
 document.addEventListener('DOMContentLoaded', (event) => {
     var activeCommentForm = null; // 활성화된 댓글 폼을 추적
-
+    console.log('d');
     document.querySelectorAll('.reply-btn').forEach(button => {
         button.addEventListener('click', function() {
+            console.log('d');
             
             
             var commentId = this.getAttribute('data-comment-id'); // 댓글 ID를 옴
@@ -300,7 +287,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
+function thumbUp() {
 
+    <?php if(!$this->session->userdata('user_id')): ?>
+        alert('로그인이 필요한 기능입니다.');
+    <?php endif; ?>
 
+    var postId = document.getElementById('post-container').getAttribute('data-post-id');
+    
 
+    // AJAX 요청을 통해 서버에 추천 처리 요청
+    $.ajax({
+        url: '/posts/post/thumbUp', 
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            postId: postId,
+        },
+        success: function(response) {
+            if (response.status === 'already_thumbed'){
+                alert('이미 추천한 글입니다.');
+                window.location.href = '/posts/free/' + postId;
+            }else if(response.status === 'success'){
+                alert('글을 추천하셨습니다.');
+                window.location.href = '/posts/free/' + postId;
+
+            }
+        },
+        error: function(error) {
+             console.error('Error:', error);
+        }
+    });
+}
 </script>
+
+<?php $this->load->view('layout/footer'); ?>
+
+

@@ -8,17 +8,17 @@
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
                     <div class="w-500 rounded-full">
                     <?php if ($this->session->userdata('profile_image')): ?>
-                    <img src="<?php echo base_url('uploads/' . $this->session->userdata('profile_image')); ?>" />
+                    <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
                     <?php else:?>
                     <img src="/uploads/profile.PNG" />
                     <?php endif;?>
                     </div>
                     </label>
                 </div>
-
+                <?php if ($this->session->userdata('user_id')): ?>
                 <div name="flex justify-center sidebar-text" class="flex flex-col justify-center h-full"> 
                     <div class="text-xl font-bold mb-2">
-                        user
+                        <?php echo $this->session->userdata('user_id'); ?>
                     </div>
                     <div class="text-sm">
                         내가 쓴 글 3개
@@ -27,9 +27,10 @@
                         내가 쓴 댓글 16개
                     </div>
                     <div class="text-sm mt-1">
-                        마이페이지
+                        <a href="/mypage">마이페이지</a>
                     </div>
                 </div>
+                <?php endif;?>
 
             </div>
 

@@ -7,7 +7,7 @@
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-gray-700">
       
 
-    <form class="card-body" method="post" action="<?php echo site_url('login'); ?>">
+    <form class="card-body" method="post" action="/login">
 
     <div class="form-control">
         <label class="label">
