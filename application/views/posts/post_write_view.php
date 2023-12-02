@@ -26,13 +26,15 @@
                             </div>
                             <div class="grow"></div>
                             <div class="flex flex-none">
-
-                            <div class="form-control mr-4">
+                            
+                            <!-- <div class="form-control mr-4">
+                        
                                 <label class="cursor-pointer label">
                                     <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
                                     <span class="label-text ml-1">공지로등록</span>
-                                </label>
-                            </div>
+                         
+                            </div> -->
+                       
 
                             </div>
                         </div>

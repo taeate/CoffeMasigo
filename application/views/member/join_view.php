@@ -123,15 +123,20 @@ $(document).ready(function(){
               $('#check_login_id').click(function(e) {
                 e.preventDefault();
                   var userid = $('#userid').val();
-                  if(userid) {
+                  var useridPattern = /^[a-z0-9]{4,}$/; // 영어 소문자와 숫자만 허용하며, 최소 4글자 이상
+
+                  // 중복 확인 버튼을 눌렀을 때 에러 메시지 초기화
+                  $('#userid_error').text('');
+
+                  if(useridPattern.test(userid)) {
                       $.ajax({
-                          url: '/member/join/checkUserId', // Controller 경로를 확인하세요.
+                          url: '/member/join/checkUserId', 
                           type: 'POST',
                           data: {'userid': userid},
                           dataType: 'json',
                           success: function(response) {
                             
-                              if(response.status === 'unavailable') {
+                              if(response.status === 'unavailable' ) {
                                   $('#useridStatus_failed').text('사용 불가능');
                                   $('#useridStatus_success').text('');
                                   isUserIdAvailable = false;
@@ -144,42 +149,55 @@ $(document).ready(function(){
                           },
                           
                       });
+                  } else {
+                    // 형식이 올바르지 않은 경우
+                    $('#useridStatus_failed').text('아이디는 영어 소문자와 숫자로만 작성해주세요. 최소 4글자 이상이어야 합니다.');
+                    $('#useridStatus_success').text('');
+                    isUserIdAvailable = false;
                   }
               });
 
+                  // 이메일 중복확인
+                  $('#checkEmail').click(function(e) {
+                      e.preventDefault();
+                      var email = $('#email').val();
+                      $('#email_error').text('');
 
-              // 이메일 중복확인
-              $('#checkEmail').click(function(e) {
-                  e.preventDefault();
-                  var email = $('#email').val();
-                  if(email) {
-                      $.ajax({
-                          url: '/member/join/checkEmail', 
-                          type: 'POST',
-                          data: {'email': email},
-                          dataType: 'json',
-                          success: function(response) {
-                              if(response.status === 'unavailable') {
-                                  $('#emailStatus_failed').text('사용 불가능');
-                                  $('#emailStatus_success').text('');
-                                  isEmailAvailable = false;
-                              }  if (!isValidEmail(email)) {
-                                  $('#emailStatus_failed').text('불가능한 이메일');
-                                  $('#emailStatus_success').text('');
-                              }else {
-                                  $('#emailStatus_success').text('사용 가능');
-                                  $('#emailStatus_failed').text('');
-                                  isEmailAvailable = true;
+                      if (!isValidEmail(email)) {
+                          $('#emailStatus_failed').text('불가능한 이메일입니다.');
+                          $('#emailStatus_success').text('');
+                          isEmailAvailable = false;
+                          return;
+                      }
+
+                      if(email) {
+                          $.ajax({
+                              url: '/member/join/checkEmail', 
+                              type: 'POST',
+                              data: {'email': email},
+                              dataType: 'json',
+                              success: function(response) {
+                                  if(response.status === 'unavailable') {
+                                      $('#emailStatus_failed').text('사용 불가능');
+                                      $('#emailStatus_success').text('');
+                                      isEmailAvailable = false;
+                                  } else {
+                                      $('#emailStatus_success').text('사용 가능');
+                                      $('#emailStatus_failed').text('');
+                                      isEmailAvailable = true;
+                                  }
                               }
-                          }
-                      });
-                  }
-              });
+                          });
+                      }
+                  });
 
-            function isValidEmail(email) {
-            var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return pattern.test(email);
-            }
+          function isValidEmail(email) {
+              var pattern = /^[a-zA-Z0-9._]+@(?!-)[a-zA-Z0-9.-]+(?<!-)\.[a-zA-Z]{2,}$/;
+              return pattern.test(email);
+          }
+
+              
+
 
 
         $('#join_form').on('submit', function(e) {
@@ -218,6 +236,7 @@ $(document).ready(function(){
           // 아이디가 비어있지 않고 알파벳 소문자 및 숫자로만 구성되었는지 확인
           if (!userid || !userid.match(/^[a-z0-9]+$/)) {
               isValid = false;
+              
               $('#userid_error').text('아이디는 영어 소문자와 숫자로만 작성해주세요.');
           }else{
             isValid = true;

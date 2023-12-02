@@ -144,7 +144,8 @@ class Post extends CI_Controller {
     public function search() {
 
          // URL 매개변수에서 검색어와 검색 대상 가져오기
-         $search_info = $this->input->get('search');
+         $search_info = $this->input->post('search');
+
          $page = $this->input->get('page') ? $this->input->get('page') : 1;
          
 
@@ -178,10 +179,6 @@ class Post extends CI_Controller {
          $start = ($page - 1) * $config['per_page'];
 
         
-
-        // $search_target = $this->input->get('search_target');
-
-        
         
          // 페이지네이션 링크 없음
         $data['link'] = $this->pagination->create_links();
@@ -191,14 +188,23 @@ class Post extends CI_Controller {
         $data['search_data'] = $this->Post_model->search($search_info, $start, $config['per_page']);
 
 
-        if (empty($data['search_data'])) {
-            $data['no_results'] = "검색결과가 없습니다";
+        if ($this->input->is_ajax_request()) {
+            // AJAX 요청인 경우 JSON으로 응답
+            $response = [
+                'search_data' => $data['search_data'],
+                'no_results' => empty($data['search_data']) ? "검색결과가 없습니다" : ""
+            ];
+            echo json_encode($response);
+        } else {
+            // 비 AJAX 요청인 경우 기존 방식대로 뷰 로드
+            $this->load->view('posts/post_list_view', $data);
         }
+
 
          // 검색 결과가 없으면 빈 배열로 초기화
         $data['get_list'] = array();
     
-        $this->load->view('posts/post_list_view', $data);
+ 
     }
 
 
