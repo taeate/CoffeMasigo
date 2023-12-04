@@ -54,7 +54,11 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'member/Login';
 $route['join'] = 'member/join';
+$route['findByid'] = 'member/Find_id';
 $route['mypage'] = 'member/mypage';
+
+
+
 $route['posts/all'] = 'posts/Post';
 $route['posts'] = 'posts/Post';
 $route['posts/free/(:num)'] = 'posts/Post/detail/$1';
@@ -67,6 +71,8 @@ $route['posts/search'] = 'posts/post/search';
 $route['posts/all/thumb/page/(:num)'] = 'posts/post/ThumbOrderBy/$1';
 $route['posts/all/newest/page/(:num)'] = 'posts/post/LatestOrderBy/$1';
 $route['posts/all/views/page/(:num)'] = 'posts/post/ViewsOrderBy/$1';
+
+
 
 
 

@@ -174,7 +174,14 @@ class Post_model extends CI_Model {
         $this->db->update('post');
     }
 
-    public function search($search_info,$start, $limit){
+    public function count_search_posts($search_info) {
+        $this->db->like('title', $search_info);
+        $this->db->or_like('content', $search_info);
+        $this->db->from('post');
+        return $this->db->count_all_results();
+    }
+
+    public function search($search_info,$start = 0, $limit = 10){
         $this->db->select('*');
         $this->db->from('post');
         $this->db->like('title', $search_info);

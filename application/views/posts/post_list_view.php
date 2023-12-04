@@ -67,7 +67,7 @@
 
                     <div name="" class="w-68 ml-4">
                   
-                            <form onsubmit="return searchPosts();" action="/posts/search" method="get">
+                            <form onsubmit="return searchPosts();" action="" method="get">
                                 <div class="flex">
                                     <label for="location-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your Email</label>
                                     <button id="dropdown-button-2" data-dropdown-toggle="dropdown-search-city" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600" type="button">
@@ -248,7 +248,6 @@
                                                
 
                         <!-- 검색 결과 -->
-                        <div id="result-container"></div>
                         <?php if(!empty($search_data)): ?>
                             <?php foreach($search_data as $post): ?>
                                 <div class="flex flex-col border-b ">
@@ -314,32 +313,52 @@
 <!-- <?php $this->load->view('layout/footer'); ?> -->
 <script>
 
+var currentSearchQuery = ""; 
 
 function searchPosts() {
     var searchQuery = document.getElementById('search').value;
+    currentSearchQuery = searchQuery; 
 
-    $.ajax({
-        url: '/posts/post/search',
-        type: 'POST',
+        $.ajax({
+        url: '/posts/search',
         data: {search: searchQuery},
-        dataType: 'json', // 서버로부터 JSON 형식의 응답을 기대합니다.
+        dataType: 'json', 
         success: function(response) {
-            if (response.search_data.length > 0) {
+            if (response.search_data.length) {
                 var postsHtml = '';
                 response.search_data.forEach(function(post) {
-                    // 각 게시물에 대한 HTML 생성
-                    postsHtml += createPostHtml(post); // createPostHtml은 게시물 데이터를 HTML로 변환하는 함수
+                   console.log(post);
+                    postsHtml += createPostHtml(post); 
                 });
-                $('#result-container').html(postsHtml);
+
+                // 페이지네이션 링크를 postsHtml에 추가
+                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' +response.paginationLinks + '</div></div></div></div>';
+
+                $('#posts-container').html(postsHtml); 
+                
             } else {
-                $('#result-container').html(response.no_results);
+                $('#posts-container').html('<div class="flex justify-center m-4 font-bold text-lg">' + response.no_results + '</div>');
             }
         }
+        
     });
+
+    // 페이지네이션 링크 클릭 이벤트 설정
+    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        page = page.replace('/', ''); // 슬래시 제거
+        loadPage(page, 'search');
+    });
+
+
+
 
     return false;
 }
+
 function loadPage(page, sort) {
+
 
     var url = '/posts/all/page/' +page
 
@@ -355,12 +374,21 @@ function loadPage(page, sort) {
         url = '/posts/all/views/page/' + page;
     }
 
+      if (sort === 'search') {
+        url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
+    } 
+
+    console.log('sort:', sort, 'page:', page);
+ 
+
+
     $.ajax({
         url: url,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
             var postsHtml = '';
+
             data.posts.forEach(function(post) {
                 postsHtml += createPostHtml(post);
             });
@@ -368,19 +396,21 @@ function loadPage(page, sort) {
             // 페이지네이션 링크를 postsHtml에 추가
             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
 
-            // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용합니다.
+            // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용
             $('#posts-container').html(postsHtml);
         },
         error: function(error) {
             console.error('Error:', error);
         }
+        
     });
 }
 
 $(document).on('click', '.pagination a', function(e) {
     e.preventDefault();
     var page = $(this).attr('href').split('page/')[1];
-    loadPage(page);
+        loadPage(page);
+    
 });
 
 function createPostHtml(post) {

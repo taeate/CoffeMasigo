@@ -27,7 +27,7 @@
     <?php echo validation_errors(); ?>
     <div class="form-control mt-6">
         <label class="label mb-3">
-            <a href="#" class="label-text-alt link link-hover text-white">아이디 찾기</a>
+            <a href="/findByid" class="label-text-alt link link-hover text-white">아이디 찾기</a>
             <a href="#" class="label-text-alt link link-hover text-white">비밀번호 찾기</a>
             <a href="<?php echo site_url('join'); ?>" class="label-text-alt link link-hover text-white">회원가입</a>
         </label>

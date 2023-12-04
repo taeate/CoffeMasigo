@@ -1,9 +1,15 @@
+<!-- 헤더 -->
 <?php $this->load->view('layout/header'); ?>
+
+
+<!-- 컨텐츠영역 -->
 <div class="flex-container" style="display: flex; margin: 400px;">
+
     <!-- 사이드바 -->
     <div class="w-80">
         <?php $this->load->view('layout/sidebar'); ?>
     </div>
+
     <div class="content ml-8" style="flex: 3;">
         <div class="flex flex-col w-full ">
             <div class="h-auto bg-base-100">
@@ -196,6 +202,7 @@
         </body>
         
     </div>
+    
     <!-- <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
     </div> -->
