@@ -47,9 +47,10 @@ class Login extends CI_Controller {
                 redirect('posts'); 
             }
                 
-             else {
-                // 로그인 실패 시 오류 메시지 설정
+            else {
+                // 로그인 실패 시 오류 메시지와 함께 입력 데이터 저장
                 $this->session->set_flashdata('error', '잘못된 아이디 또는 비밀번호입니다.');
+                $this->session->set_flashdata('input_user_id', $this->input->post('user_id'));
                 redirect('login');
             }
             }
