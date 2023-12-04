@@ -3,17 +3,17 @@
 
 
 <!-- 컨텐츠영역 -->
-<div class="flex-container" style="display: flex; margin: 400px;">
+<div class="flex flex-container xl:mx-[400px] gap-10">
 
     <!-- 사이드바 -->
-    <div class="w-80">
+    <div class="w-80 hidden md:block">
         <?php $this->load->view('layout/sidebar'); ?>
     </div>
 
-    <div class="content ml-8" style="flex: 3;">
-        <div class="flex flex-col w-full ">
-            <div class="h-auto bg-base-100">
-                <div name="title" class="mt-8 ml-12 mr-12">
+    <div class="bg-base-100 p-10 w-full">
+        <div class="">
+            <div class="">
+                <div name="title" class="flex flex-col gap-3">
                     
                    
                     <?php if ($detail_info) : ?>
@@ -27,22 +27,22 @@
                         
                         
 
-                        <div class="text-2xl ">
+                        <div class="text-2xl">
                             <?php echo $title ?><br>
                         </div>
-                        <div class="flex justify-normal mb-4">
-                            <div class="flex flex-none mt-4">
-                                <div class="mt-4">자유</div>
-                                <div class="mt-4 ml-8"> <?php echo $createdate ?></div>
-                                <div class="mt-4 ml-8"><?php echo $user_id ?></div>
+                        <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5">
+                            <div class="flex flex-none gap-3">
+                                <div class="">자유</div>
+                                <div class=""> <?php echo $createdate ?></div>
+                                <div class=""><?php echo $user_id ?></div>
                             </div>
                             <div class="grow"></div>
-                            <div class="flex flex-none">
-                                <div class="mt-4">조회: <?php echo $views ?></div>
+                            <div class="flex flex-none gap-3">
+                                <div class="">조회: <?php echo $views ?></div>
                          
-                                <div class="mt-4 ml-8">댓글: <?php echo $comments_count; ?> </div>
+                                <div class="">댓글: <?php echo $comments_count; ?> </div>
                              
-                                <div class="mt-4 ml-8">추천: <?php echo $count_thumb; ?></div>
+                                <div class="">추천: <?php echo $count_thumb; ?></div>
                             </div>
                         </div>
                         
@@ -202,7 +202,7 @@
         </body>
         
     </div>
-    
+
     <!-- <div class="w-80 ml-4">
     <?php $this->load->view('layout/rightbar'); ?>
     </div> -->
@@ -413,6 +413,6 @@ function thumbUp() {
 }
 </script>
 
-<?php $this->load->view('layout/footer'); ?>
+<!-- <?php $this->load->view('layout/footer'); ?> -->
 
 

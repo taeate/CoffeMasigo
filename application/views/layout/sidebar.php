@@ -2,17 +2,13 @@
 <div class=" bg-base-100 h-auto w-auto rounded sidebarbox">
     <div name="sidebar-container" class="rounded">
         <div class=" bg-base-100 h-auto flex">
+            <?php if ($this->session->userdata('profile_image')): ?>
             <div class="flex mt-12 ml-8">
-
                 <div name="profile-image" class="">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
-                    <div class="w-500 rounded-full">
-                    <?php if ($this->session->userdata('profile_image')): ?>
-                    <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
-                    <?php else:?>
-                    <img src="/uploads/profile.PNG" />
-                    <?php endif;?>
-                    </div>
+                        <div class="w-500 rounded-full">
+                            <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
+                        </div>
                     </label>
                 </div>
                 <?php if ($this->session->userdata('user_id')): ?>
@@ -33,7 +29,7 @@
                 <?php endif;?>
 
             </div>
-
+            <?php endif;?>
         </div>
         <div>
         <div name="login-write-but" class="flex justify-center mt-8">

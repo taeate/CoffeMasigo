@@ -15,7 +15,7 @@
     <!-- <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script> -->
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
-    
+    <!-- <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script> -->
 
     <!-- 폰트어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -48,29 +48,27 @@
             <p><?php echo $this->session->userdata('username'); ?></p>
         <?php else: ?>
            <div>
-            <button class="mr-2 btn btn-primary w-18 h-4 rounded-lg">
-                <a class="hover-underline" href="/login">로그인</a>
-                </button>   
+       
            </div>
         <?php endif; ?>
     
 
 
     </div>
-    
-        <div class="dropdown dropdown-bottom dropdown-end">
+         <?php if (!$this->session->userdata('profile_image')): ?>
+
+        <button class="mr-2 btn btn-primary w-18 h-4 rounded-lg">
+            <a class="hover-underline" href="/login">로그인</a>
+        </button>   
         
+        <?php else: ?>
+        <div class="dropdown dropdown-bottom dropdown-end">
         <label tabindex="0" class="btn btn-ghost btn-circle avatar w-10 h-20 mr-4">
             <div class="w-500 rounded-full">
-            <?php if ($this->session->userdata('profile_image')): ?>
-        
-            <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
-            
-            <?php else: ?>
-            <img src="/uploads/profile.PNG" />
-            <?php endif; ?>
+                <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
             </div>
         </label>
+  
         
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 x-[1] p-2 shadow bg-gray-700 text-white rounded-box w-52">
             <li><a>프로필 변경</a></li>
@@ -82,6 +80,7 @@
         <?php endif; ?>
         </ul>
         </div>
+        <?php endif; ?>
     
     </div>
     </div>

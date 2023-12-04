@@ -61,6 +61,8 @@ class Login extends CI_Controller {
 
     // 로그아웃 기능
     public function logout() {
+
+        $this->session->unset_userdata('profile_image'); 
         $this->session->unset_userdata('is_logged_in');
         $this->session->unset_userdata('user_id');
         redirect('login');
