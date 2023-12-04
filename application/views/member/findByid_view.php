@@ -9,7 +9,7 @@
     
       
 
-      <form id="findByid_form" class="card-body" method="post" action="findByid" >
+      <form id="findByid_form" class="card-body" method="post" action="" >
         <div class="form-control">
         <div class="flex justify-center mt-2 mb-4"><span class="text-white">아이디찾기</span></div>
 
@@ -32,12 +32,37 @@
               <p id="emailStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
               
         </div>
-        
-        
+  
+        <?php if(isset($findId) && $findId): ?>
+          <div class="flex gap-2 text-white">
+            당신의 아이디는
+            <div class="text-blue-400">"<?php echo $findId; ?>"</div>
+            입니다.
+          </div>
+            <!-- 아이디를 찾은 경우: 로그인 버튼 표시 -->
+            <div>
+          <a href="/member/findByPassword" class="label-text-alt link link-hover text-white hover:text-blue-500">비밀번호 찾기</a>
+          </div>
+          
+          <div class="form-control mt-6">
+              <a href="/login" class="btn btn-primary bg-blue-600">로그인하러가기</a>
+          </div>
+        <?php else: ?>
+          <div class="flex justify-between">
+            <div>
+            <a href="/member/findPassword" class="label-text-alt link link-hover text-white hover:text-blue-500">비밀번호 찾기</a>
+            </div>
+            <div>
+            <a href="/login" class="label-text-alt link link-hover text-white hover:text-blue-500">로그인하러가기</a>
+            </div>
+        </div>
         <div class="form-control mt-6">
           <button type="submit" class="btn btn-primary bg-blue-600">아이디찾기</button>
         </div>
+        <?php endif; ?>
       </form>
+
+
     </div>
     <div class="text-center lg:text-left text-white">
       

@@ -2,7 +2,14 @@
 <body class="">
 <div class="hero min-h-screen bg-base-200 ">
 <img src="/application/views/images/city.jpg" class="h-screen w-screen" alt="">
-  <div class="hero-content flex-col lg:flex-row-reverse">    
+  <div class="hero-content flex-col lg:flex-row-reverse">
+       
+<!-- 비밀번호 변경 성공후  로그인 페이지에서 Alert 표시 -->
+<?php if ($this->session->flashdata('password_changed')): ?>
+<script>
+    alert('<?php echo $this->session->flashdata('password_changed'); ?>');
+</script>
+<?php endif; ?>
     
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-gray-700">
       
@@ -27,8 +34,8 @@
     <?php echo validation_errors(); ?>
     <div class="form-control mt-6">
         <label class="label mb-3">
-            <a href="/findByid" class="label-text-alt link link-hover text-white">아이디 찾기</a>
-            <a href="#" class="label-text-alt link link-hover text-white">비밀번호 찾기</a>
+            <a href="/member/findByid" class="label-text-alt link link-hover text-white">아이디 찾기</a>
+            <a href="/member/findPassword" class="label-text-alt link link-hover text-white">비밀번호 찾기</a>
             <a href="<?php echo site_url('join'); ?>" class="label-text-alt link link-hover text-white">회원가입</a>
         </label>
         <button type="submit" class="btn btn-primary bg-blue-600">로그인</button>

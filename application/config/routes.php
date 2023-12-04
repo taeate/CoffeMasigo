@@ -54,7 +54,9 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'member/Login';
 $route['join'] = 'member/join';
-$route['findByid'] = 'member/Find_id';
+$route['member/findByid'] = 'member/Find_id';
+$route['member/findPassword'] = 'member/Find_password/findPassword';
+$route['member/changePassword'] = 'member/Find_password/changePassword';
 $route['mypage'] = 'member/mypage';
 
 
