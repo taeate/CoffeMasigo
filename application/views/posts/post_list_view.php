@@ -2,7 +2,7 @@
 
 <body>
 
-<div class="flex-container " style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px; margin-bottom: 200px;">
+<div class="flex flex-col lg:flex-row flex-container ml-[350px] mr-[350px] mt-[200px] mb-[200px]">
 
 
     <!-- 사이드바 -->
@@ -12,7 +12,7 @@
 
     
     <!-- 리스트 페이지 컨텐츠 -->
-    <div id="content" class="contentbox ml-4 z-10" style="flex: 3;" >
+    <div id="content" class="flex w-3/4 flex-col contentbox ml-4 z-10">
 
         <div name="top-box" class="flex flex-col w-full">
             <div name="search-nav" class="searchbox z-30 h-auto bg-base-100 place-items-center shadow-md">
@@ -123,8 +123,6 @@
                                     </div>
                                 </div>
                             </form>
-
-
 
                     </div>
 

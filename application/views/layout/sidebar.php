@@ -17,13 +17,13 @@
                         <?php echo $this->session->userdata('user_id'); ?>
                     </div>
                     <div class="text-sm">
-                        내가 쓴 글 3개
+                        <a href="/member/wrote" class="hover:text-blue-500">내가 쓴 글 3개</a>
                     </div>
                     <div class="text-sm mt-1">
                         내가 쓴 댓글 16개
                     </div>
                     <div class="text-sm mt-1">
-                        <a href="/mypage">마이페이지</a>
+                        <a href="/mypage" class="hover:text-blue-500">마이페이지</a>
                     </div>
                 </div>
                 <?php endif;?>
