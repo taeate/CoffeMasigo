@@ -41,7 +41,7 @@
           </div>
             <!-- 아이디를 찾은 경우: 로그인 버튼 표시 -->
             <div>
-          <a href="/member/findByPassword" class="label-text-alt link link-hover text-white hover:text-blue-500">비밀번호 찾기</a>
+          <a href="/member/findPassword" class="label-text-alt link link-hover text-white hover:text-blue-500">비밀번호 찾기</a>
           </div>
           
           <div class="form-control mt-6">

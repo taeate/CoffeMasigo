@@ -45,7 +45,18 @@ class Find_password extends CI_Controller {
 
     public function changePassword() {
         $this->form_validation->set_rules('newPassword1', '새비밀번호', 'required', array('required' => '비밀번호를 입력해주세요.'));
-        $this->form_validation->set_rules('newPassword2', '새비밀번호확인', 'required|matches[newPassword1]', array('required' => '비밀번호를 입력해주세요.', 'matches' => '비밀번호가 일치하지 않습니다.'));
+        $this->form_validation->set_rules(
+            'newPassword2', 
+            '새비밀번호확인', 
+            'required|min_length[4]|regex_match[/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/]|matches[newPassword1]', 
+            array(
+                'required' => '비밀번호를 입력해주세요.',
+                'min_length' => '비밀번호는 최소 4자 이상이어야 합니다.',
+                'regex_match' => '비밀번호는 영문과 숫자를 조합하여야 합니다.',
+                'matches' => '비밀번호가 일치하지 않습니다.'
+            )
+        );
+        
     
         if ($this->form_validation->run() == FALSE) {
             // 유효성 검사 실패 시, 에러 메시지와 함께 현재 뷰를 다시 로드

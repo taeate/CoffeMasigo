@@ -42,7 +42,7 @@
         <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">Cafe Masigo</a>
     </div>
     <div class="navbar-end">
-    <div class="flex text-white mr-4">
+    <div class="flex text-white mr-2">
     
         <?php if ($this->session->userdata('is_logged_in')): ?>
             <p><?php echo $this->session->userdata('username'); ?></p>
