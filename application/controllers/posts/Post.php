@@ -116,6 +116,7 @@ class Post extends CI_Controller {
             $comment_content = $this->input->post('comment');
             $user_id = $this->session->userdata('user_id');
             $parent_comment_id = $this->input->post('parent_comment_id'); // 대댓글 ID를 받음
+            
 
 
             // 대댓글 id 가 있으면 대댓글로 , 없으면 일반 댓글로
@@ -130,7 +131,6 @@ class Post extends CI_Controller {
         }
 
         // 작성자 확인
-
         $author_id = $this->Write_model->get_post_author_id($post_id);
         $data['author_id'] = $author_id;
     
@@ -138,6 +138,31 @@ class Post extends CI_Controller {
         // 최종적으로 단일 뷰 로드
         $this->load->view('posts/post_detail_view', $data);
     }
+
+
+    public function comment_modify() {
+
+        $comment_id = $this->input->post('comment_id');
+        $comment_content = $this->input->post('comment');
+        $user_id = $this->session->userdata('user_id');
+        $post_id = $this->input->post('post_id');
+
+
+        // 댓글 ID와 내용을 검증
+        if (!empty($comment_id) && !empty($comment_content)) {
+            // 댓글 수정 로직
+            $this->Post_model->update_comment($comment_id, $comment_content, $user_id);
+            
+
+            redirect('posts/free/'.$post_id);
+          
+            
+        } else {
+            // 오류 처리
+            show_error('잘못된 요청입니다.');
+        }
+    }
+    
     
 
 

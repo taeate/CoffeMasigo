@@ -304,7 +304,27 @@ class Post_model extends CI_Model {
     
         return $query->result();
     }
+
+
     
+    public function update_comment($comment_id, $comment_content, $user_id){
+        $this->db->where('comment_id', $comment_id);
+        $this->db->where('user_id', $user_id); 
+    
+        $data = array(
+            'comment_content' => $comment_content,
+            'update_date' => date('Y-m-d H:i:s') 
+        );
+        $this->db->update('comment', $data);
+    
+        if ($this->db->affected_rows() > 0) {
+            // 업데이트 성공
+            return true;
+        } else {
+            // 업데이트 실패
+            return false;
+        }
+    }
     
 
 

@@ -140,6 +140,7 @@
                     <?php foreach($comment_info as $comment) : ?>
                         <?php $comment_id = $comment->comment_id; ?>
                         <?php $user_id = $comment->user_id; ?>
+                        <?php $post_id = $comment->post_id; ?>
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
              
@@ -163,7 +164,10 @@
 
                                     <div class="font-bold">
                                         <?php if($user_id == !null) :?>
-                                        <?php echo $user_id; ?>
+                                    
+                                         <?php echo $user_id; ?>
+                                            
+                                 
                                         <?php else: ?>
                                         <div>Guest</div>
                                         <?php endif; ?>
@@ -172,10 +176,16 @@
                                     <div class="ml-2"><?php echo $createdate; ?></div>
                                     <div>
                                         <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
+                                        <?php if ($this->session->userdata('user_id') == $user_id): ?>
+                                            <button class="reply-modify-btn text-sm" data-post-id="<?= $comment->post_id ?>" data-comment-id="<?= $comment->comment_id ?>" data-comment-content="<?= htmlspecialchars($comment->comment_content) ?>">수정하기</button>
+                                            <button class="text-sm" data-comment-id="<?= $comment->comment_id ?>">삭제하기</button>
+                                        <?php endif; ?>
                                     </div>
+                                
                                     </div>
-                             
-                                    <div class="text-sm"><?php echo $content; ?><br></div>                  
+                                    
+                                    <div class="text-sm" data-comment-content=<?= $content?>><?php echo $content; ?><br></div>
+                                    
                                 </div>
                                 
                             </div>
@@ -184,9 +194,6 @@
 
                      
                     <hr>
-
-
-              
                     <?php endforeach; ?>
                     </div>
 
@@ -336,46 +343,108 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+var activeCommentForm = null; // 활성화된 댓글 폼 추적
+var activeButton = null; // 현재 활성화된 버튼 추적
+
 document.addEventListener('DOMContentLoaded', (event) => {
-    var activeCommentForm = null; // 활성화된 댓글 폼을 추적
-    
     document.querySelectorAll('.reply-btn').forEach(button => {
         button.addEventListener('click', function() {
-            
-            
-            
-            var commentId = this.getAttribute('data-comment-id'); // 댓글 ID를 옴
-
-            // 현재 댓글 컨테이너를 찾기
+            var commentId = this.getAttribute('data-comment-id');
             var commentContainer = this.closest('[name="comment-answer-area"]');
 
-            // 활성화된 폼이 있고, 현재 댓글 컨테이너에 속하지 않는 경우, 제거
-            if (activeCommentForm && activeCommentForm.closest('[name="comment-answer-area"]') !== commentContainer) {
+            // 현재 버튼이 이미 활성화된 상태라면 폼을 닫고 초기화
+            if (activeButton === this) {
+                if (activeCommentForm) {
+                    activeCommentForm.remove();
+                    activeCommentForm = null;
+                    activeButton = null;
+                }
+                return;
+            }
+
+            // 다른 버튼이 클릭되었을 때의 로직
+            // 이전 활성화된 폼 제거
+            if (activeCommentForm) {
                 activeCommentForm.remove();
                 activeCommentForm = null;
             }
 
-        
-
-            if (!activeCommentForm) {
+            // 새로운 폼 생성 및 활성화
             var originalCommentForm = document.querySelector('.comment-form');
             activeCommentForm = originalCommentForm.cloneNode(true);
             commentContainer.after(activeCommentForm);
             activeCommentForm.classList.remove('hidden');
-
-            // 폼에 숨겨진 입력 필드 추가
             var hiddenInput = document.createElement('input');
             hiddenInput.setAttribute('type', 'hidden');
             hiddenInput.setAttribute('name', 'parent_comment_id');
             hiddenInput.value = commentId;
             activeCommentForm.appendChild(hiddenInput);
 
-        }
-
-            
+            // 현재 버튼 참조 업데이트
+            activeButton = this;
         });
     });
+
+    document.querySelectorAll('.reply-modify-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        var commentId = this.getAttribute('data-comment-id');
+        var postId = this.getAttribute('data-post-id');
+        console.log(postId);
+        var commentContent = this.getAttribute('data-comment-content'); // 댓글 내용 가져오기
+        var commentContainer = this.closest('[name="comment-answer-area"]');
+
+        // 현재 버튼이 이미 활성화된 상태라면 폼을 닫고 초기화
+        if (activeButton === this) {
+            if (activeCommentForm) {
+                activeCommentForm.remove();
+                activeCommentForm = null;
+                activeButton = null;
+            }
+            return;
+        }
+
+        // 다른 버튼이 클릭되었을 때의 로직
+        if (activeCommentForm) {
+            activeCommentForm.remove();
+            activeCommentForm = null;
+        }
+
+        var originalCommentForm = document.querySelector('.comment-form');
+        activeCommentForm = originalCommentForm.cloneNode(true);
+        commentContainer.after(activeCommentForm);
+        activeCommentForm.classList.remove('hidden');
+
+        var hiddenCommentIdInput = document.createElement('input');
+        hiddenCommentIdInput.setAttribute('type', 'hidden');
+        hiddenCommentIdInput.setAttribute('name', 'comment_id');
+        hiddenCommentIdInput.value = commentId;
+        activeCommentForm.appendChild(hiddenCommentIdInput);
+
+        // 포스트 ID를 폼에 추가
+        var hiddenPostIdInput = document.createElement('input');
+        hiddenPostIdInput.setAttribute('type', 'hidden');
+        hiddenPostIdInput.setAttribute('name', 'post_id');
+        hiddenPostIdInput.value = postId;
+        activeCommentForm.appendChild(hiddenPostIdInput);
+
+        // 댓글 내용을 폼에 넣기
+        var commentTextarea = activeCommentForm.querySelector('#comment');
+        commentTextarea.value = commentContent;
+
+        // '작성' 버튼을 '수정'으로 변경
+        var submitButton = activeCommentForm.querySelector('button[type="submit"]');
+        submitButton.textContent = '수정';
+        activeCommentForm.action = "/posts/post/comment_modify"; 
+
+        // 현재 버튼 참조 업데이트
+        activeButton = this;
+    });
 });
+
+
+});
+
+
 
 
 
