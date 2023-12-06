@@ -152,19 +152,28 @@ class Post extends CI_Controller {
         if (!empty($comment_id) && !empty($comment_content)) {
             // 댓글 수정 로직
             $this->Post_model->update_comment($comment_id, $comment_content, $user_id);
-            
+            redirect('posts/free/'.$post_id);           
+        } else {
+            // 오류 처리
+            show_error('잘못된 요청입니다.');
+        }
+    }
 
-            redirect('posts/free/'.$post_id);
-          
+    public function comment_delete() {
+        $comment_id = $this->input->post('comment_id');
+        
+        if (!empty($comment_id)) {
+         
+            $this->Post_model->delete_comment($comment_id);
             
+            // 성공적으로 삭제되었다는 응답
+            echo 'Deleted';
         } else {
             // 오류 처리
             show_error('잘못된 요청입니다.');
         }
     }
     
-    
-
 
     public function search() {
 

@@ -178,7 +178,7 @@
                                         <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
                                         <?php if ($this->session->userdata('user_id') == $user_id): ?>
                                             <button class="reply-modify-btn text-sm" data-post-id="<?= $comment->post_id ?>" data-comment-id="<?= $comment->comment_id ?>" data-comment-content="<?= htmlspecialchars($comment->comment_content) ?>">수정하기</button>
-                                            <button class="text-sm" data-comment-id="<?= $comment->comment_id ?>">삭제하기</button>
+                                            <button class="delete-comment-btn text-sm" data-comment-id="<?= $comment->comment_id ?>">삭제하기</button>
                                         <?php endif; ?>
                                     </div>
                                 
@@ -441,8 +441,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
+        document.querySelectorAll('.delete-comment-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                var commentId = this.getAttribute('data-comment-id');
+                if (confirm('정말 삭제하시겠습니까?')) {
+                    // AJAX를 사용하여 서버에 삭제 요청
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/posts/post/comment_delete', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            // 성공적으로 삭제되면 페이지 새로고침 또는 다른 처리
+                            location.reload(); // 예시로 페이지 새로고침
+                        }
+                    };
+                    xhr.send('comment_id=' + commentId);
+                }
+            });
+        });
 
 });
+
+
 
 
 

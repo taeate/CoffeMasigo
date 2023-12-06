@@ -325,6 +325,14 @@ class Post_model extends CI_Model {
             return false;
         }
     }
+
+    public function delete_comment($comment_id) {
+        $this->db->where('comment_id', $comment_id);
+        $this->db->delete('comment');
+    }
+    
+
+
     
 
 
