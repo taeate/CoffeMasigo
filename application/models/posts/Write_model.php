@@ -126,37 +126,34 @@ class Write_model extends CI_Model {
         
     }
 
-    public function saveImageFile($file, $fileName) {
+    public function saveFileData($post_id, $file_name, $file_path, $file_type, $file_size, $user_id) {
         // 파일 이름을 안전하게 만들기
-        $fileName = $this->sanitizeFileName($fileName);
-    
-        // 저장할 디렉토리 지정
-        $uploadDir = __DIR__ . '../../../../uploads';
-    
-        // 파일 경로 생성
-        $filePath = $uploadDir . '/' . $fileName;
-    
-        // 파일이 저장될 디렉토리가 있는지 확인하고, 없으면 생성
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-    
-        // 파일 이동
-        if (move_uploaded_file($file, $filePath)) {
-            // 파일 이동 성공 시, 웹 접근 가능한 URL 형태로 변환하여 반환
-            return '/uploads' .'/'. $fileName; // 예: http://localhost/uploads/fileName.jpg
-        } else {
-            // 파일 이동 실패 시, 오류 처리
-            return null;
-        }
+        $file_name = $this->sanitizeFileName($file_name);
+
+        // 파일 데이터 배열 생성
+        $data = array(
+            'post_id' => $post_id,
+            'file_name' => $file_name,
+            'file_path' => $file_path,
+            'file_type' => $file_type,
+            'file_size' => $file_size,
+            'upload_date' => date('Y-m-d H:i:s'), // 현재 시간을 업로드 날짜로 설정
+            'user_id' => $user_id,
+            'status' => 1 // 파일 상태, 예: 1 = 활성화
+        );
+
+        // 데이터베이스에 데이터 삽입
+        $this->db->insert('uploadfile', $data);
+
+        // 삽입된 데이터의 ID 반환 (선택적)
+        return $this->db->insert_id();
     }
-    
+
     private function sanitizeFileName($fileName) {
         // 파일 이름에서 불필요하거나 위험한 문자 제거
-        // 예: 공백을 '-'로 대체, 특수 문자 제거 등
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = preg_replace("/[^a-zA-Z0-9\-\.]/", "", $fileName);
-    
+
         return $fileName;
     }
 

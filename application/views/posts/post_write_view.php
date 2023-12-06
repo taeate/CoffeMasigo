@@ -113,7 +113,7 @@
 
                     
                             
-                        <form method="POST" class="mt-8">
+                        <form method="POST" class="mt-8" enctype="multipart/form-data">
                             <?php if($user_role == 'admin'): ?>
                             <div class="flex mb-4">
                                 <div class="form-control mr-2 ">
@@ -143,7 +143,7 @@
                             <div class="flex justify-between">
                                 <div class="mt-2">
                                     <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                    <input type="file" id="file" name="file[]" class="file-input file-input-bordered w-full max-w-xs" />
+                                    <input type="file" id="file" name="file[]" class="file-input file-input-bordered w-full max-w-xs" multiple />
                                     <div id="uploaded-files"></div>
                                 </div>
                                 <div>
@@ -210,40 +210,46 @@
 
 
 
-//     $(document).ready(function () {
-//     $('#file').on('change', function (event) {
-//         var files = event.target.files;
+$(document).ready(function () {
+var selectedFiles = []; // 선택된 파일들을 저장할 배열
 
-//         var formData = new FormData();
-//         for (var i = 0; i < files.length; i++) {
-//             formData.append('file[]', files[i]);
-//         }
+$('#file').on('change', function (event) {
+    var files = event.target.files;
 
-//         $.ajax({
-//             url: '/posts/write/upload_files', 
-//             type: 'POST',
-//             data: formData,
-//             contentType: false,
-//             processData: false,
-//             success: function (data) {
-//                 // 업로드된 파일 목록을 표시하는 로직
-//                 if(data.uploaded) {
-//                     data.files.forEach(function(file) {
-//                         $('#uploaded-files').append('<div>' + file.name + ' <button onclick="removeFile(' + file.id + ')">삭제</button></div>');
-//                     });
-//                 }
-//             },
-//             error: function (jqXHR, textStatus, errorThrown) {
-//                 // 오류 처리 로직
-//                 console.log('File upload failed: ' + textStatus);
-//             }
-//         });
-//     });
-// });
+    // 새로운 파일을 selectedFiles 배열에 추가
+    for (var i = 0; i < files.length; i++) {
+        selectedFiles.push(files[i]);
+    }
 
-// function removeFile(fileId) {
-//     // 파일 삭제 요청을 서버에 보내는 AJAX 코드
-// }
+    updateFileList(); // 파일 목록 업데이트 함수
+});
+
+function updateFileList() {
+    // 기존에 표시된 파일 목록을 지움
+    $('#uploaded-files').empty();
+    
+
+    // selectedFiles 배열의 모든 파일을 화면에 표시
+    selectedFiles.forEach(function(file, index) {
+        $('#uploaded-files').append('<div>' + file.name + ' <button onclick="removeFile(' + index + ')">삭제</button></div>');
+    });
+    
+
+    console.log(selectedFiles);
+}
+
+window.removeFile = function(index) {
+    // 특정 인덱스의 파일을 배열에서 제거
+    selectedFiles.splice(index, 1);
+    updateFileList(); // 파일 목록 다시 업데이트
+    
+};
+});
+
+
+function removeFile(fileId) {
+    // 파일 삭제 요청을 서버에 보내는 AJAX 코드
+}
 
 
 

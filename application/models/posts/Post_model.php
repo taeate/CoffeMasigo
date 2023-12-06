@@ -31,12 +31,16 @@ class Post_model extends CI_Model {
     }
     
 
-    public function find_detail($post_id){
-
-        $query = $this->db->get_where('post', array('post_id'=> $post_id));
-
+    public function find_detail($post_id) {
+        $this->db->select('post.*, uploadfile.file_name, uploadfile.file_path');
+        $this->db->from('post');
+        $this->db->join('uploadfile', 'uploadfile.post_id = post.post_id', 'left'); // LEFT JOIN 사용
+        $this->db->where('post.post_id', $post_id);
+        $query = $this->db->get();
+    
         return $query->row();
     }
+    
 
     public function get_replies($post_id) {
         $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id AND subpost.delete_status IS NULL) as replies_count');
@@ -330,6 +334,21 @@ class Post_model extends CI_Model {
         $this->db->where('comment_id', $comment_id);
         $this->db->delete('comment');
     }
+
+    public function get_files($post_id) {
+        $this->db->select('*');
+        $this->db->from('uploadfile');
+        $this->db->where('post_id', $post_id); 
+    
+        $query = $this->db->get(); 
+    
+        if ($query->num_rows() > 0) {
+            return $query->result(); 
+        } else {
+            return array(); 
+        }
+    }
+    
     
 
 

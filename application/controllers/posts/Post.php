@@ -88,6 +88,7 @@ class Post extends CI_Controller {
 
             $data['count_thumb'] = $this->Post_model->count_thumb($post_id);
 
+
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
             

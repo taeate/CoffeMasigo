@@ -51,10 +51,19 @@ class Write extends CI_Controller {
                 $title = $this->input->post('title');
                 $content = $this->input->post('content');
                 $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
-                $this->Write_model->set_article($title, $content, $user_id,$is_notice);
+                
+                 // 글 저장 후 생성된 post_id 획득
+                $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice);
+
+                // 파일 업로드 로직
+                $this->upload_files($post_id, $user_id);
+                
+
                 redirect('/posts');
 
             }
+
+        
            
          } else {
              // 폼이 처음 로드될 때
@@ -65,6 +74,67 @@ class Write extends CI_Controller {
          }
             
 
+    }
+
+
+    public function upload_files($post_id, $user_id){
+
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = '*';
+        $config['max_size'] = 500; // 정수로 설정
+        // $config['encrypt_name'] = TRUE; // 파일명을 암호화하여 무작위 생성
+        // $config['file_ext_tolower'] = TRUE; // 파일 확장자를 소문자로 변환
+        $config['remove_spaces'] = TRUE; // 파일 이름에서 공백 제거
+        // $config['xss_clean'] = TRUE; // XSS 필터링 적용
+
+        $this->load->library('upload', $config);
+
+        if (isset($_FILES['file'])) {
+            $files = $_FILES['file'];
+
+            foreach ($files['name'] as $key => $name) {
+                
+                $_FILES['single_file'] = array(
+                    'name' => $files['name'][$key],
+                    'type' => $files['type'][$key],
+                    'tmp_name' => $files['tmp_name'][$key],
+                    'error' => $files['error'][$key],
+                    'size' => $files['size'][$key]
+                );
+
+                if ($this->upload->do_upload('single_file')) {
+                    $uploadData = $this->upload->data();
+                    // var_dump($uploadData); // For debugging purpose
+                    log_message('debug', 'Upload data: ' . print_r($uploadData, TRUE));
+                    $this->Write_model->saveFileData($post_id, $uploadData['file_name'], $uploadData['full_path'], $uploadData['file_type'], $uploadData['file_size'], $user_id);
+                } else {
+                    $error = $this->upload->display_errors();
+                    var_dump($error);
+                    // Handle the error
+                }
+            }
+        }
+    }
+
+
+    public function downloadFile($file_name) {
+        $file_path = './uploads/' . $file_name; // 파일 경로 설정 (uploads 폴더에 저장된 파일)
+    
+        if (file_exists($file_path)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $file_name . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file_path));
+    
+            readfile($file_path);
+            exit;
+        } else {
+            // 파일이 존재하지 않는 경우
+            echo '파일이 존재하지 않습니다.';
+        }
     }
 
     

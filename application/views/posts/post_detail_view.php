@@ -23,6 +23,8 @@
                         <?php $views = $detail_info->views; ?>
                         <?php $createdate = $detail_info->create_date; ?>
                         <?php $user_id = $detail_info->user_id; ?>
+                        <?php $file_name = $detail_info->file_name; ?>
+                        <?php $file_path = $detail_info->file_path; ?>
                         
                         
                         
@@ -50,6 +52,14 @@
                 </div>
                 <hr class="mr-12 ml-12">
                 <div name="content " class="">
+                <a href=""><?php echo $file_name; ?></a>
+                
+                <a class="text-blue-500" href="<?php echo '/posts/write/downloadFile/' . $file_name; ?>">다운로드</a>
+
+                
+
+                
+
                     <div class="m-12">
                         
                         <?php echo $content ?>
@@ -57,6 +67,7 @@
                        
                     </div>
                 </div>
+    
                 <hr class="mr-12 ml-12">
                 <div name="button-area" >
                     <div name="delete-update-btn" class="flex justify-end mr-12 mt-4">
@@ -145,6 +156,7 @@
                         <?php $post_id = $comment->post_id; ?>
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
+                        
              
                         
                         <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
