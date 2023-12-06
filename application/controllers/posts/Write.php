@@ -59,7 +59,7 @@ class Write extends CI_Controller {
                 $this->upload_files($post_id, $user_id);
                 
 
-                redirect('/posts');
+                // redirect('/posts');
 
             }
 
@@ -78,6 +78,7 @@ class Write extends CI_Controller {
 
 
     public function upload_files($post_id, $user_id){
+        
 
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = '*';
@@ -118,6 +119,7 @@ class Write extends CI_Controller {
 
 
     public function downloadFile($file_name) {
+        
         $file_path = './uploads/' . $file_name; // 파일 경로 설정 (uploads 폴더에 저장된 파일)
     
         if (file_exists($file_path)) {

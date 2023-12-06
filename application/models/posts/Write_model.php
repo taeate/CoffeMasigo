@@ -23,6 +23,9 @@ class Write_model extends CI_Model {
 
         // 최상위 게시글인 경우 ref 업데이트
         $this->db->update('post', array('ref' => $new_post_id), array('post_id' => $new_post_id));
+
+         // 새로운 게시글의 ID 반환
+        return $new_post_id;
     }
 
     public function get_post($post_id) {

@@ -233,6 +233,7 @@ function updateFileList() {
     selectedFiles.forEach(function(file, index) {
         $('#uploaded-files').append('<div>' + file.name + ' <button onclick="removeFile(' + index + ')">삭제</button></div>');
     });
+
     
 
     console.log(selectedFiles);
