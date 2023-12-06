@@ -166,7 +166,7 @@ class Post extends CI_Controller {
          
             $this->Post_model->delete_comment($comment_id);
             
-            // 성공적으로 삭제되었다는 응답
+            // 성공적으로 삭제되었다는 응답 보내기
             echo 'Deleted';
         } else {
             // 오류 처리

@@ -157,7 +157,7 @@ class Write extends CI_Controller {
         
         if (!empty($post_id)) {
             $this->Write_model->delete_post($post_id);
-            redirect('posts');
+            
         }
     }
 

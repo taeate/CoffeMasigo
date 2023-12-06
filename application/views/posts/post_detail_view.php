@@ -64,8 +64,10 @@
                         $user_id = $this->session->userdata('user_id');
                         if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
                         ?>
-                        <button class="btn bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
-                        <button class="btn bg-gray-500 text-white w-16 h-8" onclick="window.location.href='/posts/delete/<?=$post_id?>'">삭제</button>
+                        <button class="btn bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>                        
+                        <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-8" data-postid="<?=$post_id?>">삭제</button>
+                        
+
                         <?php else: ?>
                             <?php endif; ?>
                     </div>
@@ -460,10 +462,32 @@ document.addEventListener('DOMContentLoaded', (event) => {
             });
         });
 
+        
+
 });
 
 
 
+$(document).ready(function() {
+    $(".post-delete-btn").click(function() {
+        var post_id = $(this).data("postid");
+        console.log(post_id);
+        if (confirm('정말 삭제하시겠습니까?')) {
+            $.ajax({
+                type: "POST",
+                url: "/posts/delete/" + post_id,
+                success: function(response) {
+                    alert("글이 삭제되었습니다.");
+                    location.href = '/posts'
+                },
+                error: function() {
+                    // 삭제 중 오류가 발생한 경우에 대한 처리
+                    alert('삭제 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    });
+});
 
 
 
