@@ -14,130 +14,132 @@
         <div class="">
             <div class="">
                 <div name="title" class="flex flex-col gap-3">
-                    
-                   
-                    <?php if ($detail_info) : ?>
-                        <?php $post_id = $detail_info->post_id; ?>
-                        <?php $title = $detail_info->title; ?>
-                        <?php $content = $detail_info->content; ?>
-                        <?php $views = $detail_info->views; ?>
-                        <?php $createdate = $detail_info->create_date; ?>
-                        <?php $user_id = $detail_info->user_id; ?>
-                        <?php $file_name = $detail_info->file_name; ?>
-                        <?php $file_path = $detail_info->file_path; ?>
-                        
-                        
-                        
 
-                        <div class="text-2xl">
-                            <?php echo $title ?><br>
+
+                    <?php if ($detail_info) : ?>
+                    <?php $post_id = $detail_info->post_id; ?>
+                    <?php $title = $detail_info->title; ?>
+                    <?php $content = $detail_info->content; ?>
+                    <?php $views = $detail_info->views; ?>
+                    <?php $createdate = $detail_info->create_date; ?>
+                    <?php $user_id = $detail_info->user_id; ?>
+
+                    <div class="text-2xl">
+                        <?php echo $title ?><br>
+                    </div>
+                    <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5">
+                        <div class="flex flex-none gap-3">
+                            <div class="">자유</div>
+                            <div class=""> <?php echo $createdate ?></div>
+                            <div class=""><?php echo $user_id ?></div>
                         </div>
-                        <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5">
-                            <div class="flex flex-none gap-3">
-                                <div class="">자유</div>
-                                <div class=""> <?php echo $createdate ?></div>
-                                <div class=""><?php echo $user_id ?></div>
-                            </div>
-                            <div class="grow"></div>
-                            <div class="flex flex-none gap-3">
-                                <div class="">조회: <?php echo $views ?></div>
-                         
-                                <div class="">댓글: <?php echo $comments_count; ?> </div>
-                             
-                                <div class="">추천: <?php echo $count_thumb; ?></div>
-                            </div>
+                        <div class="grow"></div>
+                        <div class="flex flex-none gap-3">
+                            <div class="">조회: <?php echo $views ?></div>
+
+                            <div class="">댓글: <?php echo $comments_count; ?> </div>
+
+                            <div class="">추천: <?php echo $count_thumb; ?></div>
                         </div>
-                        
+                    </div>
+
                     <?php endif; ?>
                 </div>
                 <hr class="mr-12 ml-12">
                 <div name="content " class="">
-                <a href=""><?php echo $file_name; ?></a>
-                
-                <a class="text-blue-500" href="<?php echo '/posts/write/downloadFile/' . $file_name; ?>">다운로드</a>
 
-                
-
-                
+                    <?php if (!empty($files)): ?>
+                    <?php foreach ($files as $file): ?>
+                    <a href="<?php echo $file->file_path; ?>"><?php echo $file->file_name; ?></a>
+                    <a class="text-blue-500"
+                        href="<?php echo '/posts/write/downloadFile/' . $file->file_name; ?>">다운로드</a><br>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
 
                     <div class="m-12">
-                        
                         <?php echo $content ?>
-                        
-                       
                     </div>
                 </div>
-    
+
                 <hr class="mr-12 ml-12">
-                <div name="button-area" >
+                <div name="button-area">
                     <div name="delete-update-btn" class="flex justify-end mr-12 mt-4">
                         <?php 
                         $user_id = $this->session->userdata('user_id');
                         if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
                         ?>
-                        <button class="btn bg-gray-500 text-white w-16 h-8 mr-2" onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>                        
-                        <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-8" data-postid="<?=$post_id?>">삭제</button>
-                        
+                        <button class="btn bg-gray-500 text-white w-16 h-8 mr-2"
+                            onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
+                        <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-8"
+                            data-postid="<?=$post_id?>">삭제</button>
+
 
                         <?php else: ?>
-                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <div name="like-btn" class="flex justify-center">
-                        <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()" class="btn bg-gray-500 text-white w-28 h-12">추천  <?php echo $count_thumb; ?></button>
+                        <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()"
+                            class="btn bg-gray-500 text-white w-28 h-12">추천 <?php echo $count_thumb; ?></button>
                     </div>
-                    
+
                     <div name="answer-btn" class="flex justify-between ml-12 mr-12 mt-4 mb-4">
                         <div class="">
-                            <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()" class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
+                            <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
+                                class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
                         </div>
                         <div class="">
-                        <button id="shareButton" class="btn bg-gray-500 text-white w-28 h-12">공유하기</button>
+                            <button id="shareButton" class="btn bg-gray-500 text-white w-28 h-12">공유하기</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-               
+
 
             <div class="flex flex-col w-full mt-4 ">
-                <div name="commnet-name"class="h-auto card bg-base-100">
+                <div name="commnet-name" class="h-auto card bg-base-100">
                     <div class="bg-base-200 ">
                         <div class="flex ml-8 mt-4 text-lg">
                             <div class="">
                                 댓글
-                                
+
                             </div>
                             <!-- 해당 post_id 의 댓글의 개수표시 -->
                             <?php if(isset($comments_count)): ?>
-                                <div class="flex items-center justify-center text-sm ml-2">
-                                    총 <?php echo $comments_count; ?>개
-                                </div>
+                            <div class="flex items-center justify-center text-sm ml-2">
+                                총 <?php echo $comments_count; ?>개
+                            </div>
                             <?php endif; ?>
-                        
+
                         </div>
 
                         <?php if ($this->session->userdata('user_id')): ?>
                         <!-- 댓글 작성 폼 -->
                         <form class="comment-form ml-8 mr-8 mt-2" method="post" id="">
-                            <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                            <div
+                                class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                                 <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                                     <label for="comment" class="sr-only">Your comment</label>
-                                    <textarea id="comment" name="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="댓글은 여기에 작성해주세요" required></textarea>
+                                    <textarea id="comment" name="comment" rows="4"
+                                        class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                                        placeholder="댓글은 여기에 작성해주세요" required></textarea>
                                 </div>
                                 <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
-                                    <button type="submit" class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                    <button type="submit"
+                                        class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                                         작성
                                     </button>
-                                   
+
                                 </div>
                             </div>
                         </form>
                         <?php else: ?>
-                            <div class="w-96 m-auto">
-                                <p class="text-red-500 font-bold text-base ml-16 mt-12 mb-12">댓글을 작성하려면 <a href="/login">로그인</a>해주세요.</p>
-                            </div>
+                        <div class="w-96 m-auto">
+                            <p class="text-red-500 font-bold text-base ml-16 mt-12 mb-12">댓글을 작성하려면 <a
+                                    href="/login">로그인</a>해주세요.</p>
+                        </div>
                         <?php endif; ?>
-                        
+
 
                         <div class="flex ml-8 mb-4">
                             <button id="comment_orderBy_create" class="hover:text-blue-500">
@@ -148,80 +150,88 @@
                             </button>
                         </div>
                     </div>
-                         
+
                     <div id="commentsContainer">
-                    <?php foreach($comment_info as $comment) : ?>
+                        <?php foreach($comment_info as $comment) : ?>
                         <?php $comment_id = $comment->comment_id; ?>
                         <?php $user_id = $comment->user_id; ?>
                         <?php $post_id = $comment->post_id; ?>
                         <?php $content = $comment->comment_content; ?>
                         <?php $createdate = $comment->create_date; ?>
-                        
-             
-                        
+
+
+
                         <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?>">
 
                             <div name="title" class="flex m-3 ml-12 mt-2 mb-2">
                                 <?php if ($comment->re_level >= 1): ?>
-                                        <div class="mt-3 mr-2"> ↳</div>
-                                    <?php else:?>
-                                        <div class="mt-3 mr-2"> </div>
-                                    <?php endif; ?>
-                                    
+                                <div class="mt-3 mr-2"> ↳</div>
+                                <?php else:?>
+                                <div class="mt-3 mr-2"> </div>
+                                <?php endif; ?>
+
                                 <div class="flex-none w-14 h-14 bg-red-500 rounded-full overflow-hidden">
-                                    <img src="/uploads/<?php echo $comment->profile_image; ?>" alt="Profile Image" class="w-full h-full object-cover">
+                                    <img src="/uploads/<?php echo $comment->profile_image; ?>" alt="Profile Image"
+                                        class="w-full h-full object-cover">
                                 </div>
 
                                 <div class="flex-grow ml-3">
                                     <div class="flex">
-                                  
 
-                                    <div class="font-bold">
-                                        <?php if($user_id == !null) :?>
-                                    
-                                         <?php echo $user_id; ?>
-                                            
-                                 
-                                        <?php else: ?>
-                                        <div>Guest</div>
-                                        <?php endif; ?>
+
+                                        <div class="font-bold">
+                                            <?php if($user_id == !null) :?>
+
+                                            <?php echo $user_id; ?>
+
+
+                                            <?php else: ?>
+                                            <div>Guest</div>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="ml-2"><?php echo $createdate; ?></div>
+                                        <div>
+                                            <button class="reply-btn ml-2 text-sm text-red-500"
+                                                data-comment-id="<?= $comment_id ?>">댓글쓰기</button>
+                                            <?php if ($this->session->userdata('user_id') == $user_id): ?>
+                                            <button class="reply-modify-btn text-sm"
+                                                data-post-id="<?= $comment->post_id ?>"
+                                                data-comment-id="<?= $comment->comment_id ?>"
+                                                data-comment-content="<?= htmlspecialchars($comment->comment_content) ?>">수정하기</button>
+                                            <button class="delete-comment-btn text-sm"
+                                                data-comment-id="<?= $comment->comment_id ?>">삭제하기</button>
+                                            <?php endif; ?>
+                                        </div>
+
                                     </div>
 
-                                    <div class="ml-2"><?php echo $createdate; ?></div>
-                                    <div>
-                                        <button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="<?= $comment_id ?>">댓글쓰기</button> 
-                                        <?php if ($this->session->userdata('user_id') == $user_id): ?>
-                                            <button class="reply-modify-btn text-sm" data-post-id="<?= $comment->post_id ?>" data-comment-id="<?= $comment->comment_id ?>" data-comment-content="<?= htmlspecialchars($comment->comment_content) ?>">수정하기</button>
-                                            <button class="delete-comment-btn text-sm" data-comment-id="<?= $comment->comment_id ?>">삭제하기</button>
-                                        <?php endif; ?>
+                                    <div class="text-sm" data-comment-content=<?= $content?>><?php echo $content; ?><br>
                                     </div>
-                                
-                                    </div>
-                                    
-                                    <div class="text-sm" data-comment-content=<?= $content?>><?php echo $content; ?><br></div>
-                                    
+
                                 </div>
-                                
+
                             </div>
 
                         </div>
 
-                     
-                    <hr>
-                    <?php endforeach; ?>
+
+                        <hr>
+                        <?php endforeach; ?>
                     </div>
 
-                    
+
 
 
                 </div>
-                
+
             </div>
-            
+
         </div>
+
         <body class="mt-96">
         </body>
-        
+
     </div>
 
     <!-- <div class="w-80 ml-4">
@@ -230,10 +240,8 @@
 </div>
 
 <script>
-
-
 // post_id 설정
-var postId = document.getElementById('post-container').getAttribute('data-post-id'); 
+var postId = document.getElementById('post-container').getAttribute('data-post-id');
 
 // 등록순 버튼 클릭 이벤트
 document.getElementById('comment_orderBy_create').addEventListener('click', function() {
@@ -247,7 +255,7 @@ document.getElementById('comment_orderBy_last').addEventListener('click', functi
 
 function fetchComments(order) {
     $.ajax({
-        url: '/posts/post/comment_orderBy_create', 
+        url: '/posts/post/comment_orderBy_create',
         type: 'post',
         dataType: 'json',
         data: {
@@ -257,12 +265,12 @@ function fetchComments(order) {
         success: function(response) {
             console.log(response)
             var commentsHtml = '';
-            response.forEach(function(comment){
+            response.forEach(function(comment) {
                 commentsHtml += createCommentHtml(comment);
             });
 
             $('#commentsContainer').html(commentsHtml);
-            
+
         },
         error: function(error) {
             console.error('Error:', error);
@@ -298,7 +306,8 @@ function createCommentHtml(comment) {
 
     html += '<div class="ml-2">' + comment.create_date + '</div>';
     html += '<div>';
-    html += '<button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="' + comment.comment_id + '">댓글쓰기</button>';
+    html += '<button class="reply-btn ml-2 text-sm text-red-500" data-comment-id="' + comment.comment_id +
+        '">댓글쓰기</button>';
     html += '</div>';
     html += '</div>';
 
@@ -329,8 +338,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
-    
-document.addEventListener('DOMContentLoaded', function () {
+
+document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('nav');
     const sidebar = document.querySelector('.sidebarbox');
 
@@ -342,8 +351,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const navbarHeight = navbar.offsetHeight;
         const sidebarTop = sidebar.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
-        window.addEventListener('scroll', function(){
-            if(window.scrollY >= sidebarTop){
+        window.addEventListener('scroll', function() {
+            if (window.scrollY >= sidebarTop) {
                 sidebar.classList.add('fixed');
                 sidebar.style.top = `${navbarHeight}px`;
                 sidebar.style.width = originalSidebarWidth; // 고정 상태에서 원래 너비 적용
@@ -353,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebar.style.width = ''; // 너비 스타일 제거
             }
         });
-    } 
+    }
 });
 
 
@@ -400,81 +409,81 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.querySelectorAll('.reply-modify-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        var commentId = this.getAttribute('data-comment-id');
-        var postId = this.getAttribute('data-post-id');
-        console.log(postId);
-        var commentContent = this.getAttribute('data-comment-content'); // 댓글 내용 가져오기
-        var commentContainer = this.closest('[name="comment-answer-area"]');
+        button.addEventListener('click', function() {
+            var commentId = this.getAttribute('data-comment-id');
+            var postId = this.getAttribute('data-post-id');
+            console.log(postId);
+            var commentContent = this.getAttribute('data-comment-content'); // 댓글 내용 가져오기
+            var commentContainer = this.closest('[name="comment-answer-area"]');
 
-        // 현재 버튼이 이미 활성화된 상태라면 폼을 닫고 초기화
-        if (activeButton === this) {
+            // 현재 버튼이 이미 활성화된 상태라면 폼을 닫고 초기화
+            if (activeButton === this) {
+                if (activeCommentForm) {
+                    activeCommentForm.remove();
+                    activeCommentForm = null;
+                    activeButton = null;
+                }
+                return;
+            }
+
+            // 다른 버튼이 클릭되었을 때의 로직
             if (activeCommentForm) {
                 activeCommentForm.remove();
                 activeCommentForm = null;
-                activeButton = null;
             }
-            return;
-        }
 
-        // 다른 버튼이 클릭되었을 때의 로직
-        if (activeCommentForm) {
-            activeCommentForm.remove();
-            activeCommentForm = null;
-        }
+            var originalCommentForm = document.querySelector('.comment-form');
+            activeCommentForm = originalCommentForm.cloneNode(true);
+            commentContainer.after(activeCommentForm);
+            activeCommentForm.classList.remove('hidden');
 
-        var originalCommentForm = document.querySelector('.comment-form');
-        activeCommentForm = originalCommentForm.cloneNode(true);
-        commentContainer.after(activeCommentForm);
-        activeCommentForm.classList.remove('hidden');
+            var hiddenCommentIdInput = document.createElement('input');
+            hiddenCommentIdInput.setAttribute('type', 'hidden');
+            hiddenCommentIdInput.setAttribute('name', 'comment_id');
+            hiddenCommentIdInput.value = commentId;
+            activeCommentForm.appendChild(hiddenCommentIdInput);
 
-        var hiddenCommentIdInput = document.createElement('input');
-        hiddenCommentIdInput.setAttribute('type', 'hidden');
-        hiddenCommentIdInput.setAttribute('name', 'comment_id');
-        hiddenCommentIdInput.value = commentId;
-        activeCommentForm.appendChild(hiddenCommentIdInput);
+            // 포스트 ID를 폼에 추가
+            var hiddenPostIdInput = document.createElement('input');
+            hiddenPostIdInput.setAttribute('type', 'hidden');
+            hiddenPostIdInput.setAttribute('name', 'post_id');
+            hiddenPostIdInput.value = postId;
+            activeCommentForm.appendChild(hiddenPostIdInput);
 
-        // 포스트 ID를 폼에 추가
-        var hiddenPostIdInput = document.createElement('input');
-        hiddenPostIdInput.setAttribute('type', 'hidden');
-        hiddenPostIdInput.setAttribute('name', 'post_id');
-        hiddenPostIdInput.value = postId;
-        activeCommentForm.appendChild(hiddenPostIdInput);
+            // 댓글 내용을 폼에 넣기
+            var commentTextarea = activeCommentForm.querySelector('#comment');
+            commentTextarea.value = commentContent;
 
-        // 댓글 내용을 폼에 넣기
-        var commentTextarea = activeCommentForm.querySelector('#comment');
-        commentTextarea.value = commentContent;
+            // '작성' 버튼을 '수정'으로 변경
+            var submitButton = activeCommentForm.querySelector('button[type="submit"]');
+            submitButton.textContent = '수정';
+            activeCommentForm.action = "/posts/post/comment_modify";
 
-        // '작성' 버튼을 '수정'으로 변경
-        var submitButton = activeCommentForm.querySelector('button[type="submit"]');
-        submitButton.textContent = '수정';
-        activeCommentForm.action = "/posts/post/comment_modify"; 
-
-        // 현재 버튼 참조 업데이트
-        activeButton = this;
-    });
-});
-
-        document.querySelectorAll('.delete-comment-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                var commentId = this.getAttribute('data-comment-id');
-                if (confirm('정말 삭제하시겠습니까?')) {
-                    // AJAX를 사용하여 서버에 삭제 요청
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/posts/post/comment_delete', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            // 성공적으로 삭제되면 페이지 새로고침 또는 다른 처리
-                            location.reload(); // 예시로 페이지 새로고침
-                        }
-                    };
-                    xhr.send('comment_id=' + commentId);
-                }
-            });
+            // 현재 버튼 참조 업데이트
+            activeButton = this;
         });
+    });
 
-        
+    document.querySelectorAll('.delete-comment-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            var commentId = this.getAttribute('data-comment-id');
+            if (confirm('정말 삭제하시겠습니까?')) {
+                // AJAX를 사용하여 서버에 삭제 요청
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/posts/post/comment_delete', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        // 성공적으로 삭제되면 페이지 새로고침 또는 다른 처리
+                        location.reload(); // 예시로 페이지 새로고침
+                    }
+                };
+                xhr.send('comment_id=' + commentId);
+            }
+        });
+    });
+
+
 
 });
 
@@ -507,37 +516,35 @@ $(document).ready(function() {
 function thumbUp() {
 
     <?php if(!$this->session->userdata('user_id')): ?>
-        alert('로그인이 필요한 기능입니다.');
+    alert('로그인이 필요한 기능입니다.');
     <?php endif; ?>
 
     var postId = document.getElementById('post-container').getAttribute('data-post-id');
-    
+
 
     // AJAX 요청을 통해 서버에 추천 처리 요청
     $.ajax({
-        url: '/posts/post/thumbUp', 
+        url: '/posts/post/thumbUp',
         type: 'POST',
         dataType: 'json',
         data: {
             postId: postId,
         },
         success: function(response) {
-            if (response.status === 'already_thumbed'){
+            if (response.status === 'already_thumbed') {
                 alert('이미 추천한 글입니다.');
                 window.location.href = '/posts/free/' + postId;
-            }else if(response.status === 'success'){
+            } else if (response.status === 'success') {
                 alert('글을 추천하셨습니다.');
                 window.location.href = '/posts/free/' + postId;
 
             }
         },
         error: function(error) {
-             console.error('Error:', error);
+            console.error('Error:', error);
         }
     });
 }
 </script>
 
 <!-- <?php $this->load->view('layout/footer'); ?> -->
-
-

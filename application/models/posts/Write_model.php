@@ -102,10 +102,31 @@ class Write_model extends CI_Model {
     }
 
     public function get_before_post($post_id) {
-        $query = $this->db->get_where('post', array('post_id' => $post_id));
-        
-        return $query->row();
+
+
+        $this->db->where('post_id', $post_id);
+        $post_info = $this->db->get('post')->row();
+    
+      
+        $this->db->select('file_name, file_path, file_id');
+        $this->db->where('post_id', $post_id);
+        $files = $this->db->get('uploadfile')->result();
+    
+  
+        return [
+            'post_info' => $post_info,
+            'files' => $files
+        ];
     }
+
+    public function delete_file($file_id, $post_id){
+        $this->db->where('file_id', $file_id);
+        $this->db->where('post_id', $post_id); 
+        return $this->db->delete('uploadfile');
+        
+    }
+    
+    
 
     public function edit_post($post_id, $title, $content){
 
@@ -155,10 +176,43 @@ class Write_model extends CI_Model {
     private function sanitizeFileName($fileName) {
         // 파일 이름에서 불필요하거나 위험한 문자 제거
         $fileName = str_replace(" ", "-", $fileName);
-        $fileName = preg_replace("/[^a-zA-Z0-9\-\.]/", "", $fileName);
+        $fileName = preg_replace("/[^a-zA-Z0-9\-\.가-힣]/u", "", $fileName);
+
 
         return $fileName;
     }
+
+    public function saveImageFile($file, $fileName) {
+        // 파일 저장 디렉토리 설정
+        $uploadDir = 'uploads/'; 
+        
+        // 안전한 파일 이름 생성 (옵션)
+        // $safeFileName = $this->generateSafeFileName($fileName);
+    
+        // 파일 저장 경로
+        $uploadPath = $uploadDir . $safeFileName;
+    
+        // 파일 이동
+        if (move_uploaded_file($file, $uploadPath)) {
+            return $uploadPath; // 파일 저장 성공시 저장 경로 반환
+        } else {
+            return false; // 파일 저장 실패시 false 반환
+        }
+    }
+    
+    private function generateSafeFileName($fileName) {
+        // 파일 이름에서 확장자 분리
+        $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+    
+        // 안전한 이름 생성 (예: 타임스탬프)
+        $nameWithoutExt = pathinfo($fileName, PATHINFO_FILENAME);
+        $safeName = $nameWithoutExt . '_' . time() . '.' . $ext;
+    
+        return $safeName;
+    }
+    
+
+
 
    
     

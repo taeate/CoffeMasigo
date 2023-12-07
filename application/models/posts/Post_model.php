@@ -4,8 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Post_model extends CI_Model {
 
     public function get_posts($start = 0, $limit = 15){
-      
-        $this->db->select('*');
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
@@ -13,9 +12,9 @@ class Post_model extends CI_Model {
         $this->db->limit($limit, $start);
         $query = $this->db->get('post');
         return $query->result();
-
-
     }
+    
+    
 
     public function get_posts_not_notice($start = 0, $limit = 5){
       
@@ -32,14 +31,22 @@ class Post_model extends CI_Model {
     
 
     public function find_detail($post_id) {
-        $this->db->select('post.*, uploadfile.file_name, uploadfile.file_path');
-        $this->db->from('post');
-        $this->db->join('uploadfile', 'uploadfile.post_id = post.post_id', 'left'); // LEFT JOIN 사용
-        $this->db->where('post.post_id', $post_id);
-        $query = $this->db->get();
+        // 게시물 정보 가져오기
+        $this->db->where('post_id', $post_id);
+        $post_info = $this->db->get('post')->row();
     
-        return $query->row();
+        // 파일 정보 가져오기
+        $this->db->select('file_name, file_path');
+        $this->db->where('post_id', $post_id);
+        $files = $this->db->get('uploadfile')->result();
+    
+        // 게시물 정보와 파일 정보를 함께 반환
+        return [
+            'post_info' => $post_info,
+            'files' => $files
+        ];
     }
+    
     
 
     public function get_replies($post_id) {
@@ -247,6 +254,7 @@ class Post_model extends CI_Model {
 
 
     public function get_posts_ordered_by_latest($start = 0, $limit = 20) {
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id',null);
         $this->db->order_by('is_notice','DESC');
@@ -267,6 +275,7 @@ class Post_model extends CI_Model {
     
 
     public function get_posts_ordered_by_thumb($start = 0, $limit = 20) {
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
@@ -288,6 +297,7 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_ordered_by_views($start = 0, $limit = 20) {
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id',null);
         $this->db->order_by('is_notice','DESC');

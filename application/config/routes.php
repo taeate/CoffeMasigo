@@ -66,8 +66,11 @@ $route['member/wrote'] = 'member/Wrote';
 $route['posts/all'] = 'posts/Post';
 $route['posts'] = 'posts/Post';
 $route['posts/free/(:num)'] = 'posts/Post/detail/$1';
+
 $route['write'] = 'post/write';
 $route['write/(:num)'] = 'post/write/answer_post/$1';
+$route['write/delete_file/(:num)/(:num)'] = 'posts/write/delete_file/$1/$2';
+
 $route['posts/edit/(:num)'] = 'posts/write/post_edit/$1';
 $route['posts/delete/(:num)'] = 'posts/write/post_delete/$1';
 $route['posts/all/page/(:num)'] = 'posts/post/index/$1';

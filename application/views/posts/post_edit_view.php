@@ -15,8 +15,10 @@
                
                    
                         <?php if($before_data): ?>
-                            <?php $title = $before_data->title; ?>
-                            <?php $content = $before_data->content; ?>
+                            <?php $title = $before_data['post_info']->title; ?>
+                            <?php $content = $before_data['post_info']->content; ?>
+                            <?php $post_id = $before_data['post_info']->post_id; ?>
+                            
                             
                            
                       
@@ -29,14 +31,14 @@
                             </div>
                             <div class="grow"></div>
                             <div class="flex flex-none">
-
+                            <?php if($user_role == 'admin'): ?>
                             <div class="form-control mr-4">
                                 <label class="cursor-pointer label">
                                     <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
                                     <span class="label-text ml-1">공지로등록</span>
                                 </label>
                             </div>
-
+                            <?php endif; ?>
                             <div class="form-control ml-4">
                                 <label class="cursor-pointer label">
                                     <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
@@ -57,7 +59,7 @@
                             </select>
                         </div>
 
-                        <form method="POST" class="mt-8">
+                        <form method="POST" class="mt-8"  enctype="multipart/form-data">
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="<?php echo $title; ?>">
@@ -75,7 +77,8 @@
                             <div class="flex justify-between">
                                 <div class="mt-2">
                                     <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                    <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+                                    <input type="file" id="file" name="file[]" class="file-input file-input-bordered w-full max-w-xs" multiple />
+                                    <div id="uploaded-files"></div>
                                 </div>
                                 <div>
                                     <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">취소</button>
@@ -86,18 +89,24 @@
                            
                         </form>
                     
-                        <?php endif; ?>
                 </div>
-
-                <div name="content " class="">
-                    <div class="m-12">
-                        
-
-                       
+                                
+                <div name="content " class="m-8">
+                    <div class="mt-4 flex flex-col">
+                        <div><strong>[첨부된 파일]</strong></div>
+                        <div id="existing-files">
+                        <?php foreach ($before_data['files'] as $file): ?>
+                            <div id="file-<?php echo $file->file_id; ?>">
+                                <?php echo $file->file_name; ?>
+                                <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="deleteFile('<?php echo $file->file_id; ?>', '<?php echo $post_id; ?>')">X</button>
+                            </div>
+                        <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
               
                
+                <?php endif; ?>
             </div>
            
         </div>
@@ -115,6 +124,68 @@
 
 
 <script>
+
+
+
+document.getElementById('file').addEventListener('change', function(e) {
+    var files = e.target.files;
+    var filesList = document.getElementById('existing-files'); 
+
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var fileElement = document.createElement('div');
+        fileElement.className = 'new-file'; 
+        fileElement.innerHTML = file.name + ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(this)">X</button>';
+        filesList.appendChild(fileElement);
+    }
+});
+
+function newfile_remove(element) {
+    element.parentElement.remove();
+}
+
+
+function deleteFile(fileId, postId) {
+    $.ajax({
+        url: '/posts/write/delete_file/' + fileId + '/' + postId, 
+        dataType:"json",
+        type: 'POST',
+        success: function(response) {
+            
+            if (response.status) {
+                // 파일 목록 갱신 또는 사용자에게 알림
+                $('#file-' + fileId).remove();
+                // 예: 파일 목록을 다시 로드하거나, 화면에서 해당 파일 요소를 제거
+            } else {
+           
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            alert('오류가 발생했습니다.');
+        }
+    });
+}
+
+
+function removeFile(index) {
+var filesInput = document.getElementById('file');
+var dataTransfer = new DataTransfer();
+
+Array.from(filesInput.files).forEach((file, i) => {
+    if (i !== index) {
+        dataTransfer.items.add(file);
+    }
+});
+
+filesInput.files = dataTransfer.files;
+// 파일 목록을 새로고침
+var event = new Event('change');
+filesInput.dispatchEvent(event);
+}
+
+
+
   ClassicEditor.create( document.querySelector( '#content' ), {
     
     language: "ko"

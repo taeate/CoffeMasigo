@@ -181,6 +181,9 @@
                                         <div class="flex">
                                             <div class="text-blue-500 font-bold"><?php echo $post->title; ?></div>
                                             <div class="ml-1 text-red-500">[<?php echo $post->comment_count; ?>]</div>
+                                            <?php if($post->file_count > 0): ?>
+                                                <div>[파일있음]</div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">자유</div>
@@ -193,7 +196,7 @@
                                              
                                         </div>
                                     </div>
-                                    <div class="flex-[2] m-auto text-blue-500 font-bold"><i class="fa-solid fa-user mr-2"></i><?php echo $post->user_id ?></div>
+                                    <div class="flex-[2] m-auto text-blue-500 font-bold"><?php echo $post->user_id ?></div>
                                     <div class="flex-1 m-auto">
                                     <i class="fa-solid fa-eye"></i>
                                     <?php echo $post->views ?>
@@ -215,6 +218,9 @@
                                         <div class="flex">
                                             <div><?php echo $post->title; ?></div>
                                             <div class="ml-2 text-red-500">[<?php echo $post->comment_count; ?>]</div>
+                                            <?php if($post->file_count > 0): ?>
+                                                <div  class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">자유</div>
@@ -227,7 +233,7 @@
                                              
                                         </div>
                                     </div>
-                                    <div class="flex-[2] m-auto "><i class="fa-solid fa-user mr-2"></i><?php echo $post->user_id ?></div>
+                                    <div class="flex-[2] m-auto "><?php echo $post->user_id ?></div>
                                     <div class="flex-1 m-auto">
                                     <i class="fa-solid fa-eye"></i>
                                     <?php echo $post->views ?>
@@ -385,6 +391,7 @@ function loadPage(page, sort) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            console.log(data);
             var postsHtml = '';
 
             data.posts.forEach(function(post) {
@@ -433,6 +440,9 @@ function createPostHtml(post) {
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="'+titleStyle+'">' + post.title + '</div>';
     postHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+    if (post.file_count > 0) {
+    postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
+}
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="font-base text-gray-500">자유</div>';
@@ -457,6 +467,7 @@ function LatestOrderBy() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            console.log(data);
             var postsHtml = '';
             data.posts.forEach(function(post) {
                postsHtml += createPostHtml(post);

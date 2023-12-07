@@ -163,7 +163,7 @@
                     <div class="m-12">
                         
 
-                       
+                    
                     </div>
                 </div>
               
@@ -209,50 +209,35 @@
     });
 
 
+    document.getElementById('file').addEventListener('change', function(e) {
 
-$(document).ready(function () {
-var selectedFiles = []; // 선택된 파일들을 저장할 배열
+        var files = e.target.files;
+        var filesList = document.getElementById('uploaded-files');
+        filesList.innerHTML = '';
 
-$('#file').on('change', function (event) {
-    var files = event.target.files;
-
-    // 새로운 파일을 selectedFiles 배열에 추가
-    for (var i = 0; i < files.length; i++) {
-        selectedFiles.push(files[i]);
-    }
-
-    updateFileList(); // 파일 목록 업데이트 함수
-});
-
-function updateFileList() {
-    // 기존에 표시된 파일 목록을 지움
-    $('#uploaded-files').empty();
-    
-
-    // selectedFiles 배열의 모든 파일을 화면에 표시
-    selectedFiles.forEach(function(file, index) {
-        $('#uploaded-files').append('<div>' + file.name + ' <button onclick="removeFile(' + index + ')">삭제</button></div>');
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var fileElement = document.createElement('div');
+            fileElement.innerHTML = (i + 1) + '. ' + file.name + ' <button class="btn btn-primary" onclick="removeFile(' + i + ')">삭제</button>';
+            filesList.appendChild(fileElement);
+        }
     });
 
-    
+    function removeFile(index) {
+        var filesInput = document.getElementById('file');
+        var dataTransfer = new DataTransfer();
+        
+        Array.from(filesInput.files).forEach((file, i) => {
+            if (i !== index) {
+                dataTransfer.items.add(file);
+            }
+        });
 
-    console.log(selectedFiles);
-}
-
-window.removeFile = function(index) {
-    // 특정 인덱스의 파일을 배열에서 제거
-    selectedFiles.splice(index, 1);
-    updateFileList(); // 파일 목록 다시 업데이트
-    
-};
-});
-
-
-function removeFile(fileId) {
-    // 파일 삭제 요청을 서버에 보내는 AJAX 코드
-}
-
-
+        filesInput.files = dataTransfer.files;
+        // 파일 목록을 새로고침
+        var event = new Event('change');
+        filesInput.dispatchEvent(event);
+    }
 
 
 

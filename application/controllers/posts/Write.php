@@ -59,7 +59,7 @@ class Write extends CI_Controller {
                 $this->upload_files($post_id, $user_id);
                 
 
-                // redirect('/posts');
+                redirect('/posts');
 
             }
 
@@ -90,7 +90,7 @@ class Write extends CI_Controller {
 
         $this->load->library('upload', $config);
 
-        if (isset($_FILES['file'])) {
+        if (!empty($_FILES['file']['name'][0])) {
             $files = $_FILES['file'];
 
             foreach ($files['name'] as $key => $name) {
@@ -104,28 +104,33 @@ class Write extends CI_Controller {
                 );
 
                 if ($this->upload->do_upload('single_file')) {
+
                     $uploadData = $this->upload->data();
-                    // var_dump($uploadData); // For debugging purpose
-                    log_message('debug', 'Upload data: ' . print_r($uploadData, TRUE));
+                    
                     $this->Write_model->saveFileData($post_id, $uploadData['file_name'], $uploadData['full_path'], $uploadData['file_type'], $uploadData['file_size'], $user_id);
                 } else {
                     $error = $this->upload->display_errors();
-                    var_dump($error);
-                    // Handle the error
+               
                 }
             }
+
+        }else{
+
         }
     }
 
 
     public function downloadFile($file_name) {
-        
+
+        $file_name = iconv("UTF-8", "시스템 인코딩", $file_name);
+
         $file_path = './uploads/' . $file_name; // 파일 경로 설정 (uploads 폴더에 저장된 파일)
     
         if (file_exists($file_path)) {
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
             header('Content-Disposition: attachment; filename="' . $file_name . '"');
+            header('Content-Disposition: attachment; filename="' . rawurlencode($file_name) . '"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
@@ -185,6 +190,25 @@ class Write extends CI_Controller {
         }
     }
     
+    
+    public function delete_file($file_id, $post_id) {
+
+    $user_id = $this->session->userdata('user_id');
+    if (!$user_id) {
+        // 사용자가 로그인하지 않은 경우
+        echo json_encode(['status' => false, 'message' => '로그인이 필요합니다.']);
+        return;
+    }
+
+     $result = $this->Write_model->delete_file($file_id, $post_id);
+
+    if ($result) {
+        echo json_encode(['status' => true, 'message' => '파일이 삭제되었습니다.']);
+    } else {
+        echo json_encode(['status' => false, 'message' => '파일 삭제에 실패했습니다.']);
+    }
+}
+
     public function post_edit($post_id){
 
 
@@ -195,6 +219,12 @@ class Write extends CI_Controller {
             $this->session->set_flashdata('message', '로그인 후 이용 가능합니다.');
             redirect('login');
         }
+
+        $user_role = $this->db->select('role')
+        ->where('user_id', $user_id)
+        ->get('user')
+        ->row()
+        ->role;
 
 
         if (!empty($post_id)){
@@ -207,9 +237,11 @@ class Write extends CI_Controller {
             }
 
             $data['before_data'] = $this->Write_model->get_before_post($post_id);
+            $data['user_role'] = $user_role;
 
             $this->load->view('posts/post_edit_view', $data);
         }
+        
 
         if($this->input->post()){
 
@@ -217,6 +249,8 @@ class Write extends CI_Controller {
             $content = $this->input->post('content');
 
             $this->Write_model->edit_post($post_id, $title, $content);
+
+            $this->upload_files($post_id, $user_id);
 
             redirect('/posts/free/'.$post_id);
         
@@ -258,23 +292,5 @@ class Write extends CI_Controller {
 
     }   
 
-    // public function upload_files() {
-
-    //     $config['upload_path'] = './uploads/'; // 서버에 파일을 저장할 경로
-    //     $config['allowed_types'] = 'jpg|jpeg|png|gif|doc|docx|pdf|xls|xlsx|ppt|pptx|txt';
-    //     $config['max_size'] = 5000; // 최대 파일 크기 (KB)
-    
-    //     $this->load->library('upload', $config);
-    
-    //     if (!$this->upload->do_upload('file')) {
-    //         // 업로드 실패
-    //         $error = array('error' => $this->upload->display_errors());
-    //         echo json_encode($error);
-    //     } else {
-    //         // 업로드 성공
-    //         $data = $this->upload->data();
-    //         echo json_encode(['success' => true, 'file_name' => $data['file_name']]);
-    //     }
-    // }
 }
 ?>

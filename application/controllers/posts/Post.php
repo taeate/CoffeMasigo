@@ -92,12 +92,14 @@ class Post extends CI_Controller {
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
             
+            
             // 조회수 증가
             $this->Post_model->increment_views($post_id);
 
             if ($detail_info) {
 
-                $data['detail_info'] = $detail_info;
+                $data['detail_info'] = $detail_info['post_info'];
+                $data['files'] = $detail_info['files'];
 
 
             } else {
