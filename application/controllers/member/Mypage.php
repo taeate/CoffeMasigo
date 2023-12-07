@@ -86,27 +86,30 @@ public function change_image(){
 
     $user_id = $this->session->userdata('user_id');
     
-    if($this->input->post()){
+    if($this->input->is_ajax_request()){
 
-        $config['upload_path'] = __DIR__ . '../../../../uploads';
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = '*';
         $config['max_size'] = 2048; // 최대 2MB
-        $config['encrypt_name'] = TRUE; // 파일 이름 암호화
+        // $config['encrypt_name'] = TRUE; // 파일 이름 암호화
 
         $this->load->library('upload', $config);
 
         if (!$this->upload->do_upload('profile_image')) {
             echo json_encode(['success' => false, 'error' => $this->upload->display_errors()]);
+            exit;
+        
         } else {
-            // 파일 업로드 성공, 업로드된 파일된 파일 저장
+            // 파일 업로드 성공, 업로드된 파일 저장
             $upload_data = $this->upload->data();
+            
             $this->Mypage_model->change_image_save($upload_data, $user_id );
+            
             echo json_encode(['success' => true]);
+            exit; // 함수 실행 중단
 
         }
     
-
-
 
     }
 }

@@ -25,10 +25,10 @@
                         <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 dark:text-white"><?php echo $this->session->userdata('username');?></h5>
                         <span class="text-sm text-gray-500 font-medium dark:text-gray-400"><?php echo $this->session->userdata('user_id');?></span>
                         <div class="flex mt-4 md:mt-6">
-                            <form action="" method="post">
+                            <form action="member/Mypage/change_image" method="post">
                             <input type="file" class="hidden" id="file-input" name="profile_image">
-                            <a id="imgchange-btn" onclick="openFileUploader();" href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">프로필사진 변경</a>
-                            <button type="submit" onclick="saveProfile()" id="save-btn" class="btn btn-accent hidden">저장</button>
+                            <a id="imgchange-btn" onclick="openFileUploader();" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">프로필사진 변경</a>
+                            <button type="submit" onclick="saveProfile(event)" id="save-btn" class="btn btn-accent hidden">저장</button>
                             <button onclick="cancelProfileChange()" id="cancel-btn" class="btn btn-error hidden">취소</button>
                             </form>
                         
@@ -193,36 +193,48 @@ document.getElementById('file-input').addEventListener('change', function(event)
     }
 });
 
-function saveProfile() {
+function saveProfile(event) {
+    event.preventDefault();
+  
     const selectedFile = document.getElementById('file-input').files[0];
-    console.log('sss');
+
+
 
     if (selectedFile) {
         
         const formData = new FormData();
-        formData.append('profileImage', selectedFile);
+        formData.append('profile_image', selectedFile);
+        
+        console.log(selectedFile,'profile_image');
 
         $.ajax({
-        type: 'POST',
-        url: 'member/mypage/change_image',
-        data: formData,
-        processData: false,  // FormData를 사용할 때 필요
-        contentType: false, // FormData를 사용할 때 필요
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // 성공적으로 처리되었을 때의 로직
-                alert('저장완료');
-                window.location.href = '/mypage'; // 로그인 페이지로 리다이렉트
-            } else {
-                // 오류 메시지를 각 필드 아래에 표시
-                for (var key in response.errors) {
-                    $('#' + key).addClass('is-invalid'); // 부트스트랩의 유효하지 않은 입력 표시
-                    $('#' + key + '_error').text(response.errors[key]); // 오류 메시지 표시
+            type: 'POST',
+            url: '/member/Mypage/change_image',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json', 
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            },
+            success: function(response) {
+                console.log('들어옴');
+                if (response.success) {
+            
+
+                    alert('저장완료');
+                    window.location.href = '/mypage'; // 로그인 페이지로 리다이렉트
+                } else {
+                    alert('저장실패');
+                    // 오류 메시지를 각 필드 아래에 표시
+                    for (var key in response.errors) {
+                        $('#' + key).addClass('is-invalid');
+                        $('#' + key + '_error').text(response.errors[key]);
+                    }
                 }
             }
-        }
-    });
+        });
+
     }
 }
 

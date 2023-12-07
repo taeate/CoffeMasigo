@@ -18,9 +18,19 @@ class Mypage_model extends CI_Model {
     }
 
     public function change_image_save($upload_data, $user_id) {
+        // 업로드된 파일의 이름을 사용하여 업데이트 데이터 설정
+        $update_data = array('profile_image' => $upload_data['file_name']);
+    
+        // user_id에 해당하는 행 찾기
         $this->db->where('user_id', $user_id);
-        $this->db->update('profile_image', $upload_data);
+    
+        // 데이터 업데이트
+        $this->db->update('user', $update_data);
+    
+        // 세션 변수 업데이트
+        $this->session->set_userdata('profile_image', $upload_data['file_name']);
     }
+    
 
     
 }
