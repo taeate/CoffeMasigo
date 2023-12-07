@@ -135,14 +135,28 @@ document.getElementById('file').addEventListener('change', function(e) {
         var file = files[i];
         var fileElement = document.createElement('div');
         fileElement.className = 'new-file'; 
-        fileElement.innerHTML = file.name + ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(this)">X</button>';
+        fileElement.innerHTML = file.name + ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(' + i + ')">X</button>';
         filesList.appendChild(fileElement);
     }
 });
 
-function newfile_remove(element) {
-    element.parentElement.remove();
-}
+function newfile_remove(index) {
+        var filesInput = document.getElementById('file');
+        var dataTransfer = new DataTransfer();
+        
+        Array.from(filesInput.files).forEach((file, i) => {
+            if (i !== index) {
+                dataTransfer.items.add(file);
+            }
+        });
+
+        filesInput.files = dataTransfer.files;
+        // 파일 목록을 새로고침
+        var event = new Event('change');
+        filesInput.dispatchEvent(event);
+        
+    }
+
 
 
 function deleteFile(fileId, postId) {
