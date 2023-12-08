@@ -15,6 +15,13 @@ class Post extends CI_Controller {
     
     public function index() {
 
+        
+        $userid = $this->session->userdata('user_id');
+
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+
+
         //페이지네이션 설정
         $config = array();
         $config['base_url'] = site_url('posts/all/page/');
@@ -78,6 +85,7 @@ class Post extends CI_Controller {
     
 
     public function detail($post_id) {
+
         
         $data = array();
     
@@ -111,10 +119,17 @@ class Post extends CI_Controller {
             $comments = $this->Post_model->get_comment($post_id);
             $data['comment_info'] = $comments;
         }
+
+        //사이드바 정보
+        $userid = $this->session->userdata('user_id');
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         
         
         // 댓글 저장
         if ($this->input->post()) {
+
+            
 
             $comment_content = $this->input->post('comment');
             $user_id = $this->session->userdata('user_id');
@@ -182,7 +197,7 @@ class Post extends CI_Controller {
 
       
          // URL 매개변수에서 검색어와 검색 대상 가져오기
-        $search_query = $this->input->get('search');
+         $search_query = $this->input->get('search', true); // true를 사용하여 XSS 필터링 활성화 및 기본값 설정
         // $search_param = $search_query ? "query=" . urlencode($search_query) . "&" : "";
 
         // 페이지네이션 설정
@@ -192,7 +207,7 @@ class Post extends CI_Controller {
         $config['total_rows'] = $this->Post_model->count_search_posts($search_query); // 총 게시물수
         $config['per_page'] = 10; // 페이지당 게시물수
         $config['num_links'] = FALSE;
-        $config['use_page_numbers'] = TRUE;
+        $config['use_page_numbers'] = false;;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
         $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
         $config['last_link'] = FALSE;
@@ -209,10 +224,12 @@ class Post extends CI_Controller {
          
          
         // 쿼리 매개변수에서 페이지 번호 가져오기
-        $page = $this->input->get('page') ? $this->input->get('page') : 1;
+        $page = $this->input->get('page', true); // 페이지 번호 가져오기
+        $page = max($page, 1); // 페이지 번호가 1 이하인 경우 1로 설정
 
 
-        $page = max($page, 1); // 페이지 번호가 1 이상이 되도록 함
+
+        // $page = max($page, 1); // 페이지 번호가 1 이상이 되도록 함
 
         // 오프셋 계산
         $start = ($page - 1) * $config['per_page'];
@@ -234,10 +251,12 @@ class Post extends CI_Controller {
 
         if ($this->input->is_ajax_request()) {
             // AJAX 요청인 경우 JSON으로 응답
+
+            
             $response = [
                 'search_data' => $data['search_data'],
-                'paginationLinks' => $data['link'], // $this->pagination->create_links()의 결과를 직접 할당
-                'no_results' => empty($data['search_data']) ? "검색결과가 없습니다" : ""
+                'paginationLinks' => $data['link'],
+                'no_results' => empty($data['search_data']) ? "검색결과가 없습니다" : "검색 결과가 없습니다" 
             ];
             echo json_encode($response);
         } else {
@@ -488,6 +507,9 @@ class Post extends CI_Controller {
 
  
     }
+
+
+
     
 }
 ?>

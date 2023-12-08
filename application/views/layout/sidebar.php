@@ -11,25 +11,29 @@
                         </div>
                     </label>
                 </div>
+                <?php endif;?>
                 <?php if ($this->session->userdata('user_id')): ?>
                 <div name="flex justify-center sidebar-text" class="flex flex-col justify-center h-full"> 
                     <div class="text-xl font-bold mb-2">
                         <?php echo $this->session->userdata('user_id'); ?>
                     </div>
+                    <?php endif;?>
+                
                     <div class="text-sm">
-                        <a href="/member/wrote" class="hover:text-blue-500">내가 쓴 글 3개</a>
+                        <a href="/member/wrote" class="hover:text-blue-500">내가 쓴 글  <?php echo $post_count; ?>개</a>
                     </div>
+                   
                     <div class="text-sm mt-1">
-                        내가 쓴 댓글 16개
+                        내가 쓴 댓글  <?php echo $comment_count; ?>개
                     </div>
                     <div class="text-sm mt-1">
                         <a href="/mypage" class="hover:text-blue-500">마이페이지</a>
                     </div>
                 </div>
-                <?php endif;?>
+             
 
             </div>
-            <?php endif;?>
+            
         </div>
         <div>
         <div name="login-write-but" class="flex justify-center mt-8">

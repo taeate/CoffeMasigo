@@ -63,7 +63,6 @@ $route['member/wrote'] = 'member/Wrote';
 
 
 
-
 $route['posts/all'] = 'posts/Post';
 $route['posts'] = 'posts/Post';
 $route['posts/free/(:num)'] = 'posts/Post/detail/$1';

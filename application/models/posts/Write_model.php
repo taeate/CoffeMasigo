@@ -187,7 +187,7 @@ class Write_model extends CI_Model {
         $uploadDir = 'uploads/'; 
         
         // 안전한 파일 이름 생성 (옵션)
-        // $safeFileName = $this->generateSafeFileName($fileName);
+        $safeFileName = $this->generateSafeFileName($fileName);
     
         // 파일 저장 경로
         $uploadPath = $uploadDir . $safeFileName;

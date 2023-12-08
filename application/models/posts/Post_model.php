@@ -185,18 +185,18 @@ class Post_model extends CI_Model {
         $this->db->update('post');
     }
 
-    public function count_search_posts($search_info) {
-        $this->db->like('title', $search_info);
-        $this->db->or_like('content', $search_info);
+    public function count_search_posts($search_query) {
+        $this->db->like('title', $search_query);
+        $this->db->or_like('content', $search_query);
         $this->db->from('post');
         return $this->db->count_all_results();
     }
 
-    public function search($search_info,$start = 0, $limit = 10){
+    public function search($search_query, $start = 0, $limit = 10){
         $this->db->select('*');
         $this->db->from('post');
-        $this->db->like('title', $search_info);
-        $this->db->or_like('content', $search_info);
+        $this->db->like('title', $search_query);
+        $this->db->or_like('content', $search_query);
         $this->db->limit($limit,$start);
         $query = $this->db->get();
          
@@ -359,7 +359,15 @@ class Post_model extends CI_Model {
         }
     }
     
+    public function count_wrote_posts_sidebar($userid) {
+        $this->db->where('user_id', $userid);
+        return $this->db->count_all_results('post');
+    }
     
+    public function count_wrote_comments_sidebar($userid) {
+        $this->db->where('user_id', $userid);
+        return $this->db->count_all_results('comment');
+    }
 
 
     

@@ -113,7 +113,7 @@
 
                     
                             
-                        <form method="POST" class="mt-8" enctype="multipart/form-data">
+                        <form id="postForm" method="POST" class="mt-8" enctype="multipart/form-data">
                             <?php if($user_role == 'admin'): ?>
                             <div class="flex mb-4">
                                 <div class="form-control mr-2 ">
@@ -128,7 +128,8 @@
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "  value="<?php echo set_value('title'); ?>" >
-                                <?php echo form_error('title'); ?>
+                                <?php echo form_error('title', '<div class="error">', '</div>'); ?>
+
                             </div>
                             <div class="mb-6">
                             
@@ -136,7 +137,8 @@
                                 <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg" value="<?php echo set_value('content'); ?>">내용</label>
                                
                                 <textarea class="h-36" type="text" name="content" id="content"></textarea>
-                                <?php echo form_error('content'); ?>
+                                <?php echo form_error('content', '<div class="error">', '</div>'); ?>
+
                                 
                             </div>
 
@@ -207,6 +209,33 @@
       // 초기화 중 오류가 발생했을 때 실행될 코드
       console.error(error);
     });
+
+    document.getElementById('postForm').addEventListener('submit', function(event){
+    event.preventDefault();
+
+    var formData = new FormData(this);
+
+    fetch('/posts/write', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            // 성공 메시지 표시 및 리디렉션
+            window.location.href = '/posts';
+        } else {
+            // 에러 메시지 표시
+            alert(data.message);
+        }
+    })
+    .catch((error) => {
+        // 네트워크 오류 또는 서버 에러 처리
+        console.error('Error:', error);
+    });
+});
+
+    
 
 
     document.getElementById('file').addEventListener('change', function(e) {

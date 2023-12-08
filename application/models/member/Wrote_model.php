@@ -16,8 +16,13 @@ class Wrote_model extends CI_Model {
 
     public function count_wrote_posts($userid) {
         $this->db->where('user_id', $userid);
+        $this->db->order_by('create_date','desc');
         return $this->db->count_all_results('post');
     }
+
+
+
+
 
     public function get_wrote_comment($userid) {
         $this->db->select('COMMENT.*, POST.title');

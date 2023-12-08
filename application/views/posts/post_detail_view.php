@@ -143,10 +143,10 @@
 
                         <div class="flex ml-8 mb-4">
                             <button id="comment_orderBy_create" class="hover:text-blue-500">
-                                등록순
+                                
                             </button>
                             <button id="comment_orderBy_last" class="ml-2 hover:text-blue-500">
-                                최신순
+                                
                             </button>
                         </div>
                     </div>

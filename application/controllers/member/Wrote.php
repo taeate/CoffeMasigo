@@ -5,6 +5,7 @@ class Wrote extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('posts/Post_model');
         $this->load->model('member/Wrote_model');
         $this->load->database();
         $this->load->helper('url');
@@ -15,6 +16,11 @@ class Wrote extends CI_Controller {
         $userid = $this->session->userdata('user_id');
         $data['wrote_post'] = $this->Wrote_model->get_wrote_post($userid);
         $data['wrote_count'] = $this->Wrote_model->count_wrote_posts($userid);
+
+        
+         //사이드바 정보
+         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
     
         $this->load->view('member/wrote_view', $data);
     }
@@ -41,7 +47,7 @@ class Wrote extends CI_Controller {
         $userid = $this->session->userdata('user_id'); 
 
         $data['wrote_comment'] = $this->Wrote_model->get_wrote_comment($userid);
-        $data['wrote_comment_count'] = $this->Wrote_model->count_wrote_posts($userid);
+        $data['wrote_comment_count'] = $this->Wrote_model->count_wrote_comment($userid);
 
 
         if ($this->input->is_ajax_request()) {

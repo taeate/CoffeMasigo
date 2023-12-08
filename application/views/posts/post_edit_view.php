@@ -39,12 +39,12 @@
                                 </label>
                             </div>
                             <?php endif; ?>
-                            <div class="form-control ml-4">
+                            <!-- <div class="form-control ml-4">
                                 <label class="cursor-pointer label">
                                     <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
                                     <span class="label-text ml-1">전체공개</span>
                                 </label>
-                            </div>
+                            </div> -->
 
                             </div>
                         </div>

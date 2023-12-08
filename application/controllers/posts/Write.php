@@ -5,6 +5,7 @@ class Write extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
+        $this->load->model('posts/Post_model');
         $this->load->model('posts/Write_model');
         $this->load->database();
         $this->load->helper('url');
@@ -17,64 +18,60 @@ class Write extends CI_Controller {
 
     public function index(){
 
-
         $this->form_validation->set_rules('title', '제목', 'required', array('required' => '제목을 입력해주세요.'));
         $this->form_validation->set_rules('content', '내용', 'required', array('required' => '내용을 입력해주세요.'));
-        $this->form_validation->set_error_delimiters('<div class="ml-1 mb-1 text-red-500">', '</div>');
-
+    
         $user_id = $this->session->userdata('user_id');
         
-
         if (!$user_id) {
-            // 비회원일 경우 로그인 페이지로 리디렉션하기 전에 메시지 설정
-            $this->session->set_flashdata('message', '로그인 후 이용 가능합니다.');
-            redirect('login');
+            // AJAX 요청에 대한 응답으로 JSON 반환
+            echo json_encode(['success' => false, 'message' => '로그인 후 이용 가능합니다.']);
+            return; 
         }
-
+    
         $user_role = $this->db->select('role')
         ->where('user_id', $user_id)
         ->get('user')
         ->row()
         ->role;
     
-        // 글 작성 로직
-        if ($this->input->post()) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($this->form_validation->run() == FALSE) {
-                $this->session->set_flashdata('message', validation_errors());
-                $data['post_data'] = null;
-                $data['user_role'] = $user_role;
-                $this->load->view('posts/post_write_view', $data);
+                // AJAX 요청에 대한 응답으로 JSON 반환
+                echo json_encode(['success' => false, 'message' => strip_tags(validation_errors())]);
+                return; 
 
-            } else{
-                    
+            } else {
+
                 $title = $this->input->post('title');
                 $content = $this->input->post('content');
                 $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
                 
-                 // 글 저장 후 생성된 post_id 획득
+                // 글 저장 후 생성된 post_id 획득
                 $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice);
-
+    
                 // 파일 업로드 로직
                 $this->upload_files($post_id, $user_id);
-                
-
-                redirect('/posts');
-
+    
+              
+                echo json_encode(['success' => true, 'redirect' => '/posts']);
+                return; 
             }
+        } else {
 
-        
-           
-         } else {
-             // 폼이 처음 로드될 때
+              //사이드바 정보
+            $userid = $this->session->userdata('user_id');
+            $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+            $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+
+            // AJAX 요청이 아닐 경우 기존의 로직 수행
             $data['post_data'] = null;
             $data['user_role'] = $user_role;
             $this->load->view('posts/post_write_view', $data);
-         
-         }
-            
-
+        }
     }
+    
 
 
     public function upload_files($post_id, $user_id){
@@ -178,6 +175,12 @@ class Write extends CI_Controller {
                     redirect('/posts/all');
                 }
             } else {
+                
+                //사이드바 정보
+                $userid = $this->session->userdata('user_id');
+                $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+                $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+
                 // 폼에서 데이터가 전송되지 않았을 경우
                 $post_info = $this->Write_model->get_post($post_id);
                 if ($post_info) {
@@ -238,6 +241,12 @@ class Write extends CI_Controller {
 
             $data['before_data'] = $this->Write_model->get_before_post($post_id);
             $data['user_role'] = $user_role;
+
+            
+            //사이드바 정보
+            $userid = $this->session->userdata('user_id');
+            $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+            $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
 
             $this->load->view('posts/post_edit_view', $data);
         }

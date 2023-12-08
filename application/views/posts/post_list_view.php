@@ -324,44 +324,55 @@ function searchPosts() {
     currentSearchQuery = searchQuery; 
 
         $.ajax({
-        url: '/posts/search',
-        data: {search: searchQuery},
-        dataType: 'json', 
-        success: function(response) {
-            if (response.search_data.length) {
+            url: '/posts/search',
+            type: 'GET',
+            dataType: 'json',
+            data: { search: searchQuery }, // 검색어를 서버로 전송
+            success: function(data) {
+            if (data.search_data.length) {
                 var postsHtml = '';
-                response.search_data.forEach(function(post) {
-                   console.log(post);
+                data.search_data.forEach(function(post) {
+                 
                     postsHtml += createPostHtml(post); 
                 });
-
+                
                 // 페이지네이션 링크를 postsHtml에 추가
-                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' +response.paginationLinks + '</div></div></div></div>';
-
+                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
                 $('#posts-container').html(postsHtml); 
                 
             } else {
-                $('#posts-container').html('<div class="flex justify-center m-4 font-bold text-lg">' + response.no_results + '</div>');
+                $('#posts-container').html('<div class="flex justify-center m-4 font-bold text-lg">' + data.no_results + '</div>');
+                
             }
         }
         
     });
 
-    // 페이지네이션 링크 클릭 이벤트 설정
+
+
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        var page = $(this).attr('href').split('page=')[1];
-        page = page.replace('/', ''); // 슬래시 제거
-        loadPage(page, 'search');
-    });
+    e.preventDefault();
+    var href = $(this).attr('href');
+    console.log('다음페이지주소:', href); // 디버깅을 위한 로그
+    
+    var urlParams = new URLSearchParams(href.split('?')[1]);
+    var page = urlParams.get('page');
 
 
+    console.log('번호추출', page);
+    loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
+});
 
+
+    
+   
 
     return false;
 }
 
 function loadPage(page, sort) {
+    console.log(page,sort);
+
 
 
     var url = '/posts/all/page/' +page
@@ -379,10 +390,13 @@ function loadPage(page, sort) {
     }
 
       if (sort === 'search') {
+        console.log('search 만남')
         url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
+        console.log(url);
     } 
+    
 
-    console.log('sort:', sort, 'page:', page);
+    // console.log('sort:', sort, 'page:', page);
  
 
 
@@ -394,12 +408,17 @@ function loadPage(page, sort) {
             console.log(data);
             var postsHtml = '';
 
-            data.posts.forEach(function(post) {
-                postsHtml += createPostHtml(post);
-            });
+            var postsArray = sort === 'search' ? data.search_data : data.posts;
+                if (postsArray && Array.isArray(postsArray)) {
+                    postsArray.forEach(function(post) {
+                        postsHtml += createPostHtml(post);
+                    });
+                } else {
+                console.error("Invalid data format or empty array");
+            }
 
             // 페이지네이션 링크를 postsHtml에 추가
-            postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+            postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="">' + data.paginationLinks + '</div></div></div></div>';
 
             // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용
             $('#posts-container').html(postsHtml);
@@ -411,7 +430,9 @@ function loadPage(page, sort) {
     });
 }
 
+// 전체글 페이지네이션 링크
 $(document).on('click', '.pagination a', function(e) {
+    console.log('클릭됨');
     e.preventDefault();
     var page = $(this).attr('href').split('page/')[1];
         loadPage(page);

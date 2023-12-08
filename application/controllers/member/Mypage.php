@@ -5,6 +5,7 @@ class Mypage extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('posts/Post_model');
         $this->load->model('member/Mypage_model');
         $this->load->database();
         $this->load->helper('url');
@@ -52,8 +53,14 @@ class Mypage extends CI_Controller {
                 }
             }
         } else {
-            // GET 요청 시
-            $this->load->view('member/mypage_view');
+
+            //사이드바 정보
+            $userid = $this->session->userdata('user_id');
+            $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+            $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+
+   
+            $this->load->view('member/mypage_view',$data);
         }
     }
     
