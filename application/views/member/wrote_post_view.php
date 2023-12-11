@@ -49,7 +49,9 @@
                             <!-- 리스트 페이지의 내용 -->
                             <div class="bg-base-100">
                                 <div class="flex flex-col border-b hover:bg-blue-100">
+                                <a href="/posts/free/<?php echo $post['post_id']; ?>">
                                     <div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer">
+                                        
                                         <!-- 콘텐츠 내용 -->
                                         <div class="flex-[0.4] flex flex-col items-center ">
                                             <div class="m-auto"><i class='fa-solid fa-caret-up fa-xl text-gray-400'></i></div>
@@ -59,9 +61,9 @@
                                         <div class="flex">
 
                                             <div class="text-base font-medium">
-                                                <a href="/posts/free/<?php echo $post['post_id']; ?>">
+                                    
                                                     <?php echo $post['title']; ?>
-                                                </a>    
+                                            
                                             </div>
                                             <div class="ml-1 text-red-500">[33]</div>
 
@@ -88,6 +90,7 @@
                                         </div>
 
                                     </div>
+                                </a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -153,29 +156,31 @@ $(document).ready(function(){
                     html += 
                     '<div class="bg-base-100">'+
                     '<div class="flex flex-col border-b ">' +
-                    '<div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer hover:bg-blue-100">' +
-                        '<div class="flex-[0.4] flex flex-col items-center ">' +
-                                '<div class="m-auto"><i class="fa-solid fa-caret-up fa-xl text-gray-400"></i></div>' +
-                                    '<div class="">'+post.thumb+'</div>' +
+                    '<a href="/posts/free/' + post.post_id +'">' +
+                        '<div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer hover:bg-blue-100">' +
+                            '<div class="flex-[0.4] flex flex-col items-center ">' +
+                                    '<div class="m-auto"><i class="fa-solid fa-caret-up fa-xl text-gray-400"></i></div>' +
+                                        '<div class="">'+post.thumb+'</div>' +
+                                    '</div>' +
+                            '<div class="flex-[1] m-auto">' +
+                                '<div class="flex">' +
+                                
+                                    '<div class="text-base font-medium">' + post.title + '</div>' +
+                                
                                 '</div>' +
-                        '<div class="flex-[1] m-auto">' +
-                            '<div class="flex">' +
-                            
-                                '<div class="text-base font-medium"><a href="/posts/free/' + post.post_id + '">' + post.title + '</a></div>' +
-                             
+                                '<div class="flex">' +
+                                    '<div class="font-base text-gray-500">'+ '자유</div>' + // 카테고리 또는 태그 필요
+                                '</div>' +
                             '</div>' +
-                            '<div class="flex">' +
-                                '<div class="font-base text-gray-500">'+ '자유</div>' + // 카테고리 또는 태그 필요
+                            '<div class="flex-1 m-auto">' +
+                            '<i class="fa-solid fa-eye"></i>' +
+                            post.views +
+                            '</div>' +
+                            '<div class="flex-[1] m-auto"><i class="fa-regular fa-clock mr-2"></i> ' +
+                            post.create_date +
                             '</div>' +
                         '</div>' +
-                        '<div class="flex-1 m-auto">' +
-                        '<i class="fa-solid fa-eye"></i>' +
-                        post.views +
-                        '</div>' +
-                        '<div class="flex-[1] m-auto"><i class="fa-regular fa-clock mr-2"></i> ' +
-                        post.create_date +
-                        '</div>' +
-                    '</div>' +
+                    '</a>' +
                     '<div>'+
                     '</div>'+
                     '</div>';
@@ -226,25 +231,27 @@ $(document).ready(function(){
                     html += 
                     '<div class="bg-base-100">'+
                     '<div class="flex flex-col border-b ">' +
-                    '<div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer hover:bg-blue-100">' +
-                        '<div class="ml-4 flex-[0.2] flex flex-col items-center ">' +
-                            '<div class="">' + '</div>' +
-                        '</div>' +
-                        '<div class="flex-[1] m-auto">' +
-                            '<div class="flex">' +
-                                '<div class="text-base font-medium">' + comment.comment_content + '</div>' +
-                             
+                    '<a href="/posts/free/'+ comment.post_id +'">' +
+                        '<div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer hover:bg-blue-100">' +
+                            '<div class="ml-4 flex-[0.2] flex flex-col items-center ">' +
+                                '<div class="">' + '</div>' +
                             '</div>' +
-                            '<div class="flex">' +
-                                '<div class="font-base text-gray-500">'+ comment.title +'에 대한 댓글</div>' + // 카테고리 또는 태그 필요
+                            '<div class="flex-[1] m-auto">' +
+                                '<div class="flex">' +
+                                    '<div class="text-base font-medium">' + comment.comment_content + '</div>' +
+                                
+                                '</div>' +
+                                '<div class="flex">' +
+                                    '<div class="font-base text-gray-500">'+ comment.title +'에 대한 댓글</div>' + // 카테고리 또는 태그 필요
+                                '</div>' +
+                            '</div>' +
+                            '<div class="flex-1 m-auto">' +
+                                
+                            '</div>' +
+                            '<div class="flex-[1] m-auto"><i class="fa-regular fa-clock mr-2"></i> ' + comment.create_date +
                             '</div>' +
                         '</div>' +
-                        '<div class="flex-1 m-auto">' +
-                            
-                        '</div>' +
-                        '<div class="flex-[1] m-auto"><i class="fa-regular fa-clock mr-2"></i> ' + comment.create_date +
-                        '</div>' +
-                    '</div>' +
+                    '</a>'
                     '<div>'+
                     '<div>' +
                     '</div>';
