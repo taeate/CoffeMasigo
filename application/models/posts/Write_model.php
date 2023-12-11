@@ -140,6 +140,7 @@ class Write_model extends CI_Model {
         $this->db->update('post', $data);
         
     } 
+    
      public function delete_post($post_id){
 
         $data = array('delete_status' => TRUE);

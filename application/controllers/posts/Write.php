@@ -261,7 +261,10 @@ class Write extends CI_Controller {
 
             $this->upload_files($post_id, $user_id);
 
-            redirect('/posts/free/'.$post_id);
+            echo json_encode(['success' => true, 'message' => '글이 수정되었습니다.']);
+            return;
+
+            // redirect('/posts/free/'.$post_id);
         
         }
 
@@ -277,8 +280,6 @@ class Write extends CI_Controller {
     }
 
   
-
-
     public function saveImage(){
         
         if (isset($_FILES['upload'])) {
@@ -288,6 +289,7 @@ class Write extends CI_Controller {
 
             // 이미지 파일을 서버에 저장하는 로직
             $savedImageUrl = $this->Write_model->saveImageFile($file, $fileName);
+            
 
             // CKEditor에 반환할 JSON 응답
             $response = [
@@ -299,7 +301,7 @@ class Write extends CI_Controller {
             return;
     }
 
-    }   
+    } 
 
 }
 ?>

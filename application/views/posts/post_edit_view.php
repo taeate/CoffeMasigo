@@ -59,17 +59,19 @@
                             </select>
                         </div>
 
-                        <form method="POST" class="mt-8"  enctype="multipart/form-data">
+                        <form id="editForm" method="POST" class="mt-8"  enctype="multipart/form-data">
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
+                                <input type="hidden" name="post_id" id="post_id" value="<?php echo $post_id; ?>">
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="<?php echo $title; ?>">
                             </div>
                             <div class="mb-6">
                 
 
-                                <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
+                                <label for="edit_content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
                                
-                                <textarea class="h-36" type="text" name="content" id="content"><?php echo $content; ?></textarea>
+                                <textarea class="h-36" type="text" name="edit_content" id="edit_content"><?php echo $content; ?></textarea>
+                                
 
                                 
                             </div>
@@ -124,6 +126,47 @@
 
 
 <script>
+
+ClassicEditor.create(document.querySelector('#edit_content'), {
+    language: "ko",
+    simpleUpload: {
+        uploadUrl: '/posts/write/saveImage'
+    },
+    ckfinder: {
+        uploadUrl: "/posts/write/saveImage",
+        withCredentials: true
+    }
+});
+
+document.getElementById('editForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+    
+    // 폼 안의 post_id 필드의 값을 가져옴
+    var post_id = formData.get('post_id');
+
+    console.log(post_id);
+
+    fetch('/posts/write/post_edit/' + post_id, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 수정 성공 메시지 표시 또는 리디렉션
+            window.location.href = '/posts/free/' + post_id;
+        } else {
+            // 에러 메시지 표시
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        // 네트워크 오류 또는 서버 에러 처리
+        console.error('Error:', error);
+    });
+});
 
 
 
