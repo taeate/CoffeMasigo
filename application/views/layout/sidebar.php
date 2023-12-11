@@ -20,11 +20,11 @@
                     <?php endif;?>
                 
                     <div class="text-sm">
-                        <a href="/member/wrote" class="hover:text-blue-500">내가 쓴 글  <?php echo $post_count; ?>개</a>
+                        <a href="/member/wrote/post" class="hover:text-blue-500">내가 쓴 글  <?php echo $post_count; ?>개</a>
                     </div>
                    
                     <div class="text-sm mt-1">
-                        내가 쓴 댓글  <?php echo $comment_count; ?>개
+                       <a href="/member/wrote/comment"> 내가 쓴 댓글  <?php echo $comment_count; ?>개</a>
                     </div>
                     <div class="text-sm mt-1">
                         <a href="/mypage" class="hover:text-blue-500">마이페이지</a>

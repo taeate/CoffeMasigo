@@ -60,21 +60,26 @@ $route['member/changePassword'] = 'member/Find_password/changePassword';
 $route['mypage'] = 'member/mypage';
 $route['member/mypage/change_image'] = 'member/Mypage/change_image';
 $route['member/wrote'] = 'member/Wrote';
+$route['member/wrote/comment'] = 'member/Wrote/wrote_comment';
+$route['member/wrote/post'] = 'member/Wrote/wrote_post';
+
 
 
 
 $route['posts/all'] = 'posts/Post';
 $route['posts'] = 'posts/Post';
 $route['posts/free/(:num)'] = 'posts/Post/detail/$1';
-
 $route['write'] = 'post/write';
 $route['write/(:num)'] = 'post/write/answer_post/$1';
 $route['write/delete_file/(:num)/(:num)'] = 'posts/write/delete_file/$1/$2';
-
 $route['posts/edit/(:num)'] = 'posts/write/post_edit/$1';
 $route['posts/delete/(:num)'] = 'posts/write/post_delete/$1';
+
+
+
 $route['posts/all/page/(:num)'] = 'posts/post/index/$1';
 $route['posts/search'] = 'posts/post/search';
+// $route['posts/search/(:any)/page/(:num)'] = 'posts/post/search/$1/$2';
 $route['posts/all/thumb/page/(:num)'] = 'posts/post/ThumbOrderBy/$1';
 $route['posts/all/newest/page/(:num)'] = 'posts/post/LatestOrderBy/$1';
 $route['posts/all/views/page/(:num)'] = 'posts/post/ViewsOrderBy/$1';

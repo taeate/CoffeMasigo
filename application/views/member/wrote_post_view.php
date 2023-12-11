@@ -23,7 +23,7 @@
                         </a>
                     </li>
                     <li class="me-2">
-                        <a href="#" id="comments-tab" class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
+                        <a href="" id="comments-tab" class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
                             aria-current="page">
                             <span>내가 쓴 댓글</span>
                             <div></div>
@@ -58,7 +58,11 @@
                                         <div class="flex-[2] m-auto">
                                         <div class="flex">
 
-                                            <div class="text-base font-medium"><?php echo $post['title']; ?></div>
+                                            <div class="text-base font-medium">
+                                                <a href="/posts/free/<?php echo $post['post_id']; ?>">
+                                                    <?php echo $post['title']; ?>
+                                                </a>    
+                                            </div>
                                             <div class="ml-1 text-red-500">[33]</div>
 
                                         </div>
@@ -156,7 +160,8 @@ $(document).ready(function(){
                                 '</div>' +
                         '<div class="flex-[1] m-auto">' +
                             '<div class="flex">' +
-                                '<div class="text-base font-medium">' + post.title + '</div>' +
+                            
+                                '<div class="text-base font-medium"><a href="/posts/free/' + post.post_id + '">' + post.title + '</a></div>' +
                              
                             '</div>' +
                             '<div class="flex">' +

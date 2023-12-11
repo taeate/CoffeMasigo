@@ -26,7 +26,10 @@ class Wrote extends CI_Controller {
     }
 
     public function wrote_post(){
-        $userid = $this->session->userdata('user_id');      
+        $userid = $this->session->userdata('user_id');   
+        
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
 
         $data['wrote_post'] = $this->Wrote_model->get_wrote_post($userid);
         $data['wrote_count'] = $this->Wrote_model->count_wrote_posts($userid);
@@ -40,11 +43,18 @@ class Wrote extends CI_Controller {
             ];
             echo json_encode($response);
             return; 
+        }else {
+            // HTML 뷰 로드
+            $this->load->view('member/wrote_post_view', $data);
         }
     }
 
     public function wrote_comment(){
         $userid = $this->session->userdata('user_id'); 
+
+        //사이드바 정보
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
 
         $data['wrote_comment'] = $this->Wrote_model->get_wrote_comment($userid);
         $data['wrote_comment_count'] = $this->Wrote_model->count_wrote_comment($userid);
@@ -58,6 +68,9 @@ class Wrote extends CI_Controller {
             ];
             echo json_encode($response);
             return; 
+        }else {
+            // HTML 뷰 로드
+            $this->load->view('member/wrote_comment_view', $data);
         }
     }
     

@@ -283,6 +283,7 @@
                                     <?php echo $no_results; ?>
                                 </div>
                             <?php endif; ?>
+
                         <?php endif; ?>
                         <!-- 검색 결과 끝 -->
 
@@ -290,7 +291,7 @@
                     
                     </div>
                     
-                        
+                
                     <div class="mt-6 mb-6">
                         <div class="flex justify-center">
                             <div class="pagination mb-4">
@@ -324,7 +325,7 @@ function searchPosts() {
     currentSearchQuery = searchQuery; 
 
         $.ajax({
-            url: '/posts/search',
+            url: '/posts/post/search',
             type: 'GET',
             dataType: 'json',
             data: { search: searchQuery }, // 검색어를 서버로 전송
@@ -338,6 +339,7 @@ function searchPosts() {
                 
                 // 페이지네이션 링크를 postsHtml에 추가
                 postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+                console.log(data.paginationLinks);
                 $('#posts-container').html(postsHtml); 
                 
             } else {
@@ -348,8 +350,6 @@ function searchPosts() {
         
     });
 
-
-
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
     e.preventDefault();
     var href = $(this).attr('href');
@@ -358,17 +358,16 @@ function searchPosts() {
     var urlParams = new URLSearchParams(href.split('?')[1]);
     var page = urlParams.get('page');
 
-
     console.log('번호추출', page);
     loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
-});
-
+    });
 
     
-   
 
     return false;
 }
+
+
 
 function loadPage(page, sort) {
     console.log(page,sort);
@@ -390,13 +389,13 @@ function loadPage(page, sort) {
     }
 
       if (sort === 'search') {
-        console.log('search 만남')
+
         url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
-        console.log(url);
+  
     } 
     
 
-    // console.log('sort:', sort, 'page:', page);
+
  
 
 
@@ -544,6 +543,8 @@ $.ajax({
 // 페이지네이션 링크 클릭 이벤트 설정
 $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
     e.preventDefault();
+    var href = $(this).attr('href');
+    console.log('다음페이지주소:', href); 
     var page = $(this).attr('href').split('page/')[1];
     loadPage(page, 'thumb');
 });

@@ -23,7 +23,6 @@ class Wrote_model extends CI_Model {
 
 
 
-
     public function get_wrote_comment($userid) {
         $this->db->select('COMMENT.*, POST.title');
         $this->db->from('comment as COMMENT');

@@ -198,24 +198,23 @@ class Post extends CI_Controller {
       
          // URL 매개변수에서 검색어와 검색 대상 가져오기
          $search_query = $this->input->get('search', true); // true를 사용하여 XSS 필터링 활성화 및 기본값 설정
-        // $search_param = $search_query ? "query=" . urlencode($search_query) . "&" : "";
 
         // 페이지네이션 설정
         $config = array();
-        $config['base_url'] = site_url('posts/search?search=' . urlencode($search_query) . '&page=');
-        $config['first_url'] = site_url('posts/search?search=' . urlencode($search_query) . '&page=1');
+        $config['base_url'] = site_url('posts/search?search=' . urlencode($search_query));  
+        $config['first_url'] = site_url('posts/search?search=' . urlencode($search_query));
         $config['total_rows'] = $this->Post_model->count_search_posts($search_query); // 총 게시물수
         $config['per_page'] = 10; // 페이지당 게시물수
-        $config['num_links'] = FALSE;
-        $config['use_page_numbers'] = false;;
+        $config['num_links'] = false;
+        $config['use_page_numbers'] = true;
         $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
         $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
         $config['last_link'] = FALSE;
         $config['first_link'] = FALSE;
         $config['display_pages'] = FALSE;
          
-        //  $config['page_query_string'] = TRUE;
-        //  $config['query_string_segment'] = 'page';
+         $config['page_query_string'] = TRUE;
+         $config['query_string_segment'] = 'page';
          
  
          //초기화
@@ -227,20 +226,19 @@ class Post extends CI_Controller {
         $page = $this->input->get('page', true); // 페이지 번호 가져오기
         $page = max($page, 1); // 페이지 번호가 1 이하인 경우 1로 설정
 
-
-
-        // $page = max($page, 1); // 페이지 번호가 1 이상이 되도록 함
-
+    
         // 오프셋 계산
         $start = ($page - 1) * $config['per_page'];
-        
-        
-         // 페이지네이션 링크 
-        $data['link'] = $this->pagination->create_links();
+        $start = max($start, 0); // 오프셋이 음수가 되지 않도록 보장
 
 
         // 검색 결과 가져오기
         $data['search_data'] = $this->Post_model->search($search_query, $start, $config['per_page']);
+
+              
+         // 페이지네이션 링크 
+         $data['link'] = $this->pagination->create_links();
+
         
         foreach ($data['search_data'] as &$post) { // 참조를 사용하여 각 게시글을 수정
             $post['comment_count'] = $this->Post_model->count_comment($post['post_id']);
@@ -251,11 +249,10 @@ class Post extends CI_Controller {
 
         if ($this->input->is_ajax_request()) {
             // AJAX 요청인 경우 JSON으로 응답
-
             
             $response = [
                 'search_data' => $data['search_data'],
-                'paginationLinks' => $data['link'],
+                'paginationLinks' =>  $this->pagination->create_links(),
                 'no_results' => empty($data['search_data']) ? "검색결과가 없습니다" : "검색 결과가 없습니다" 
             ];
             echo json_encode($response);
