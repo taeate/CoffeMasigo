@@ -199,6 +199,7 @@ class Post extends CI_Controller {
          // URL 매개변수에서 검색어와 검색 대상 가져오기
          $search_query = $this->input->get('search', true); // true를 사용하여 XSS 필터링 활성화 및 기본값 설정
          $search_option = $this->input->get('option', true);
+         $search_filter = $this->input->get('filter', true);
 
 
         // 페이지네이션 설정
@@ -235,7 +236,7 @@ class Post extends CI_Controller {
 
 
         // 검색 결과 가져오기
-        $data['search_data'] = $this->Post_model->search($search_query, $search_option, $start, $config['per_page']);
+        $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
 
               
          // 페이지네이션 링크 

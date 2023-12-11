@@ -55,20 +55,23 @@
                         </div>
                     </div>
                         
-                    <div name="select-box" class="ml-auto">
-                        <select id="countries" class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>지난 1일</option>
-                        <option value="US">지난 1주일</option>
-                        <option value="CA">지난 1개월</option>
-                        <option value="FR">지난 1년</option>
-                        </select>
-                    </div>
+                    
 
 
                     <div name="" class="w-68 ml-4">
                   
                     <form onsubmit="return searchPosts();" action="" method="get">
                         <div class="flex">
+
+                        <div name="select-box" class="ml-auto">
+                        <select id="search-past" class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>전체</option>
+                        <option value="last_day">지난 1일</option>
+                        <option value="last_week">지난 1주일</option>
+                        <option value="last_month">지난 1개월</option>
+                        <option value="last_year">지난 1년</option>
+                        </select>
+                        </div>
                             <!-- Label for Email (hidden for screen readers) -->
                             <label for="location-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your Email</label>
                             
@@ -298,9 +301,12 @@ var currentSearchQuery = "";
 
 function searchPosts() {
 
+    var selectedPast = document.getElementById('search-past').value;
+
     var selectedOption = document.getElementById('search-options').value;
 
     var searchQuery = document.getElementById('search').value;
+
     currentSearchQuery = searchQuery; 
 
         $.ajax({
@@ -309,7 +315,8 @@ function searchPosts() {
             dataType: 'json',
             data: {
                 search: searchQuery,
-                option: selectedOption
+                option: selectedOption,
+                filter: selectedPast
             }, // 검색어를 서버로 전송
             success: function(data) {
             if (data.search_data.length) {

@@ -192,27 +192,23 @@ class Post_model extends CI_Model {
         return $this->db->count_all_results();
     }
 
-    public function search($search_query, $search_option, $start, $limit) {
+    public function search($search_query, $search_option, $selectedPast, $start, $limit) {
         $this->db->select('*');
         $this->db->from('post');
     
-        // 검색 옵션에 따라 검색 조건 설정
+        // 검색 옵션에 따른 검색 조건 설정
         switch($search_option) {
             case 'title':
-                // 제목 필드만 검색
                 $this->db->like('title', $search_query);
                 break;
             case 'content':
-                // 내용 필드만 검색
                 $this->db->like('content', $search_query);
                 break;
             case 'author':
-                // 작성자 필드만 검색 (작성자 필드가 'author'라고 가정)
                 $this->db->like('user_id', $search_query);
                 break;
             case 'title-content':
             default:
-                // 제목과 내용 필드 모두 검색
                 $this->db->group_start();
                 $this->db->like('title', $search_query);
                 $this->db->or_like('content', $search_query);
@@ -220,11 +216,30 @@ class Post_model extends CI_Model {
                 break;
         }
     
+        // 시간 필터 처리
+        if (!empty($selectedPast)) {
+            switch($selectedPast) {
+                case 'last_day':
+                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 day')));
+                    break;
+                case 'last_week':
+                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 week')));
+                    break;
+                case 'last_month':
+                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 month')));
+                    break;
+                case 'last_year':
+                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 year')));
+                    break;
+            }
+        }
+    
         $this->db->limit($limit, $start);
         $query = $this->db->get();
     
         return $query->result_array();
     }
+    
     
 
     public function hasUserAlreadyThumb($post_id, $user_id) {
