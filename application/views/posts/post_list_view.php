@@ -143,6 +143,7 @@
                     <div class="overflow-x-auto shadow-md">
                         <!-- 메인 글 -->
                         <?php if(isset($get_list)): ?>
+
                         <div id="posts-container">
                         <?php foreach($get_list as $post): ?>
                             <?php if($post->is_notice == 1): ?>
@@ -159,6 +160,7 @@
                                             <?php if($post->file_count > 0): ?>
                                                 <div>[파일있음]</div>
                                             <?php endif; ?>
+                                            
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">자유</div>
@@ -451,6 +453,9 @@ function createPostHtml(post) {
     if (post.file_count > 0) {
     postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
 }
+if (post.content && post.content.includes('<img')) {
+    postHtml += '<div class="ml-2 text-green-500"><i class="fa-solid fa-image"></i></div>';
+}             
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="font-base text-gray-500">자유</div>';
