@@ -59,20 +59,19 @@
                             </select>
                         </div>
 
-                        <form id="editForm" method="POST" class="mt-8"  enctype="multipart/form-data">
+                        <form id="edit_form" method="POST" class="mt-8"  enctype="multipart/form-data" data-post-id="<?= $post_id ?>">
                             <div class="mb-6">
                                 <label for="title" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
-                                <input type="hidden" name="post_id" id="post_id" value="<?php echo $post_id; ?>">
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="<?php echo $title; ?>">
+                            
                             </div>
                             <div class="mb-6">
                 
 
-                                <label for="edit_content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
+                                <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
                                
-                                <textarea class="h-36" type="text" name="edit_content" id="edit_content"><?php echo $content; ?></textarea>
-                                
-
+                                <textarea class="h-36" type="text" name="content" id="content"><?php echo $content; ?></textarea>
+                        
                                 
                             </div>
 
@@ -93,7 +92,7 @@
                     
                 </div>
                                 
-                <div name="content " class="m-8">
+                <div  class="m-8">
                     <div class="mt-4 flex flex-col">
                         <div><strong>[첨부된 파일]</strong></div>
                         <div id="existing-files">
@@ -127,46 +126,78 @@
 
 <script>
 
-ClassicEditor.create(document.querySelector('#edit_content'), {
-    language: "ko",
-    simpleUpload: {
-        uploadUrl: '/posts/write/saveImage'
-    },
-    ckfinder: {
-        uploadUrl: "/posts/write/saveImage",
-        withCredentials: true
-    }
-});
-
-document.getElementById('editForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var formData = new FormData(this);
     
-    // 폼 안의 post_id 필드의 값을 가져옴
-    var post_id = formData.get('post_id');
+ClassicEditor
+        .create( document.querySelector( '#content' ), {
+    
+        language: "ko",
+        simpleUpload: {
+            uploadUrl: '/posts/write/saveImage'
+        },
+        ckfinder : {
+            uploadUrl: "/posts/write/saveImage",
+            withCredentials: true
+        },
+        removePlugins: [ 'Heading' ],
+        
 
-    console.log(post_id);
+        } )
+        .then(editor => {
+            globalEditor = editor; // 전역 변수에 인스턴스 저장
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-    fetch('/posts/write/post_edit/' + post_id, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // 수정 성공 메시지 표시 또는 리디렉션
-            window.location.href = '/posts/free/' + post_id;
-        } else {
-            // 에러 메시지 표시
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        // 네트워크 오류 또는 서버 에러 처리
-        console.error('Error:', error);
-    });
+
+
+document.getElementById('edit_form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (globalEditor) {
+        var content = globalEditor.getData();
+        document.getElementById('content').value = content;
+    }
+
+    // 제목과 내용이 비어 있는지 검사
+    let title = document.getElementById('title').value.trim();
+    
+
+    if (title === '' ) {
+        alert('제목을 입력해주세요.');
+        return;
+    }
+
+    if (content === '' ) {
+        alert('내용을 입력해주세요.');
+        return;
+    }
+
+    let formData = new FormData(this);
+    let post_id = $('#edit_form').attr('data-post-id');
+
+    console.log(formData);
+
+    axios.post('/posts/write/post_edit/'+post_id, formData)
+        .then(function (response) {
+            console.log('성공: ', response);
+            alert('글이 수정되었습니다.')
+            location.href = '/posts/free/' +post_id;
+        })
+        .catch(function (error) {
+            if (error.response && error.response.data.errors) {
+            // 오류 메시지를 사용자에게 보여주는 로직
+            console.log('유효성 검증 오류: ', error.response.data.errors);
+            // 예시: alert 사용
+            alert('오류: ' + Object.values(error.response.data.errors).join('\n'));
+            
+            } else {
+                // 다른 종류의 오류 처리
+                console.log('실패: ', error);
+            }
+        });
 });
+
 
 
 
@@ -243,10 +274,6 @@ filesInput.dispatchEvent(event);
 
 
 
-  ClassicEditor.create( document.querySelector( '#content' ), {
-    
-    language: "ko"
-  } )
 </script>
 <style>
 	.ck.ck-editor {

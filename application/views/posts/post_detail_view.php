@@ -56,7 +56,7 @@
                     <?php endforeach; ?>
                     <?php endif; ?>
 
-                    <div class="m-12">
+                    <div class="m-12 w-full">
                         <?php echo $content ?>
                     </div>
                 </div>

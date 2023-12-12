@@ -50,12 +50,14 @@ class Write extends CI_Controller {
                 
                 // 글 저장 후 생성된 post_id 획득
                 $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice);
-    
+                
+                echo json_encode(['success' => true, 'redirect' => '/posts']);
+
                 // 파일 업로드 로직
                 $this->upload_files($post_id, $user_id);
     
               
-                echo json_encode(['success' => true, 'redirect' => '/posts']);
+                
                 return; 
             }
         } else {
@@ -144,10 +146,10 @@ class Write extends CI_Controller {
     
 
     public function answer_post($post_id) {
+
         // 폼 유효성 검사 규칙 설정
         $this->form_validation->set_rules('title', '제목', 'required', array('required' => '제목을 입력해주세요.'));
         $this->form_validation->set_rules('content', '내용', 'required', array('required' => '내용을 입력해주세요.'));
-        $this->form_validation->set_error_delimiters('<div class="ml-1 mb-1 text-red-500">', '</div>');
     
         $user_id = $this->session->userdata('user_id');
     
@@ -158,21 +160,29 @@ class Write extends CI_Controller {
         }
     
         if (!empty($post_id)) {
-            if ($this->input->post()) {
+
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // 폼 유효성 검사 실행
                 if ($this->form_validation->run() == FALSE) {
-                    // 검사 실패: 오류 메시지를 플래시 데이터로 저장
-                    $this->session->set_flashdata('message', validation_errors());
-    
+                    $errors = $this->form_validation->error_array();
+                    echo json_encode(['success' => false, 'errors' => $errors]);
+                    return;
+                }else{
                     // 필요한 경우 다른 데이터를 뷰에 전달
                     $data['post_data'] = $this->Write_model->get_post($post_id);
                     $this->load->view('posts/post_write_view', $data);
-                } else {
+            
                     // 검사 성공: 답글 저장 로직
                     $title = $this->input->post('title');
                     $content = $this->input->post('content');
-                    $this->Write_model->save_answer_post($title, $content, $user_id, $post_id);
-                    redirect('/posts/all');
+                    $new_post_id =$this->Write_model->save_answer_post($title, $content, $user_id, $post_id);
+
+                    $this->upload_files($new_post_id, $user_id);
+                          
+                    echo json_encode(['success' => true, 'new_post_id' => $new_post_id, 'message' => '성공']);
+
+                    exit();
                 }
             } else {
                 
@@ -214,6 +224,9 @@ class Write extends CI_Controller {
 
     public function post_edit($post_id){
 
+        $this->form_validation->set_rules('title', '제목', 'required', array('required' => '제목을 입력해주세요.'));
+        $this->form_validation->set_rules('content', '내용', 'required', array('required' => '내용을 입력해주세요.'));
+
 
         $user_id = $this->session->userdata('user_id');
         
@@ -250,22 +263,26 @@ class Write extends CI_Controller {
 
             $this->load->view('posts/post_edit_view', $data);
         }
-        
 
-        if($this->input->post()){
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            if ($this->form_validation->run() == FALSE) {
+                $errors = $this->form_validation->error_array();
+                echo json_encode(['success' => false, 'errors' => $errors]);
+                return;
+            }else{
 
             $title = $this->input->post('title');
             $content = $this->input->post('content');
 
+  
             $this->Write_model->edit_post($post_id, $title, $content);
 
             $this->upload_files($post_id, $user_id);
 
-            echo json_encode(['success' => true, 'message' => '글이 수정되었습니다.']);
-            return;
-
-            // redirect('/posts/free/'.$post_id);
-        
+            
+            }
         }
 
         // $this->load->view("posts/post_edit_view");
@@ -280,6 +297,8 @@ class Write extends CI_Controller {
     }
 
   
+
+
     public function saveImage(){
         
         if (isset($_FILES['upload'])) {
@@ -289,7 +308,6 @@ class Write extends CI_Controller {
 
             // 이미지 파일을 서버에 저장하는 로직
             $savedImageUrl = $this->Write_model->saveImageFile($file, $fileName);
-            
 
             // CKEditor에 반환할 JSON 응답
             $response = [
@@ -301,7 +319,7 @@ class Write extends CI_Controller {
             return;
     }
 
-    } 
+    }   
 
 }
 ?>

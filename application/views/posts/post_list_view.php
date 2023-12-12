@@ -182,7 +182,6 @@
                                 <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
                                 
                             <?php else: ?>
-                          
                             <div  class="flex flex-col border-b answer-row" >
                                 <div class="flex flex-1 p-2 hover:bg-gray-200 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
@@ -628,7 +627,7 @@ function loadReplies(postId) {
                 repliesHtml += '        <div class="ml-' + (reply.re_level * 12) + ' flex-[0.1] flex items-center">';
                 repliesHtml += '            <div>↳</div>'; // 들여쓰기 표시
                 repliesHtml += '        </div>';
-                repliesHtml += '        <div class="flex-[3] hover:text-red-500">';
+                repliesHtml += '        <div class="flex-[3] hover:text-red-500 cursor-pointer" onclick="redirectToPost('+reply.post_id+');">';
                 repliesHtml += '            ' + reply.title + ''; // 답글 제목
                 repliesHtml += '            <div class="flex">';
                 repliesHtml += '                <div>자유</div>'; 
@@ -653,6 +652,17 @@ function loadReplies(postId) {
    
 }
 
+function redirectToPost(postId) {
+    
+    window.location.href = '/posts/free/' + postId;
+}
+
+$(document).ready(function() {
+    $('.flex-[3].hover:text-red-500').on('click', function() {
+        var postId = $(this).data('post-id');
+        redirectToPost(postId);
+    });
+});
 
 
 function redirectToURL() {
