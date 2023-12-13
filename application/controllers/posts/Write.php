@@ -46,10 +46,11 @@ class Write extends CI_Controller {
 
                 $title = $this->input->post('title');
                 $content = $this->input->post('content');
+                $channel_id = $this->input->post('channel_id'); 
                 $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
                 
                 // 글 저장 후 생성된 post_id 획득
-                $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice);
+                $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice, $channel_id);
                 
                 echo json_encode(['success' => true, 'redirect' => '/posts']);
 
@@ -176,7 +177,8 @@ class Write extends CI_Controller {
                     // 검사 성공: 답글 저장 로직
                     $title = $this->input->post('title');
                     $content = $this->input->post('content');
-                    $new_post_id =$this->Write_model->save_answer_post($title, $content, $user_id, $post_id);
+                    $channel_id = $this->input->post('channel_id'); 
+                    $new_post_id =$this->Write_model->save_answer_post($title, $content, $user_id, $post_id, $channel_id );
 
                     $this->upload_files($new_post_id, $user_id);
                           
@@ -275,9 +277,9 @@ class Write extends CI_Controller {
 
             $title = $this->input->post('title');
             $content = $this->input->post('content');
-
+            $channel_id = $this->input->post('channel_id'); 
   
-            $this->Write_model->edit_post($post_id, $title, $content);
+            $this->Write_model->edit_post($post_id, $title, $content, $channel_id);
 
             $this->upload_files($post_id, $user_id);
 

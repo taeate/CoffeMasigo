@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Write_model extends CI_Model {
 
-    public function set_article($title, $content, $user_id, $is_notice) {
+    public function set_article($title, $content, $user_id, $is_notice, $channel_id) {
 
         $data = array(
             'title'=> $title,
@@ -13,7 +13,8 @@ class Write_model extends CI_Model {
             're_step' => 0,
             're_level' => 0,
             'delete_status' => FALSE,
-            'is_notice' => $is_notice
+            'is_notice' => $is_notice,
+            'channel_id' => $channel_id
         );
 
         $this->db->insert('post', $data);
@@ -36,7 +37,7 @@ class Write_model extends CI_Model {
     }
 
 
-    public function save_answer_post($title, $content, $user_id, $parent_post_id) {
+    public function save_answer_post($title, $content, $user_id, $parent_post_id, $channel_id) {
     $ref = null;
     $re_step = 0;
     $re_level = 0;
@@ -69,6 +70,7 @@ class Write_model extends CI_Model {
         'ref' => $ref,
         're_step' => $re_step,
         're_level' => $re_level,
+        'channel_id' => $channel_id
     );
 
     $this->db->insert('post', $data);
@@ -126,13 +128,14 @@ class Write_model extends CI_Model {
     
     
 
-    public function edit_post($post_id, $title, $content){
+    public function edit_post($post_id, $title, $content, $channel_id){
 
         $this->db->where('post_id', $post_id);
 
         $data = array(
             'title'=> $title,
-            'content'=> $content
+            'content'=> $content,
+            'channel_id' => $channel_id
             );
 
         $this->db->update('post', $data);

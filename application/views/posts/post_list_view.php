@@ -211,7 +211,11 @@
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">
+                                            <?php if(isset($post->channel_name)):?>
                                             <?php echo $post->channel_name; ?>
+                                            <?php else: ?>
+                                                <div>자유</div>
+                                            <?php endif; ?>
                                             </div>
 
                                                 <!-- 답글이 있을 때만 버튼이 보임 -->
@@ -471,7 +475,7 @@ function createPostHtml(post) {
     }             
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
-    postHtml += '                <div class="font-base text-gray-500">z</div>';
+    postHtml += '                <div class="font-base text-gray-500">'+post.channel_name +'</div>';
     if (post.replies > 1) {
         postHtml += '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + post.post_id + '); return false;">답글보기</a>';
     }
@@ -664,7 +668,7 @@ function loadReplies(postId) {
 
                 repliesHtml += '        </div>';
                 repliesHtml += '        <div class="flex">'; 
-                repliesHtml += '           <div>자유</div>'; 
+                repliesHtml += '           <div>'+ reply.channel_name +'</div>'; 
                 repliesHtml += '           <div class="ml-2">' + reply.user_id + '</div>';
                 repliesHtml += '           <div class="ml-2">조회 ' + reply.views + '</div>'; // 조회수
                 repliesHtml += '               <div class="ml-2 text-gray-400">' + reply.create_date + '</div>';

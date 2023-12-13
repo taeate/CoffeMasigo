@@ -37,19 +37,31 @@
 
                         </div>
                     </div>
-                    <div class="mt-2">
-                        <select class="select select-bordered w-28 h-4 max-w-xs mt-2">
-                            <option disabled selected>채널선택</option>
-                            <option>자유</option>
-                            <option>PYTHON</option>
-                            <option>JAVA</option>
-                            <option>PHP</option>
-                            <option>C++</option>
-                        </select>
-                    </div>
-                    
+           
                     <!-- 답변 폼 -->
                     <form data-post-id="<?= $post_id?>" id="answer_form" method="POST" class="mt-8">
+                        <div class="mb-4">
+                                <select name="answer_channel_id" class="select select-bordered w-52 h-4 max-w-xs mt-2">
+                                    <option disabled selected>채널선택</option>
+                                    <option value="3" >자유게시판</option>
+                                    <option value="4">7세대 머스탱</option>
+                                    <option value="5">머스탱 5.0</option>
+                                    <option value="6">머스탱 2.3 에코부스터</option>
+                                    <option value="7">머스탱은 OOO 이다</option>
+                                    <option value="8">머스탱 시승기 공유</option>
+                                    <option value="9">머스탱 연비 공유</option>
+                                    <option value="10">머스탱 부품 공유</option>
+                                    <option value="11">맛집/여행/드라이브</option>
+                                    <option value="12">리스/승계</option>
+                                    <option value="13">사건사고</option>
+                                    <option value="14">QNA</option>
+                                    <option value="16">서울</option>
+                                    <option value="17">대전</option>
+                                    <option value="18">대구</option>
+                                    <option value="19">부산</option>
+                                    <option value="20">제주</option>
+                                </select>
+                            </div>
                         <div class="mb-6">
                             <label for="title"
                                 class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
@@ -93,16 +105,7 @@
                         <div class="flex flex-none">
                             <div class="mt-2 text-2xl font-bold">게시글작성</div>
                         </div>
-                        <div class="ml-4 mb-4">
-                            <select class="select select-bordered w-28 h-4 max-w-xs mt-2">
-                                <option disabled selected>채널선택</option>
-                                <option>자유게시판</option>
-                                <option>머스탱 5.0</option>
-                                <option>머스탱 2.3 에코부스터</option>
-                                <option>머스탱 시승기 공유</option>
-                                <option>머스탱 연비 공유</option>
-                            </select>
-                        </div>
+                        
                         <div class="grow"></div>
                         <div class="flex flex-none">
 
@@ -121,6 +124,28 @@
 
 
                     <form  id="postForm" method="POST" class="mt-8" enctype="multipart/form-data">
+                    <div class="mb-4">
+                            <select name="channel_id" class="select select-bordered w-52 h-4 max-w-xs mt-2">
+                                <option disabled selected>채널선택</option>
+                                <option value="3" >자유게시판</option>
+                                <option value="4">7세대 머스탱</option>
+                                <option value="5">머스탱 5.0</option>
+                                <option value="6">머스탱 2.3 에코부스터</option>
+                                <option value="7">머스탱은 OOO 이다</option>
+                                <option value="8">머스탱 시승기 공유</option>
+                                <option value="9">머스탱 연비 공유</option>
+                                <option value="10">머스탱 부품 공유</option>
+                                <option value="11">맛집/여행/드라이브</option>
+                                <option value="12">리스/승계</option>
+                                <option value="13">사건사고</option>
+                                <option value="14">QNA</option>
+                                <option value="16">서울</option>
+                                <option value="17">대전</option>
+                                <option value="18">대구</option>
+                                <option value="19">부산</option>
+                                <option value="20">제주</option>
+                            </select>
+                        </div>
                         <?php if($user_role == 'admin'): ?>
                         <div class="flex mb-4">
                             <div class="form-control mr-2 ">
@@ -225,7 +250,7 @@ ClassicEditor
 document.addEventListener('DOMContentLoaded', function () {
     var answerForm = document.getElementById('answer_form');
     if (answerForm) {
-        //답글작성폼
+    //답글작성폼
     document.getElementById('answer_form').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -249,7 +274,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         let formData = new FormData(this);
-        let post_id = $('#answer_form').attr('data-post-id');
+        let post_id = $('#answer_form').attr('data-post-id'); 
+        formData.append('channel_id', document.querySelector('select[name="answer_channel_id"]').value);
 
         console.log(post_id);
 
@@ -285,6 +311,8 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             var formData = new FormData(this);
+            
+            formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
 
                 fetch('/posts/write', {
                         method: 'POST',

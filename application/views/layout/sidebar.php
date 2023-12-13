@@ -60,12 +60,12 @@
             </div>
             <div>
                 <button  class="hover:bg-base-200">
-                    <a href="">공지사항</a>
+                    <a href="/posts/channel_id/2">공지사항</a>
                 </button>
             </div>
             <div>
                 <button  class="hover:bg-base-200">
-                    <a href="">자유게시판</a>
+                    <a href="/posts/channel_id/3">자유게시판</a>
                 </button>
             </div>
         </div>
@@ -75,23 +75,22 @@
 
         <div name="sec-side-box" class="mt-4 ml-8">
             <div class="grid grid-cols gap-3">
-                <a href="/posts/channel_id/4" data-channel-id="4">7세대 머스탱</a>
-                <a href="/posts/channel_id/5" data-channel-id="5">머스탱 5.0</a>
-                <a href="/posts/channel_id/6" data-channel-id="6">머스탱 2.3 에코부스터</a>
-                <a href="/posts/channel_id/7" data-channel-id="7">머스탱은 OOO 이다</a>
-                <a href="/posts/channel_id/8" data-channel-id="8">머스탱 시승기 공유</a>
-                <a href="/posts/channel_id/9" data-channel-id="9">머스탱 연비 공유</a>
-                <a href="/posts/channel_id/10" data-channel-id="10">머스탱 부품 공유</a>
-                <a href="/posts/channel_id/11" data-channel-id="11">맛집/여행/드라이브</a>
-                <a href="/posts/channel_id/12" data-channel-id="12">리스/승계</a>
-                <a href="/posts/channel_id/13" data-channel-id="13">사건사고</a>
-                <a href="/posts/channel_id/14" data-channel-id="14">>QNA</a>
-                <a href="/posts/channel_id/15" data-channel-id="15">지역</a>
-                <a href="/posts/channel_id/16" data-channel-id="16">서울</a>
-                <a href="/posts/channel_id/17" data-channel-id="17">대전</a>
-                <a href="/posts/channel_id/18" data-channel-id="18">대구</a>
-                <a href="/posts/channel_id/19" data-channel-id="19">부산</a>
-                <a href="/posts/channel_id/20" data-channel-id="20">제주</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/4" data-channel-id="4">7세대 머스탱</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/5" data-channel-id="5">머스탱 5.0</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/6" data-channel-id="6">머스탱 2.3 에코부스터</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/7" data-channel-id="7">머스탱은 OOO 이다</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/8" data-channel-id="8">머스탱 시승기 공유</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/9" data-channel-id="9">머스탱 연비 공유</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/10" data-channel-id="10">머스탱 부품 공유</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/11" data-channel-id="11">맛집/여행/드라이브</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/12" data-channel-id="12">리스/승계</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/13" data-channel-id="13">사건사고</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/14" data-channel-id="14">QNA</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/16" data-channel-id="16">서울</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/17" data-channel-id="17">대전</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/18" data-channel-id="18">대구</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/19" data-channel-id="19">부산</a>
+                <a class="hover:text-blue-500" href="/posts/channel_id/20" data-channel-id="20">제주</a>
             </div>
         </div>
             

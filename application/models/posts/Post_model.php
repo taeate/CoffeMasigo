@@ -68,8 +68,9 @@ class Post_model extends CI_Model {
     }
 
     public function get_reply_to_post($post_id) {
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->from('post');
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); 
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
         $this->db->order_by('ref', 'ASC');
@@ -78,6 +79,7 @@ class Post_model extends CI_Model {
         $query = $this->db->get();
         return $query->result();
     }
+    
     
 
     public function get_reply_to_post_count($post_id){
@@ -303,7 +305,12 @@ class Post_model extends CI_Model {
 
 
     public function get_posts_ordered_by_latest($start = 0, $limit = 20) {
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+
+        // channel 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id',null);
         $this->db->order_by('is_notice','DESC');
@@ -324,7 +331,11 @@ class Post_model extends CI_Model {
     
 
     public function get_posts_ordered_by_thumb($start = 0, $limit = 20) {
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+
+        // channel 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->order_by('is_notice','DESC');
@@ -346,15 +357,21 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_ordered_by_views($start = 0, $limit = 20) {
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id',null);
-        $this->db->order_by('is_notice','DESC');
-        $this->db->order_by('views', 'DESC');
-        $this->db->limit($limit,$start);
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        
+        // channel 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        
+        $this->db->where('post.delete_status', FALSE);
+        $this->db->where('post.parent_post_id', null);
+        $this->db->order_by('post.is_notice', 'DESC');
+        $this->db->order_by('post.views', 'DESC');
+        $this->db->limit($limit, $start);
+        
         $query = $this->db->get('post');
         return $query->result(); 
     }
+    
 
     public function comment_orderby_created($post_id,$order)  {
         $this->db->select('COMMENT.*, USER.profile_image');
