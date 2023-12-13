@@ -4,16 +4,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Post_model extends CI_Model {
 
     public function get_posts($start = 0, $limit = 15){
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+    
+        // channel 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+    
+        // 기존의 조건들을 그대로 유지
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
-        $this->db->order_by('is_notice','DESC');
-        $this->db->order_by('create_date','DESC');
+        $this->db->order_by('is_notice', 'DESC');
+        $this->db->order_by('create_date', 'DESC');
         $this->db->limit($limit, $start);
+    
+        // 쿼리 실행 및 결과 반환
         $query = $this->db->get('post');
         return $query->result();
     }
     
+
     
 
     public function get_posts_not_notice($start = 0, $limit = 5){
@@ -194,7 +202,7 @@ class Post_model extends CI_Model {
     }
 
     public function search($search_query, $search_option, $selectedPast, $start, $limit) {
-        $this->db->select('*');
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->from('post');
     
         // 검색 옵션에 따른 검색 조건 설정
@@ -240,6 +248,7 @@ class Post_model extends CI_Model {
     
         return $query->result_array();
     }
+    
     
     
 
@@ -408,6 +417,45 @@ class Post_model extends CI_Model {
         $this->db->where('user_id', $userid);
         return $this->db->count_all_results('comment');
     }
+
+    public function get_posts_by_channel($channel_id) {
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        
+        $this->db->where('post.channel_id', $channel_id);
+        $this->db->where('post.delete_status', FALSE);
+        $this->db->where('post.parent_post_id', null);
+        $this->db->order_by('post.is_notice', 'DESC');
+        $this->db->order_by('post.create_date', 'DESC');
+        
+        $query = $this->db->get('post');
+        return $query->result();
+    }
+
+    
+    public function get_channel_name($channel_id) {
+        $this->db->select('name');
+        $this->db->where('channel_id', $channel_id);
+        $query = $this->db->get('channel');  
+        if ($query->num_rows() > 0) {
+            return $query->row()->name;
+        } else {
+            return null; // 채널이 존재하지 않는 경우
+        }
+    }
+    
+    
+    
+ 
+
+
+    
+   
+    
+    
+    
+    
 
 
     

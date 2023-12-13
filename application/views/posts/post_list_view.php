@@ -1,7 +1,7 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
-
+<!-- <img src="/application/views/images/car.jpg" class="h-56 w-screen" alt=""> -->
 <div class="flex flex-col lg:flex-row flex-container ml-[350px] mr-[350px] mt-[200px] mb-[200px]">
 
 
@@ -20,7 +20,13 @@
                 <div class="m-4">
                     <div class="flex justify-between w-full">
                         <div class="flex">
-                            <div class="text-xl font-bold">전체글</div>
+                            <div class="text-xl font-bold">
+                            <?php if (isset($channel_name)): ?>
+                                <h1><?php echo $channel_name; ?></h1>
+                            <?php else: ?>
+                                <h1>전체글</h1>
+                            <?php endif; ?>
+                            </div>
                         </div>
                         <div>
                             <div class="mt-2 mb-2 mr-2">
@@ -163,7 +169,7 @@
                                             
                                         </div>
                                         <div class="flex">
-                                            <div class="font-base text-gray-500">자유</div>
+                                            <div class="font-base text-gray-500"> <?php echo $post->views ?></div>
 
                                                 <!-- 답글이 있을 때만 버튼이 보임 -->
                                                 <?php if($post->replies > 1): ?>
@@ -200,10 +206,13 @@
                                             <?php if($post->content && strpos($post->content, '<img') !== false): ?>
                                                 <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
                                             <?php endif; ?>
+                                            <!-- <div class="ml-1 text-red-500"><i class="fa-regular fa-n"></i></div> -->
 
                                         </div>
                                         <div class="flex">
-                                            <div class="font-base text-gray-500">자유</div>
+                                            <div class="font-base text-gray-500">
+                                            <?php echo $post->channel_name; ?>
+                                            </div>
 
                                                 <!-- 답글이 있을 때만 버튼이 보임 -->
                                                 <?php if($post->replies > 1): ?>
@@ -462,7 +471,7 @@ function createPostHtml(post) {
     }             
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
-    postHtml += '                <div class="font-base text-gray-500">자유</div>';
+    postHtml += '                <div class="font-base text-gray-500">z</div>';
     if (post.replies > 1) {
         postHtml += '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + post.post_id + '); return false;">답글보기</a>';
     }
@@ -583,6 +592,12 @@ $.ajax({
             loadPage(page, 'views');
     });
 }
+
+
+
+
+
+
 
 
 var showNotices = true; // 초기 상태는 공지사항을 보여주는 것으로 설정

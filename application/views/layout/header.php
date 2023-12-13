@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">Cafe Masigo</a>
+        <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">FORD MUSTANG</a>
     </div>
     <div class="navbar-end">
     <div class="flex text-white mr-2">
@@ -86,5 +86,6 @@
     </div>
     </div>
 </nav>
+
 </html>
 

@@ -73,6 +73,9 @@ class Wrote extends CI_Controller {
             $this->load->view('member/wrote_comment_view', $data);
         }
     }
+
+
+    
     
 
 

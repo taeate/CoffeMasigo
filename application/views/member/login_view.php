@@ -1,7 +1,7 @@
 <?php $this->load->view('layout/header'); ?>
 <body class="">
 <div class="hero min-h-screen bg-base-200 ">
-<img src="/application/views/images/city.jpg" class="h-screen w-screen" alt="">
+<img src="/application/views/images/car.jpg" class="h-screen w-screen" alt="">
   <div class="hero-content flex-col lg:flex-row-reverse">
 
 <!-- 비밀번호 변경 성공후  로그인 페이지에서 Alert 표시 -->
@@ -49,9 +49,8 @@
     </div>
     <div class="text-center lg:text-left text-white">
       
-      <h1 class="text-6xl font-bold">Welcome Cafe Masigo!</h1>
-      <p class="py-6">Provident qwer voluptatem et in. Quaerat qwer ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi. 
-      Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
+      <h1 class="text-6xl font-bold">Welcome Ford Mustang!</h1>
+      <p class="py-6">The Ford Mustang, an American icon and a symbol of automotive freedom, debuted in 1964 and revolutionized the muscle car industry with its captivating blend of power, style, and performance. With a heritage rooted in American culture, it has become a ontinues to captivate with its unique combination of performance, style, and legacy.
       
       </p>
     </div>

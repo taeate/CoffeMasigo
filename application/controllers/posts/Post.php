@@ -509,6 +509,28 @@ class Post extends CI_Controller {
     }
 
 
+    public function get_channel_posts($channel_id = null) {
+
+        $data['channel_name'] = $this->Post_model->get_channel_name($channel_id);
+        $data['get_list'] = $this->Post_model->get_posts_by_channel($channel_id);
+        //사이드바 정보
+        $userid = $this->session->userdata('user_id');
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+        $data['link'] = $this->pagination->create_links();
+
+        foreach ($data['get_list'] as $post) {
+            $post->comment_count = $this->Post_model->count_comment($post->post_id);
+            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+            $post->thumb = $this->Post_model->count_thumb($post->post_id);
+        }
+    
+        $this->load->view('posts/post_list_view', $data);
+    }
+    
+    
+    
+
 
     
 }

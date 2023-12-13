@@ -96,11 +96,11 @@
                         <div class="ml-4 mb-4">
                             <select class="select select-bordered w-28 h-4 max-w-xs mt-2">
                                 <option disabled selected>채널선택</option>
-                                <option>자유</option>
-                                <option>PYTHON</option>
-                                <option>JAVA</option>
-                                <option>PHP</option>
-                                <option>C++</option>
+                                <option>자유게시판</option>
+                                <option>머스탱 5.0</option>
+                                <option>머스탱 2.3 에코부스터</option>
+                                <option>머스탱 시승기 공유</option>
+                                <option>머스탱 연비 공유</option>
                             </select>
                         </div>
                         <div class="grow"></div>

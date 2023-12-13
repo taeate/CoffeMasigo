@@ -6,7 +6,7 @@ class Wrote_model extends CI_Model {
 
 
     public function get_wrote_post($userid) {
-        $this->db->select('*');
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->from('post');
         $this->db->where('user_id',$userid);
         $query = $this->db->get();

@@ -66,6 +66,15 @@
                                             
                                             </div>
                                             <div class="ml-1 text-red-500">[33]</div>
+                                            <?php if($post['content'] && strpos($post['content'], '<img') !== false): ?>
+                                                <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
+                                            <?php endif; ?>
+
+
+                                            <?php if($post['file_count'] > 0): ?>
+                                                    <div  class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>
+                                            <?php endif; ?>
+
 
                                         </div>
                                             <div class="flex">
@@ -166,6 +175,9 @@ $(document).ready(function(){
                                 '<div class="flex">' +
                                 
                                     '<div class="text-base font-medium">' + post.title + '</div>' +
+                                    (post.content && post.content.includes('<img') ? '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>' : '') +
+                                    (post.file_count > 0 ? '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>' : '') +
+                
                                 
                                 '</div>' +
                                 '<div class="flex">' +
@@ -239,7 +251,7 @@ $(document).ready(function(){
                             '<div class="flex-[1] m-auto">' +
                                 '<div class="flex">' +
                                     '<div class="text-base font-medium">' + comment.comment_content + '</div>' +
-                                
+                              
                                 '</div>' +
                                 '<div class="flex">' +
                                     '<div class="font-base text-gray-500">'+ comment.title +'에 대한 댓글</div>' + // 카테고리 또는 태그 필요

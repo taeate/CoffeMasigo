@@ -51,13 +51,22 @@
         <hr class="mt-8">
         
 
-        <div name="sec-side-box" class="mt-4 ml-8">
-            <div >
+        <div name="sec-side-box" class="mt-4 ml-8 flex flex-col gap-2">
+            <div class="">
                 
                 <button  class="hover:bg-base-200">
-                    <a href="">전체글보기</a>
+                    <a href="/posts" data-channel-id="1">전체글보기</a>
+                </button> 
+            </div>
+            <div>
+                <button  class="hover:bg-base-200">
+                    <a href="">공지사항</a>
                 </button>
-                
+            </div>
+            <div>
+                <button  class="hover:bg-base-200">
+                    <a href="">자유게시판</a>
+                </button>
             </div>
         </div>
             
@@ -65,14 +74,24 @@
 
 
         <div name="sec-side-box" class="mt-4 ml-8">
-            <div >
-                <div>공지사항</div>
-                <button  class="hover:bg-base-200">
-                    <a href="">자유</a>
-                </button>
-                <div>가입인사</div>
-                <div>사건사고</div>
-                <div>QNA</div>
+            <div class="grid grid-cols gap-3">
+                <a href="/posts/channel_id/4" data-channel-id="4">7세대 머스탱</a>
+                <a href="/posts/channel_id/5" data-channel-id="5">머스탱 5.0</a>
+                <a href="/posts/channel_id/6" data-channel-id="6">머스탱 2.3 에코부스터</a>
+                <a href="/posts/channel_id/7" data-channel-id="7">머스탱은 OOO 이다</a>
+                <a href="/posts/channel_id/8" data-channel-id="8">머스탱 시승기 공유</a>
+                <a href="/posts/channel_id/9" data-channel-id="9">머스탱 연비 공유</a>
+                <a href="/posts/channel_id/10" data-channel-id="10">머스탱 부품 공유</a>
+                <a href="/posts/channel_id/11" data-channel-id="11">맛집/여행/드라이브</a>
+                <a href="/posts/channel_id/12" data-channel-id="12">리스/승계</a>
+                <a href="/posts/channel_id/13" data-channel-id="13">사건사고</a>
+                <a href="/posts/channel_id/14" data-channel-id="14">>QNA</a>
+                <a href="/posts/channel_id/15" data-channel-id="15">지역</a>
+                <a href="/posts/channel_id/16" data-channel-id="16">서울</a>
+                <a href="/posts/channel_id/17" data-channel-id="17">대전</a>
+                <a href="/posts/channel_id/18" data-channel-id="18">대구</a>
+                <a href="/posts/channel_id/19" data-channel-id="19">부산</a>
+                <a href="/posts/channel_id/20" data-channel-id="20">제주</a>
             </div>
         </div>
             
@@ -82,6 +101,39 @@
 </div>
 
 <script>
+
+
+// $(document).on('click', '[data-channel-id]', function(e) {
+//     e.preventDefault();
+//     var channelId = $(this).data("channel-id");
+
+//     // window.location.href = '/posts?channel_id=' + channelId;
+
+//     $.ajax({
+//         url: '/posts/get_channel_posts',
+//         type: 'GET',
+//         dataType: 'json',
+//         data: channelId ? { channel_id: channelId } : {},
+//         success: function(response) {
+//             var postsHtml = '';
+//             response.forEach(function(post) {
+//                 postsHtml += createPostHtml(post);
+//             });
+
+//             // 게시물 목록을 페이지에 추가
+//             $('#posts-container').html(postsHtml);
+//         },
+//         error: function(error) {
+//             console.error('Error:', error);
+//         }
+//     });
+// });
+
+
+
+
+
+
 function checkLoginBeforeWrite() {
 
     <?php if(!$this->session->userdata('user_id')): ?>

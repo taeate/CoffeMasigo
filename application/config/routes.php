@@ -77,6 +77,7 @@ $route['posts/delete/(:num)'] = 'posts/write/post_delete/$1';
 
 
 
+$route['posts/channel_id/(:num)'] = 'posts/post/get_channel_posts/$1';
 $route['posts/all/page/(:num)'] = 'posts/post/index/$1';
 $route['posts/search'] = 'posts/post/search';
 // $route['posts/search/(:any)/page/(:num)'] = 'posts/post/search/$1/$2';
