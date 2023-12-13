@@ -37,23 +37,27 @@ class Post_model extends CI_Model {
 
     }
     
+public function find_detail($post_id) {
+    // 게시물 정보와 채널 정보를 가져오기
+    $this->db->select('post.*, channel.name as channel_name');
+    $this->db->from('post');
+    $this->db->where('post.post_id', $post_id);
+    $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); // 채널 정보를 조인
 
-    public function find_detail($post_id) {
-        // 게시물 정보 가져오기
-        $this->db->where('post_id', $post_id);
-        $post_info = $this->db->get('post')->row();
-    
-        // 파일 정보 가져오기
-        $this->db->select('file_name, file_path');
-        $this->db->where('post_id', $post_id);
-        $files = $this->db->get('uploadfile')->result();
-    
-        // 게시물 정보와 파일 정보를 함께 반환
-        return [
-            'post_info' => $post_info,
-            'files' => $files
-        ];
-    }
+    $post_info = $this->db->get()->row();
+
+    // 파일 정보 가져오기
+    $this->db->select('file_name, file_path');
+    $this->db->where('post_id', $post_id);
+    $files = $this->db->get('uploadfile')->result();
+
+    // 게시물 정보와 파일 정보를 함께 반환
+    return [
+        'post_info' => $post_info,
+        'files' => $files
+    ];
+}
+
     
     
 

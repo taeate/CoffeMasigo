@@ -18,6 +18,7 @@
                             <?php $title = $before_data['post_info']->title; ?>
                             <?php $content = $before_data['post_info']->content; ?>
                             <?php $post_id = $before_data['post_info']->post_id; ?>
+                            <?php $channel_name = $before_data['post_info']->channel_name; ?>
                             
                             
                            
@@ -54,23 +55,23 @@
                             <div class="mb-4">
                                 <select name="channel_id" class="select select-bordered w-52 h-4 max-w-xs mt-2">
                                     <option disabled selected>채널선택</option>
-                                    <option value="3" >자유게시판</option>
-                                    <option value="4">7세대 머스탱</option>
-                                    <option value="5">머스탱 5.0</option>
-                                    <option value="6">머스탱 2.3 에코부스터</option>
-                                    <option value="7">머스탱은 OOO 이다</option>
-                                    <option value="8">머스탱 시승기 공유</option>
-                                    <option value="9">머스탱 연비 공유</option>
-                                    <option value="10">머스탱 부품 공유</option>
-                                    <option value="11">맛집/여행/드라이브</option>
-                                    <option value="12">리스/승계</option>
-                                    <option value="13">사건사고</option>
-                                    <option value="14">QNA</option>
-                                    <option value="16">서울</option>
-                                    <option value="17">대전</option>
-                                    <option value="18">대구</option>
-                                    <option value="19">부산</option>
-                                    <option value="20">제주</option>
+                                    <option value="3" <?php if ($before_data['post_info']->channel_id == 3) echo 'selected'; ?> >자유게시판</option>
+                                    <option value="4" <?php if ($before_data['post_info']->channel_id == 4) echo 'selected'; ?>>7세대 머스탱</option>
+                                    <option value="5" <?php if ($before_data['post_info']->channel_id == 5) echo 'selected'; ?>>머스탱 5.0</option>
+                                    <option value="6" <?php if ($before_data['post_info']->channel_id == 6) echo 'selected'; ?>>머스탱 2.3 에코부스터</option>
+                                    <option value="7" <?php if ($before_data['post_info']->channel_id == 7) echo 'selected'; ?>>머스탱은 OOO 이다</option>
+                                    <option value="8" <?php if ($before_data['post_info']->channel_id == 8) echo 'selected'; ?>>머스탱 시승기 공유</option>
+                                    <option value="9" <?php if ($before_data['post_info']->channel_id == 9) echo 'selected'; ?>>머스탱 연비 공유</option>
+                                    <option value="10" <?php if ($before_data['post_info']->channel_id == 10) echo 'selected'; ?>>머스탱 부품 공유</option>
+                                    <option value="11" <?php if ($before_data['post_info']->channel_id == 11) echo 'selected'; ?>>맛집/여행/드라이브</option>
+                                    <option value="12" <?php if ($before_data['post_info']->channel_id == 12) echo 'selected'; ?>>리스/승계</option>
+                                    <option value="13" <?php if ($before_data['post_info']->channel_id == 13) echo 'selected'; ?>>사건사고</option>
+                                    <option value="14" <?php if ($before_data['post_info']->channel_id == 14) echo 'selected'; ?>>QNA</option>
+                                    <option value="16" <?php if ($before_data['post_info']->channel_id == 16) echo 'selected'; ?>>서울</option>
+                                    <option value="17" <?php if ($before_data['post_info']->channel_id == 17) echo 'selected'; ?>>대전</option>
+                                    <option value="18" <?php if ($before_data['post_info']->channel_id == 18) echo 'selected'; ?>>대구</option>
+                                    <option value="19" <?php if ($before_data['post_info']->channel_id == 19) echo 'selected'; ?>>부산</option>
+                                    <option value="20" <?php if ($before_data['post_info']->channel_id == 20) echo 'selected'; ?>>제주</option>
                                 </select>
                             </div>
                             <div class="mb-6">

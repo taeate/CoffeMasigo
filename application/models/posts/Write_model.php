@@ -102,22 +102,22 @@ class Write_model extends CI_Model {
     }
 
     public function get_before_post($post_id) {
-
-
+        $this->db->select('post.*, channel.name as channel_name');
+        $this->db->from('post');
+        $this->db->join('channel', 'post.channel_id = channel.channel_id');
         $this->db->where('post_id', $post_id);
-        $post_info = $this->db->get('post')->row();
+        $post_info = $this->db->get()->row();
     
-      
         $this->db->select('file_name, file_path, file_id');
         $this->db->where('post_id', $post_id);
         $files = $this->db->get('uploadfile')->result();
     
-  
         return [
             'post_info' => $post_info,
             'files' => $files
         ];
     }
+    
 
     public function delete_file($file_id, $post_id){
         $this->db->where('file_id', $file_id);

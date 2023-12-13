@@ -23,13 +23,14 @@
                     <?php $views = $detail_info->views; ?>
                     <?php $createdate = $detail_info->create_date; ?>
                     <?php $user_id = $detail_info->user_id; ?>
+                    <?php $channel_name = $detail_info->channel_name; ?>
 
                     <div class="text-2xl">
                         <?php echo $title ?><br>
                     </div>
                     <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5">
                         <div class="flex flex-none gap-3">
-                            <div class="">자유</div>
+                            <div class=""><?php echo $channel_name ?></div>
                             <div class=""> <?php echo $createdate ?></div>
                             <div class=""><?php echo $user_id ?></div>
                         </div>
