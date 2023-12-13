@@ -60,12 +60,13 @@ class Post_model extends CI_Model {
     }
 
     public function get_reply_to_post($post_id) {
+        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->from('post');
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
-        $this->db->order_by('re_level', 'ASC'); // 추가: re_level에 따른 정렬
+        $this->db->order_by('re_level', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }

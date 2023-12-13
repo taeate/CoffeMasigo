@@ -197,6 +197,10 @@
                                             <?php if($post->file_count > 0): ?>
                                                 <div  class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>
                                             <?php endif; ?>
+                                            <?php if($post->content && strpos($post->content, '<img') !== false): ?>
+                                                <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
+                                            <?php endif; ?>
+
                                         </div>
                                         <div class="flex">
                                             <div class="font-base text-gray-500">자유</div>
@@ -452,10 +456,10 @@ function createPostHtml(post) {
     postHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
     if (post.file_count > 0) {
     postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
-}
-if (post.content && post.content.includes('<img')) {
-    postHtml += '<div class="ml-2 text-green-500"><i class="fa-solid fa-image"></i></div>';
-}             
+    }
+    if (post.content && post.content.includes('<img')) {
+        postHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
+    }             
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="font-base text-gray-500">자유</div>';
@@ -633,13 +637,23 @@ function loadReplies(postId) {
                 repliesHtml += '            <div>↳</div>'; // 들여쓰기 표시
                 repliesHtml += '        </div>';
                 repliesHtml += '        <div class="flex-[3] hover:text-red-500 cursor-pointer" onclick="redirectToPost('+reply.post_id+');">';
-                repliesHtml += '            ' + reply.title + ''; // 답글 제목
-                repliesHtml += '            <div class="flex">';
-                repliesHtml += '                <div>자유</div>'; 
-                repliesHtml += '        <div class="ml-2">' + reply.user_id + '</div>';
-                repliesHtml += '        <div class="ml-2">조회 ' + reply.views + '</div>'; // 조회수
-                repliesHtml += '        <div class="ml-2 text-gray-400">' + reply.create_date + '</div>';
-                repliesHtml += '            </div>';
+                repliesHtml += '         <div class="flex">';
+                repliesHtml += '           <div>' + reply.title + '</div>'; 
+                                        if (reply.file_count > 0) {
+                                        repliesHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
+                                        }
+                                        
+                                        if (reply.content && reply.content.includes('<img')) {
+                                            repliesHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
+                                            } 
+
+                repliesHtml += '        </div>';
+                repliesHtml += '        <div class="flex">'; 
+                repliesHtml += '           <div>자유</div>'; 
+                repliesHtml += '           <div class="ml-2">' + reply.user_id + '</div>';
+                repliesHtml += '           <div class="ml-2">조회 ' + reply.views + '</div>'; // 조회수
+                repliesHtml += '               <div class="ml-2 text-gray-400">' + reply.create_date + '</div>';
+                repliesHtml += '           </div>';
                 repliesHtml += '        </div>';
                 repliesHtml += '    </div>';
                 repliesHtml += '</div>';
