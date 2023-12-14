@@ -201,26 +201,32 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('post');
     }
 
- public function increment_views($post_id) {
-
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+    public function increment_views($post_id) {
+        // 세션 시작
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // 사용자 ID를 가져옵니다.
+        $user_id = $this->session->userdata('user_id');
+    
+        // 사용자별로 조회한 게시물 정보를 저장할 세션 데이터를 가져옵니다.
+        $viewed_posts = isset($_SESSION['viewed_posts'][$user_id]) ? $_SESSION['viewed_posts'][$user_id] : array();
+    
+        // 이전에 이 게시물을 보지 않았다면 조회수 증가
+        if (!in_array($post_id, $viewed_posts)) {
+            $this->db->set('views', 'views+1', FALSE);
+            $this->db->where('post_id', $post_id);
+            $this->db->update('post');
+    
+            // 해당 사용자의 세션 데이터에 게시물 ID 추가
+            $_SESSION['viewed_posts'][$user_id][] = $post_id;
+        }
     }
+    
+    
+    
 
-    // 세션에서 해당 post_id의 마지막 조회 시간 확인
-    $last_view_time = $_SESSION['last_view'][$post_id] ?? false;
-
-    // 현재 시간과 비교 (예: 30분 제한)
-    if (!$last_view_time || time() - $last_view_time > 1800) { // 1800초 = 30분
-        // 조회수 증가
-        $this->db->set('views', 'views+1', FALSE);
-        $this->db->where('post_id', $post_id);
-        $this->db->update('post');
-
-        // 세션에 조회 시간 갱신
-        $_SESSION['last_view'][$post_id] = time();
-    }
-}
 
 
     public function count_search_posts($search_query) {
@@ -537,20 +543,46 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('comment');
     }
 
-    public function get_posts_by_channel($channel_id) {
+    public function get_posts_by_channel($channel_id, $start = 0, $limit = 20) {
+
+        // 최근 일주일 날짜 계산
+        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+    
+        // 초기화
+        $notices = [];
+    
+        // 첫 페이지일 경우에만 최신 3개의 공지사항
+        if ($start == 0) {
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('post.channel_id', $channel_id);
+            $this->db->where('post.delete_status', FALSE);
+            $this->db->where('post.parent_post_id', null);
+            $this->db->where('post.is_notice', TRUE);
+            $this->db->order_by('post.create_date', $week_ago);
+            $this->db->limit(3);
+            $notices = $this->db->get('post')->result();
+        }
+    
+        // 일반 글
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-        
         $this->db->where('post.channel_id', $channel_id);
         $this->db->where('post.delete_status', FALSE);
         $this->db->where('post.parent_post_id', null);
-        $this->db->order_by('post.is_notice', 'DESC');
+        $this->db->where('post.is_notice', FALSE);
+        if ($start == 0) {
+            $this->db->limit($limit - count($notices));
+        } else {
+            $this->db->limit($limit, $start);
+        }
         $this->db->order_by('post.create_date', 'DESC');
-        
-        $query = $this->db->get('post');
-        return $query->result();
+        $posts = $this->db->get('post')->result();
+    
+        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
+        return $start == 0 ? array_merge($notices, $posts) : $posts;
     }
+    
 
     
     public function get_channel_name($channel_id) {

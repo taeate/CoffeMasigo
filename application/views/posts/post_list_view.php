@@ -450,7 +450,7 @@ function createPostHtml(post) {
     
     var postStyle = post.is_notice == 1 ? "bg-blue-100 border-b border-gray-300"  : "hover:bg-gray-200"; // 공지사항인 경우 다른 배경 적용
     var titleStyle = post.is_notice == 1 ? " text-blue-500 font-bold" : "";
-    var headerStyle = post.is_notice == 1 ? "<div class='m-auto'><i class='fa-solid fa-flag fa-xl text-blue-400'></i></div>" : "<div><i class='fa-solid fa-caret-up fa-xl text-gray-400'></i></div>";
+    var headerStyle = post.is_notice == 1 ? "<div class='m-auto'><div class='text-red-500 bg-red-200 rounded-lg'>공지</div></div>" : "<div><i class='fa-solid fa-caret-up fa-xl text-gray-400'></i></div>";
     var thumbhide = post.is_notice == 1 ? " " : "";
 
     
@@ -493,8 +493,17 @@ function createPostHtml(post) {
 }
 
 function LatestOrderBy() {
+
+    // 현재 페이지 URL에서 채널 ID 추출
+    var currentUrl = window.location.pathname;
+    var channelId = currentUrl.match(/channel_id\/(\d+)/) ? currentUrl.match(/channel_id\/(\d+)/)[1] : null;
+
+    // 채널 ID에 따라 요청 URL 설정
+    var url = channelId ? '/posts/channel_id/' + channelId + '/LatestOrderBy' : '/posts/post/LatestOrderBy';
+
+    
     $.ajax({
-        url: '/posts/post/LatestOrderBy',
+        url: url,
         type: 'GET',
         dataType: 'json',
         success: function(data) {

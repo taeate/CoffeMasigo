@@ -42,7 +42,9 @@ class Login extends CI_Controller {
                     'is_logged_in'=> TRUE
                 );
                 $this->session->set_userdata($newdata);
-    
+                
+                // 사용자 ID를 세션 데이터에 저장
+                $this->session->set_userdata('user_id', $user->user_id);
                 
                 redirect('posts'); 
             }
@@ -62,12 +64,16 @@ class Login extends CI_Controller {
 
     // 로그아웃 기능
     public function logout() {
-
+        // 특정 세션 데이터 제거
         $this->session->unset_userdata('profile_image'); 
         $this->session->unset_userdata('is_logged_in');
         $this->session->unset_userdata('user_id');
+    
+        // 로그인 페이지로 리디렉션
         redirect('login');
     }
+    
+    
 
 
 	
