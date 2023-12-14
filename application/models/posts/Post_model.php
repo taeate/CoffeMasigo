@@ -202,30 +202,11 @@ public function find_detail($post_id) {
     }
 
     public function increment_views($post_id) {
-        // 세션 시작
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
+        $this->db->set('views', 'views+1', FALSE);
+        $this->db->where('post_id', $post_id);
+        $this->db->update('post');
     
-        // 사용자 ID를 가져옵니다.
-        $user_id = $this->session->userdata('user_id');
-    
-        // 사용자별로 조회한 게시물 정보를 저장할 세션 데이터를 가져옵니다.
-        $viewed_posts = isset($_SESSION['viewed_posts'][$user_id]) ? $_SESSION['viewed_posts'][$user_id] : array();
-    
-        // 이전에 이 게시물을 보지 않았다면 조회수 증가
-        if (!in_array($post_id, $viewed_posts)) {
-            $this->db->set('views', 'views+1', FALSE);
-            $this->db->where('post_id', $post_id);
-            $this->db->update('post');
-    
-            // 해당 사용자의 세션 데이터에 게시물 ID 추가
-            $_SESSION['viewed_posts'][$user_id][] = $post_id;
-        }
     }
-    
-    
-    
 
 
 
@@ -359,7 +340,8 @@ public function find_detail($post_id) {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->where('is_notice', TRUE);
-        $this->db->order_by('create_date', $week_ago);
+        $this->db->or_where('post.create_date <', $week_ago);
+        $this->db->order_by('create_date', 'DESC');
         $this->db->limit(3);
         $notices = $this->db->get('post')->result();
     }
@@ -407,7 +389,8 @@ public function find_detail($post_id) {
             $this->db->where('delete_status', FALSE);
             $this->db->where('parent_post_id', null);
             $this->db->where('is_notice', TRUE);
-            $this->db->order_by('create_date', $week_ago);
+            $this->db->or_where('post.create_date <', $week_ago);
+            $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
         }
@@ -456,7 +439,8 @@ public function find_detail($post_id) {
             $this->db->where('delete_status', FALSE);
             $this->db->where('parent_post_id', null);
             $this->db->where('is_notice', TRUE);
-            $this->db->order_by('create_date', $week_ago);
+            $this->db->or_where('post.create_date <', $week_ago);
+            $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
         }
