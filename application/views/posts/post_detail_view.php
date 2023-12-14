@@ -25,8 +25,11 @@
                     <?php $user_id = $detail_info->user_id; ?>
                     <?php $channel_name = $detail_info->channel_name; ?>
 
-                    <div class="text-2xl">
-                        <?php echo $title ?><br>
+                    <div class="text-2xl flex gap-4">
+                        <?php if($detail_info->is_notice == 1): ?>
+                        <div class="text-red-500 bg-red-200 rounded-lg">공지</div>
+                        <?php endif; ?>
+                        <div><?php echo $title ?></div><br>
                     </div>
                     <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5">
                         <div class="flex flex-none gap-3">

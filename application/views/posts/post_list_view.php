@@ -1,7 +1,7 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
-<!-- <img src="/application/views/images/car.jpg" class="h-56 w-screen" alt=""> -->
+<!-- <img src="/application/views/images/car.jpg" class="h-sreen w-screen" alt=""> -->
 <div class="flex flex-col lg:flex-row flex-container ml-[350px] mr-[350px] mt-[200px] mb-[200px]">
 
 
@@ -54,10 +54,7 @@
                                 <button class="btn btn-sm btn-accent hover:text-white" onclick="ViewsOrderBy()">
                                 <i class="fa-solid fa-eye"></i>조회수</button>
                             </div>
-                            <!-- <div class="ml-4">
-                                <button class="btn btn-sm btn-accent hover:text-white"  onclick="toggleNotices()">공지숨기기</button>
-                            </div> -->
-                            
+                           
                         </div>
                     </div>
                         
@@ -67,7 +64,7 @@
                     <div name="" class="w-68 ml-4">
                   
                     <form onsubmit="return searchPosts();" action="" method="get">
-                        <div class="flex">
+                        <div class="flex gap-4">
 
                         <div name="select-box" class="ml-auto">
                         <select id="search-past" class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -93,7 +90,7 @@
 
                             <!-- Search Input -->
                             <div class="relative w-full">
-                                <input type="text" name="search" id="search" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="검색" required>
+                                <input type="text" name="search" id="search" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg  border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="검색" required>
                                 <button type="submit" class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -116,27 +113,29 @@
   
             <div class="stat border-r">
                 <div class="stat-figure text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <i class="fa-solid fa-pen-nib fa-xl"></i>
                 </div>
-                <div class="stat-title">1위</div>
-                <div class="stat-value text-primary text-xl">admin</div>
-                <!-- <div class="stat-desc">21% more than last month</div> -->
+                <div class="stat-title">글을 가장 많이 쓴사람</div>
+                <div class="stat-value text-primary text-xl"><?php echo $top_poster->user_id ?></div>
+                <div class="stat-desc">누적 게시글수: <?php echo $top_poster->post_count ?></div> <!-- 게시글 수 표시 -->
             </div>
             
             <div class="stat border-r">
                 <div class="stat-figure text-secondary">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <i class="fa-solid fa-comment fa-xl"></i>
                 </div>
-                <div class="stat-title">2위</div>
-                <div class="stat-value text-secondary text-xl">tjdwls3144</div>
-                <!-- <div class="stat-desc">21% more than last month</div> -->
+                <div class="stat-title">댓글을 가장 많이 쓴 사람</div>
+                <div class="stat-value text-secondary text-xl"><?php echo $top_commenter->user_id ?></div>
+                <div class="stat-desc">누적 댓글수: <?php echo $top_commenter->comment_count ?></div> <!-- 댓글 수 표시 -->
             </div>
             
             <div class="stat">
-                <div class="stat-title ">3위</div>
-                <div class="stat-value text-xl">starbuck</div>
-
-                <!-- <div class="stat-desc text-secondary">31 tasks remaining</div>   $data['user_role'] = $user_role;-->
+                <div class="stat-figure text-secondary">
+                <i class="fa-solid fa-thumbs-up fa-xl"></i>
+                </div>
+                <div class="stat-title ">추천수를 제일 많이 받은사람</div>
+                <div class="stat-value text-xl"><?php echo $top_thumb->user_id ?></div>
+                <div class="stat-desc">누적 추천수: <?php echo $top_thumb->thumb_count ?></div> <!-- 추천 수 표시 -->
             </div>
             
         </div>
@@ -153,10 +152,10 @@
                         <div id="posts-container">
                         <?php foreach($get_list as $post): ?>
                             <?php if($post->is_notice == 1): ?>
-                                <div  class="flex flex-col border-b answer-row" >
+                                <div class="flex flex-col border-b answer-row <?= $post->is_notice == 1 ? 'notice-post' : '' ?>">
                                 <div class="flex flex-1 p-2 border-b border-gray-300 bg-blue-100 cursor-pointer "onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
                                     <div class="ml-4 flex-[1] flex flex-col items-center ">
-                                        <div class="m-auto"><i class="fa-solid fa-flag fa-xl text-blue-400"></i></div>
+                                        <div class="m-auto"><div class="text-red-500 bg-red-200 rounded-lg">공지</div></div>
                                         <div class=""></div>
                                     </div>
                                     <div class="flex-[4] m-auto">
@@ -169,7 +168,7 @@
                                             
                                         </div>
                                         <div class="flex">
-                                            <div class="font-base text-gray-500"> <?php echo $post->views ?></div>
+                                            <div class="font-base text-gray-500"> <?php echo $post->channel_name ?></div>
 
                                                 <!-- 답글이 있을 때만 버튼이 보임 -->
                                                 <?php if($post->replies > 1): ?>
@@ -298,10 +297,10 @@
 
     </div>
         
-    <!-- <div class="" >
-    <?php $this->load->view('layout/rightbar'); ?>
-    </div> -->
-    <div></div>
+  
+    <!-- <?php $this->load->view('layout/rightbar'); ?> -->
+   
+    
 
   
 </div>
@@ -309,8 +308,10 @@
 </body>
 
 <!-- <?php $this->load->view('layout/footer'); ?> -->
-<script>
 
+
+
+<script>
 
 
 
@@ -599,39 +600,6 @@ $.ajax({
 
 
 
-
-
-
-
-
-var showNotices = true; // 초기 상태는 공지사항을 보여주는 것으로 설정
-
-function toggleNotices() {
-    showNotices = !showNotices; // 상태 토글
-    is_notice_hidden(showNotices); // 변경된 상태로 함수 호출
-}
-
-function is_notice_hidden(showNotices) {
-
-    var url = showNotices ? '/posts/post/get_posts_json' : '/posts/post/is_notice_hidden'; 
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            var postsHtml = '';
-            data.get_list.forEach(function(post) {
-                postsHtml += createPostHtml(post);
-            });
-
-            document.getElementById('posts-container').innerHTML = postsHtml;
-        },
-        error: function(xhr, status, error) {
-    console.error('AJAX Error:', xhr.status, xhr.responseText);
-}
-    });
-}
 
 
 

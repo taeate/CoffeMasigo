@@ -58,6 +58,11 @@ class Post extends CI_Controller {
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
         }
+
+        // 순위 데이터 가져오기
+        $data['top_poster'] = $this->Post_model->get_top_poster();
+        $data['top_commenter'] = $this->Post_model->get_top_commenter();
+        $data['top_thumb'] = $this->Post_model->get_top_thumb();
  
 
          // 페이지네이션 링크 생성
@@ -67,6 +72,8 @@ class Post extends CI_Controller {
 
 
         if ($this->input->is_ajax_request()) {
+
+            
   
             $response = [
                 'posts' => $data['get_list'],
@@ -468,17 +475,6 @@ class Post extends CI_Controller {
     }
 
     
-    public function is_notice_hidden() {
-
-
-        $data['get_list'] = $this->Post_model->get_posts_not_notice();
-
-        foreach ($data['get_list'] as &$post) {
-            $post->comment_count = $this->Post_model->count_comment($post->post_id);
-            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
-        }
-        echo json_encode($data);
-    }
 
 
     public function get_posts_json() {
@@ -511,8 +507,15 @@ class Post extends CI_Controller {
 
     public function get_channel_posts($channel_id = null) {
 
+
         $data['channel_name'] = $this->Post_model->get_channel_name($channel_id);
         $data['get_list'] = $this->Post_model->get_posts_by_channel($channel_id);
+
+        // 순위 데이터 가져오기
+        $data['top_poster'] = $this->Post_model->get_top_poster();
+        $data['top_commenter'] = $this->Post_model->get_top_commenter();
+        $data['top_thumb'] = $this->Post_model->get_top_thumb();
+
         //사이드바 정보
         $userid = $this->session->userdata('user_id');
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
@@ -529,7 +532,30 @@ class Post extends CI_Controller {
     }
     
     
-    
+    public function is_notice() {
+
+
+        $data['get_list'] = $this->Post_model->get_posts_is_notice();
+
+        // 순위 데이터 가져오기
+        $data['top_poster'] = $this->Post_model->get_top_poster();
+        $data['top_commenter'] = $this->Post_model->get_top_commenter();
+        $data['top_thumb'] = $this->Post_model->get_top_thumb();
+
+        //사이드바 정보
+        $userid = $this->session->userdata('user_id');
+        $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
+        $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+        $data['link'] = $this->pagination->create_links();
+
+        foreach ($data['get_list'] as &$post) {
+            $post->comment_count = $this->Post_model->count_comment($post->post_id);
+            $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+            $post->thumb = $this->Post_model->count_thumb($post->post_id);
+        }
+
+        $this->load->view('posts/post_list_view', $data);
+    }
 
 
     

@@ -4,38 +4,45 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Post_model extends CI_Model {
 
     public function get_posts($start = 0, $limit = 15){
+
+        // 최근 일주일 날짜 계산
+        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+    
+        // 초기화
+        $notices = [];
+    
+        // 첫 페이지일 경우에만 최신 3개의 공지사항 가져오기
+        if ($start == 0) {
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('delete_status', FALSE);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', TRUE);
+            $this->db->where('post.create_date >=', $week_ago);
+            $this->db->order_by('create_date', 'DESC');
+            $this->db->limit(3);
+            $notices = $this->db->get('post')->result();
+        }
+    
+        // 일반 글 가져오기
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-    
-        // channel 테이블과 조인
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-    
-        // 기존의 조건들을 그대로 유지
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
-        $this->db->order_by('is_notice', 'DESC');
+        $this->db->where('is_notice', FALSE);
+        $this->db->or_where('post.create_date <', $week_ago);
         $this->db->order_by('create_date', 'DESC');
         $this->db->limit($limit, $start);
+        $posts = $this->db->get('post')->result();
     
-        // 쿼리 실행 및 결과 반환
-        $query = $this->db->get('post');
-        return $query->result();
+        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
+        return $start == 0 ? array_merge($notices, $posts) : $posts;
     }
     
 
     
+    
 
-    public function get_posts_not_notice($start = 0, $limit = 5){
-      
-        $this->db->select('*');
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', 0);
-        $this->db->limit($limit, $start);
-        $query = $this->db->get('post');
-        return $query->result();
-
-
-    }
     
 public function find_detail($post_id) {
     // 게시물 정보와 채널 정보를 가져오기
@@ -194,11 +201,27 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('post');
     }
 
-    public function increment_views($post_id) {
+ public function increment_views($post_id) {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // 세션에서 해당 post_id의 마지막 조회 시간 확인
+    $last_view_time = $_SESSION['last_view'][$post_id] ?? false;
+
+    // 현재 시간과 비교 (예: 30분 제한)
+    if (!$last_view_time || time() - $last_view_time > 1800) { // 1800초 = 30분
+        // 조회수 증가
         $this->db->set('views', 'views+1', FALSE);
         $this->db->where('post_id', $post_id);
         $this->db->update('post');
+
+        // 세션에 조회 시간 갱신
+        $_SESSION['last_view'][$post_id] = time();
     }
+}
+
 
     public function count_search_posts($search_query) {
         $this->db->like('title', $search_query);
@@ -208,7 +231,14 @@ public function find_detail($post_id) {
     }
 
     public function search($search_query, $search_option, $selectedPast, $start, $limit) {
-        $this->db->select('post.*, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+
+         // 'channel.name'을 select 절에 포함
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+
+        // 'channel' 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+
+        // 기존의 from 절 유지
         $this->db->from('post');
     
         // 검색 옵션에 따른 검색 조건 설정
@@ -310,19 +340,42 @@ public function find_detail($post_id) {
 
     public function get_posts_ordered_by_latest($start = 0, $limit = 20) {
 
+    // 최근 일주일 날짜 계산
+    $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+    // 초기화
+    $notices = [];
+
+    // 첫 페이지일 경우에만 최신 3개의 공지사항
+    if ($start == 0) {
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-
-        // channel 테이블과 조인
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-
         $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id',null);
-        $this->db->order_by('is_notice','DESC');
-        $this->db->order_by('create_date', 'DESC');
-        $this->db->limit($limit,$start);
-        $query = $this->db->get('post');
-        return $query->result(); // 모든 게시글을 반환
+        $this->db->where('parent_post_id', null);
+        $this->db->where('is_notice', TRUE);
+        $this->db->order_by('create_date', $week_ago);
+        $this->db->limit(3);
+        $notices = $this->db->get('post')->result();
     }
+
+    // 일반 글 
+    $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+    $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+    $this->db->where('delete_status', FALSE);
+    $this->db->where('parent_post_id', null);
+    $this->db->where('is_notice', FALSE);
+    if ($start == 0) {
+        $this->db->limit($limit - count($notices));
+    } else {
+        $this->db->limit($limit, $start);
+    }
+    $this->db->order_by('create_date', 'DESC');
+    $posts = $this->db->get('post')->result();
+
+    // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
+    return $start == 0 ? array_merge($notices, $posts) : $posts;
+}
+
 
     public function count_posts_ordered_by_thumb(){
         $this->db->where('delete_status', FALSE);
@@ -335,19 +388,42 @@ public function find_detail($post_id) {
     
 
     public function get_posts_ordered_by_thumb($start = 0, $limit = 20) {
+        // 최근 일주일 날짜 계산
+        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+    
+        // 초기화
+        $notices = [];
+    
+        // 첫 페이지일 경우에만 최신 3개의 공지사항
+        if ($start == 0) {
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('delete_status', FALSE);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', TRUE);
+            $this->db->order_by('create_date', $week_ago);
+            $this->db->limit(3);
+            $notices = $this->db->get('post')->result();
+        }
+    
+        // 일반 글
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-
-        // channel 테이블과 조인
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
-        $this->db->order_by('is_notice','DESC');
+        $this->db->where('is_notice', FALSE);
         $this->db->order_by('thumb', 'DESC');
-        $this->db->limit($limit,$start);
-        $query = $this->db->get('post');
-        return $query->result(); 
+        if ($start == 0) {
+            $this->db->limit($limit - count($notices));
+        } else {
+            $this->db->limit($limit, $start);
+        }
+        $posts = $this->db->get('post')->result();
+    
+        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
+        return $start == 0 ? array_merge($notices, $posts) : $posts;
     }
+    
 
 
 
@@ -361,20 +437,42 @@ public function find_detail($post_id) {
     }
 
     public function get_posts_ordered_by_views($start = 0, $limit = 20) {
+        // 최근 일주일 날짜 계산
+        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+    
+        // 초기화
+        $notices = [];
+    
+        // 첫 페이지일 경우에만 최신 3개의 공지사항
+        if ($start == 0) {
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('delete_status', FALSE);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', TRUE);
+            $this->db->order_by('create_date', $week_ago);
+            $this->db->limit(3);
+            $notices = $this->db->get('post')->result();
+        }
+    
+        // 일반 글
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        
-        // channel 테이블과 조인
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-        
-        $this->db->where('post.delete_status', FALSE);
-        $this->db->where('post.parent_post_id', null);
-        $this->db->order_by('post.is_notice', 'DESC');
-        $this->db->order_by('post.views', 'DESC');
-        $this->db->limit($limit, $start);
-        
-        $query = $this->db->get('post');
-        return $query->result(); 
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->where('is_notice', FALSE);
+        $this->db->order_by('views', 'DESC');
+        if ($start == 0) {
+            $this->db->limit($limit - count($notices));
+        } else {
+            $this->db->limit($limit, $start);
+        }
+        $posts = $this->db->get('post')->result();
+    
+        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
+        return $start == 0 ? array_merge($notices, $posts) : $posts;
     }
+    
     
 
     public function comment_orderby_created($post_id,$order)  {
@@ -465,8 +563,70 @@ public function find_detail($post_id) {
             return null; // 채널이 존재하지 않는 경우
         }
     }
+
+    public function get_posts_is_notice() {
+        // file_count를 계산하고 channel_name을 포함하기 위한 서브쿼리와 조인
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        
+        // channel 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+    
+        // is_notice가 1인 게시물만 선택
+        $this->db->from('post');
+        $this->db->where('is_notice', 1);
+        
+        // 정렬 및 기타 조건 설정
+        $this->db->order_by('create_date', 'DESC');
+    
+        // 쿼리 실행 및 결과 반환
+        $query = $this->db->get();
+        return $query->result();
+    }
     
     
+    
+    
+    public function get_top_poster() {
+
+        $this->db->select('user_id');
+        $this->db->select('COUNT(*) as post_count', FALSE);
+        $this->db->from('post');
+        $this->db->group_by('user_id');
+        $this->db->order_by('post_count', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->row();
+
+    }
+    
+    public function get_top_commenter() {
+
+        $this->db->select('user_id');
+        $this->db->select('COUNT(*) as comment_count', FALSE);
+        $this->db->from('comment');
+        $this->db->group_by('user_id');
+        $this->db->order_by('comment_count', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->row();
+
+    }
+    
+    public function get_top_thumb() {
+
+        $this->db->select('user_id');
+        $this->db->select('SUM(thumb) as thumb_count', FALSE);
+        $this->db->from('post');
+        $this->db->group_by('user_id');
+        $this->db->order_by('thumb_count', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+
+        return $query->row();
+
+    }
     
  
 

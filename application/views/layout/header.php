@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-base-300">
+    
 <head>
     
     <meta charset="UTF-8">
@@ -87,5 +88,6 @@
     </div>
 </nav>
 
+<!-- <img src="/application/views/images/car.jpg" class="h-sreen w-screen" alt=""> -->
 </html>
 

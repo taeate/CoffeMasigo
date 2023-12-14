@@ -27,6 +27,9 @@
                        <a href="/member/wrote/comment"> 내가 쓴 댓글  <?php echo $comment_count; ?>개</a>
                     </div>
                     <div class="text-sm mt-1">
+                       <a href="/member/wrote/comment"> 내가 추천한 글  ? 개</a>
+                    </div>
+                    <div class="text-sm mt-1">
                         <a href="/mypage" class="hover:text-blue-500">마이페이지</a>
                     </div>
                 </div>
@@ -60,7 +63,7 @@
             </div>
             <div>
                 <button  class="hover:bg-base-200">
-                    <a href="/posts/channel_id/2">공지사항</a>
+                    <a href="/posts/channel_id/is_notice">공지사항</a>
                 </button>
             </div>
             <div>
@@ -102,31 +105,7 @@
 <script>
 
 
-// $(document).on('click', '[data-channel-id]', function(e) {
-//     e.preventDefault();
-//     var channelId = $(this).data("channel-id");
 
-//     // window.location.href = '/posts?channel_id=' + channelId;
-
-//     $.ajax({
-//         url: '/posts/get_channel_posts',
-//         type: 'GET',
-//         dataType: 'json',
-//         data: channelId ? { channel_id: channelId } : {},
-//         success: function(response) {
-//             var postsHtml = '';
-//             response.forEach(function(post) {
-//                 postsHtml += createPostHtml(post);
-//             });
-
-//             // 게시물 목록을 페이지에 추가
-//             $('#posts-container').html(postsHtml);
-//         },
-//         error: function(error) {
-//             console.error('Error:', error);
-//         }
-//     });
-// });
 
 
 
