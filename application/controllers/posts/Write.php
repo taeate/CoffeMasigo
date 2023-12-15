@@ -7,6 +7,7 @@ class Write extends CI_Controller {
         parent::__construct();
         $this->load->model('posts/Post_model');
         $this->load->model('posts/Write_model');
+        $this->load->model('member/Wrote_model');
         $this->load->database();
         $this->load->helper('url');
         $this->load->helper('alert');
@@ -67,6 +68,7 @@ class Write extends CI_Controller {
             $userid = $this->session->userdata('user_id');
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+            $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
             // AJAX 요청이 아닐 경우 기존의 로직 수행
             $data['post_data'] = null;
@@ -192,6 +194,7 @@ class Write extends CI_Controller {
                 $userid = $this->session->userdata('user_id');
                 $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
                 $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+                $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
                 // 폼에서 데이터가 전송되지 않았을 경우
                 $post_info = $this->Write_model->get_post($post_id);
@@ -262,6 +265,7 @@ class Write extends CI_Controller {
             $userid = $this->session->userdata('user_id');
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+            $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
             $this->load->view('posts/post_edit_view', $data);
         }

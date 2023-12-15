@@ -6,6 +6,7 @@ class Post extends CI_Controller {
         parent::__construct();
         $this->load->model('posts/Post_model');
         $this->load->model('posts/Write_model');
+        $this->load->model('member/Wrote_model');
         $this->load->database();
         $this->load->helper('url');
         $this->load->library('session'); // 세션 라이브러리 로드
@@ -20,11 +21,12 @@ class Post extends CI_Controller {
 
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+        $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
 
         //페이지네이션 설정
         $config = array();
-        $config['base_url'] = site_url('posts/all/page/');
+        $config['base_url'] = site_url('/posts/all/page/');
         $config['first_url'] = site_url('posts/all/page/1');
         $config['total_rows'] = $this->Post_model->count_posts(); // 총 게시물수
         $config['per_page'] = 20; // 페이지당 게시물수
@@ -131,6 +133,7 @@ class Post extends CI_Controller {
         $userid = $this->session->userdata('user_id');
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+        $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         
         
         // 댓글 저장
@@ -507,9 +510,45 @@ class Post extends CI_Controller {
 
     public function get_channel_posts($channel_id = null) {
 
+        //페이지네이션 설정
+        $config = array();
+        $config['base_url'] = site_url('/posts/channel_id/' . $channel_id . '/page/');
+        $config['first_url'] = site_url('posts/channel_id/' . $channel_id . '/page/1');
+        
+        $config['total_rows'] = $this->Post_model->count_channel_posts($channel_id); // 총 게시물수
+        $config['per_page'] = 10; // 페이지당 게시물수
+        $config['num_links'] = FALSE;
+        $config['use_page_numbers'] = TRUE;
+        $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
+        $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
+        $config['last_link'] = FALSE;
+        $config['first_link'] = FALSE;
+        $config['display_pages'] = FALSE;
+        $config["uri_segment"] = 5;
+        
+
+
+
+        
+        //초기화
+        $this->pagination->initialize($config);
+
+        //현재페이지 번호 계싼
+        $page = !empty($this->uri->segment(5)) ? $this->uri->segment(5) : 1;
+
+
+        //오프셋계산
+        $start = ($page - 1) * $config['per_page'];
+
+
+        // 페이지네이션 링크 생성
+        $data['link'] = $this->pagination->create_links();
+        
 
         $data['channel_name'] = $this->Post_model->get_channel_name($channel_id);
-        $data['get_list'] = $this->Post_model->get_posts_by_channel($channel_id);
+        $data['get_list'] = $this->Post_model->get_posts_by_channel($channel_id, $start, $config['per_page']);
+
+
 
         // 순위 데이터 가져오기
         $data['top_poster'] = $this->Post_model->get_top_poster();
@@ -520,7 +559,7 @@ class Post extends CI_Controller {
         $userid = $this->session->userdata('user_id');
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
-        $data['link'] = $this->pagination->create_links();
+        $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
         foreach ($data['get_list'] as $post) {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
@@ -528,14 +567,45 @@ class Post extends CI_Controller {
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
         }
     
-        $this->load->view('posts/post_list_view', $data);
+        // $this->load->view('posts/post_list_view', $data);
+        echo json_encode($data);
     }
     
     
     public function is_notice() {
 
+        //페이지네이션 설정
+        $config = array();
+        $config['base_url'] = site_url('/posts/channel_id/is_notice/page/');
+        $config['first_url'] = site_url('posts/channel_id/is_notice/page/1');
+        
+        $config['total_rows'] = $this->Post_model->count_is_notice_posts(); 
+        $config['per_page'] = 10; // 페이지당 게시물수
+        $config['num_links'] = FALSE;
+        $config['use_page_numbers'] = TRUE;
+        $config['prev_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg mr-2">이전</button>';
+        $config['next_link'] = '<button class="bg-gray-600 text-white w-20 h-10 rounded-lg ml-2">다음</button>';
+        $config['last_link'] = FALSE;
+        $config['first_link'] = FALSE;
+        $config['display_pages'] = FALSE;
+        $config["uri_segment"] = 5;
+        
 
-        $data['get_list'] = $this->Post_model->get_posts_is_notice();
+        
+        //초기화
+        $this->pagination->initialize($config);
+
+        //현재페이지 번호 계싼
+        $page = !empty($this->uri->segment(5)) ? $this->uri->segment(5) : 1;
+
+
+        //오프셋계산
+        $start = ($page - 1) * $config['per_page'];
+   
+        // 페이지네이션 링크 생성
+        $data['link'] = $this->pagination->create_links();
+
+        $data['get_list'] = $this->Post_model->get_posts_is_notice($start, $config['per_page']);
 
         // 순위 데이터 가져오기
         $data['top_poster'] = $this->Post_model->get_top_poster();
@@ -546,6 +616,7 @@ class Post extends CI_Controller {
         $userid = $this->session->userdata('user_id');
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+        $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['link'] = $this->pagination->create_links();
 
         foreach ($data['get_list'] as &$post) {
@@ -554,7 +625,8 @@ class Post extends CI_Controller {
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
         }
 
-        $this->load->view('posts/post_list_view', $data);
+        // $this->load->view('posts/post_list_view', $data);
+        echo json_encode($data);
     }
 
 

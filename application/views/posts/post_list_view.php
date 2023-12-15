@@ -314,6 +314,14 @@
 <script>
 
 
+$(document).ready(function() {
+    $('.grid a').on('click', function(e) {
+        e.preventDefault(); // 기본 동작 방지
+
+        var channelId = $(this).data('channel-id');
+        loadPage(1, 'sortType', channelId); // 첫 페이지와 채널 ID를 사용하여 loadPage 호출
+    });
+});
 
 
 var currentSearchQuery = ""; 
@@ -377,12 +385,18 @@ function searchPosts() {
 
 
 
-function loadPage(page, sort) {
-    console.log(page,sort);
+function loadPage(page, sort, channelId, isNotice) {
+    console.log('페이지:',page,'정렬:',sort,'채널아이디:',channelId,'공지:', isNotice);
 
 
 
     var url = '/posts/all/page/' +page
+
+    if (channelId) {
+        url = '/posts/channel_id/' + channelId + '/page/' + page;
+    } else if (isNotice) {
+        url = '/posts/channel_id/is_notice/page/' + page;
+    }
 
     if (sort === 'thumb') {
         url = '/posts/all/thumb/page/' + page;
@@ -404,9 +418,6 @@ function loadPage(page, sort) {
     
 
 
- 
-
-
     $.ajax({
         url: url,
         type: 'GET',
@@ -416,17 +427,24 @@ function loadPage(page, sort) {
             var postsHtml = '';
 
             var postsArray = sort === 'search' ? data.search_data : data.posts;
-                if (postsArray && Array.isArray(postsArray)) {
-                    postsArray.forEach(function(post) {
-                        postsHtml += createPostHtml(post);
-                    });
-                } else {
+            if (postsArray && Array.isArray(postsArray)) {
+                postsArray.forEach(function(post) {
+                    postsHtml += createPostHtml(post);
+                });
+            } else if (data.get_list && Array.isArray(data.get_list)) {
+                data.get_list.forEach(function(post) {
+                    postsHtml += createPostHtml(post);
+                });
+
+                
+            } else {
                 console.error("Invalid data format or empty array");
             }
 
             // 페이지네이션 링크를 postsHtml에 추가
             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="">' + data.paginationLinks + '</div></div></div></div>';
 
+            
             // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용
             $('#posts-container').html(postsHtml);
         },
@@ -492,18 +510,14 @@ function createPostHtml(post) {
     return postHtml;
 }
 
+
+
+
+
 function LatestOrderBy() {
-
-    // 현재 페이지 URL에서 채널 ID 추출
-    var currentUrl = window.location.pathname;
-    var channelId = currentUrl.match(/channel_id\/(\d+)/) ? currentUrl.match(/channel_id\/(\d+)/)[1] : null;
-
-    // 채널 ID에 따라 요청 URL 설정
-    var url = channelId ? '/posts/channel_id/' + channelId + '/LatestOrderBy' : '/posts/post/LatestOrderBy';
-
-    
+ 
     $.ajax({
-        url: url,
+        url: '/posts/post/LatestOrderBy',
         type: 'GET',
         dataType: 'json',
         success: function(data) {

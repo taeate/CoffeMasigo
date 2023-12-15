@@ -7,6 +7,7 @@ class Mypage extends CI_Controller {
         parent::__construct();
         $this->load->model('posts/Post_model');
         $this->load->model('member/Mypage_model');
+        $this->load->model('member/Wrote_model');
         $this->load->database();
         $this->load->helper('url');
         $this->load->library('session');
@@ -58,6 +59,7 @@ class Mypage extends CI_Controller {
             $userid = $this->session->userdata('user_id');
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+            $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
 
    
             $this->load->view('member/mypage_view',$data);

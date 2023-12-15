@@ -29,6 +29,15 @@
                             <div></div>
                         </a>
                     </li>
+                    <li class="me-2">
+                        <a href="/member/wrote/thumb_post" 
+                        
+                            class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
+                            aria-current="page">
+                            <span>내가 추천한 글</span>
+                            <div></div>
+                        </a>
+                    </li>
                 </ul>
 
                 <ul class="p-4">

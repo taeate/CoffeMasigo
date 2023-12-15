@@ -24,10 +24,10 @@
                     </div>
                    
                     <div class="text-sm mt-1">
-                       <a href="/member/wrote/comment"> 내가 쓴 댓글  <?php echo $comment_count; ?>개</a>
+                       <a href="/member/wrote/comment" class="hover:text-blue-500"> 내가 쓴 댓글  <?php echo $comment_count; ?>개</a>
                     </div>
                     <div class="text-sm mt-1">
-                       <a href="/member/wrote/comment"> 내가 추천한 글  ? 개</a>
+                       <a href="/member/wrote/thumb_post" class="hover:text-blue-500"> 내가 추천한 글 <?php echo $wrote_thumb_post_count; ?>개</a>
                     </div>
                     <div class="text-sm mt-1">
                         <a href="/mypage" class="hover:text-blue-500">마이페이지</a>

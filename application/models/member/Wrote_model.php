@@ -48,6 +48,47 @@ class Wrote_model extends CI_Model {
         $this->db->where('user_id', $userid);
         return $this->db->count_all_results('comment');
     }
+
+
+
+    public function get_wrote_thumb_post($userid, $start = 0, $limit = 15) {
+        $this->db->select('post.*, channel.name AS channel_name, COUNT(uploadfile.post_id) AS file_count');
+        $this->db->from('post_thumb');
+        $this->db->join('post', 'post_thumb.post_id = post.post_id');
+        $this->db->join('channel', 'post.channel_id = channel.channel_id', 'left');
+        $this->db->join('uploadfile', 'post.post_id = uploadfile.post_id', 'left');
+        $this->db->where('post_thumb.user_id', $userid);
+        $this->db->where('delete_status', FALSE);
+        $this->db->order_by('create_date', 'DESC');
+        $this->db->group_by('post.post_id');
+        $this->db->limit($limit, $start);
+        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function count_wrote_thumb_post($userid) {
+        
+        $this->db->from('post_thumb');
+        $this->db->join('post', 'post_thumb.post_id = post.post_id', 'inner');
+        $this->db->where('post.delete_status', 0);
+        $this->db->where('post_thumb.user_id', $userid);
+    
+        
+        return $this->db->count_all_results();
+    }
+    
+    
+    
+    
+    
+    
+    
+
+   
+    
+
+
     
     
 }

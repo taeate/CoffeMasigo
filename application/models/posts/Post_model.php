@@ -527,11 +527,9 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('comment');
     }
 
-    public function get_posts_by_channel($channel_id, $start = 0, $limit = 20) {
+    public function get_posts_by_channel($channel_id, $start, $limit = 10) {
 
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
+        
         // 초기화
         $notices = [];
     
@@ -543,7 +541,7 @@ public function find_detail($post_id) {
             $this->db->where('post.delete_status', FALSE);
             $this->db->where('post.parent_post_id', null);
             $this->db->where('post.is_notice', TRUE);
-            $this->db->order_by('post.create_date', $week_ago);
+            $this->db->order_by('post.create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
         }
@@ -580,7 +578,7 @@ public function find_detail($post_id) {
         }
     }
 
-    public function get_posts_is_notice() {
+    public function get_posts_is_notice($start,$limit) {
         // file_count를 계산하고 channel_name을 포함하기 위한 서브쿼리와 조인
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         
@@ -593,12 +591,21 @@ public function find_detail($post_id) {
         
         // 정렬 및 기타 조건 설정
         $this->db->order_by('create_date', 'DESC');
+
+        $this->db->limit($limit, $start);
     
         // 쿼리 실행 및 결과 반환
         $query = $this->db->get();
         return $query->result();
     }
     
+    public function count_is_notice_posts(){
+        $this->db->select('*');
+        $this->db->from('post');
+        $this->db->where('is_notice', true);
+        $this->db->where('delete_status', false);
+        return $this->db->count_all_results();
+    }
     
     
     
@@ -643,6 +650,18 @@ public function find_detail($post_id) {
         return $query->row();
 
     }
+
+ 
+    
+    public function count_channel_posts($channel_id) {
+        // 채널 ID에 해당하는 일반 게시물(공지사항 제외)의 수 계산
+        $this->db->where('channel_id', $channel_id);
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->from('post');
+        return $this->db->count_all_results();
+    }
+    
     
  
 

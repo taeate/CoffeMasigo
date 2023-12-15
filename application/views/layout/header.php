@@ -41,7 +41,25 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">FORD MUSTANG</a>
+        <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">
+        <div class="flex text-white text-2xl gap-1 font-bold">
+            <div class="flex">
+                <p class="text-red-400">F</p>
+                <p class="text-red-400">O</p>
+                <p class="text-red-400">R</p>
+                <p class="text-red-400">D</p>
+            </div>
+            <div class="flex">
+                <p class="text-white">M</p>
+                <p class="text-white">U</p>
+                <p class="text-white">S</p>
+                <p class="text-white">T</p>
+                <p class="text-white">A</p>
+                <p class="text-white">N</p>
+                <p class="text-white">G</p>
+            </div>
+        </div>
+        </a>
     </div>
     <div class="navbar-end">
     <div class="flex text-white mr-2">
