@@ -527,6 +527,8 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('comment');
     }
 
+    
+
     public function get_posts_by_channel($channel_id, $start, $limit = 10) {
 
         
@@ -563,6 +565,18 @@ public function find_detail($post_id) {
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
+    }
+
+
+    
+    
+    public function count_channel_posts($channel_id) {
+        // 채널 ID에 해당하는 일반 게시물(공지사항 제외)의 수 계산
+        $this->db->where('channel_id', $channel_id);
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->from('post');
+        return $this->db->count_all_results();
     }
     
 
@@ -652,15 +666,6 @@ public function find_detail($post_id) {
     }
 
  
-    
-    public function count_channel_posts($channel_id) {
-        // 채널 ID에 해당하는 일반 게시물(공지사항 제외)의 수 계산
-        $this->db->where('channel_id', $channel_id);
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->from('post');
-        return $this->db->count_all_results();
-    }
     
     
  

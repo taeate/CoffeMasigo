@@ -314,155 +314,8 @@
 <script>
 
 
-$(document).ready(function() {
-    $('.grid a').on('click', function(e) {
-        e.preventDefault(); // 기본 동작 방지
-
-        var channelId = $(this).data('channel-id');
-        loadPage(1, 'sortType', channelId); // 첫 페이지와 채널 ID를 사용하여 loadPage 호출
-    });
-});
 
 
-var currentSearchQuery = ""; 
-
-function searchPosts() {
-
-    var selectedPast = document.getElementById('search-past').value;
-
-    var selectedOption = document.getElementById('search-options').value;
-
-    var searchQuery = document.getElementById('search').value;
-
-    currentSearchQuery = searchQuery; 
-
-        $.ajax({
-            url: '/posts/post/search',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                search: searchQuery,
-                option: selectedOption,
-                filter: selectedPast
-            }, // 검색어를 서버로 전송
-            success: function(data) {
-            if (data.search_data.length) {
-                var postsHtml = '';
-                data.search_data.forEach(function(post) {
-                 
-                    postsHtml += createPostHtml(post); 
-                });
-                
-                // 페이지네이션 링크를 postsHtml에 추가
-                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
-                console.log(data.paginationLinks);
-                $('#posts-container').html(postsHtml); 
-                
-            } else {
-                $('#posts-container').html('<div class="flex justify-center m-4 font-bold text-lg">' + data.no_results + '</div>');
-                
-            }
-        }
-        
-    });
-
-    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
-    e.preventDefault();
-    var href = $(this).attr('href');
-    console.log('다음페이지주소:', href); // 디버깅을 위한 로그
-    
-    var urlParams = new URLSearchParams(href.split('?')[1]);
-    var page = urlParams.get('page');
-
-    console.log('번호추출', page);
-    loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
-    });
-
-    
-
-    return false;
-}
-
-
-
-function loadPage(page, sort, channelId, isNotice) {
-    console.log('페이지:',page,'정렬:',sort,'채널아이디:',channelId,'공지:', isNotice);
-
-
-
-    var url = '/posts/all/page/' +page
-
-    if (channelId) {
-        url = '/posts/channel_id/' + channelId + '/page/' + page;
-    } else if (isNotice) {
-        url = '/posts/channel_id/is_notice/page/' + page;
-    }
-
-    if (sort === 'thumb') {
-        url = '/posts/all/thumb/page/' + page;
-    }
-
-    if (sort === 'newest') {
-        url = '/posts/all/newest/page/' + page;
-    }
-
-    if (sort === 'views') {
-        url = '/posts/all/views/page/' + page;
-    }
-
-      if (sort === 'search') {
-
-        url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
-  
-    } 
-    
-
-
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            var postsHtml = '';
-
-            var postsArray = sort === 'search' ? data.search_data : data.posts;
-            if (postsArray && Array.isArray(postsArray)) {
-                postsArray.forEach(function(post) {
-                    postsHtml += createPostHtml(post);
-                });
-            } else if (data.get_list && Array.isArray(data.get_list)) {
-                data.get_list.forEach(function(post) {
-                    postsHtml += createPostHtml(post);
-                });
-
-                
-            } else {
-                console.error("Invalid data format or empty array");
-            }
-
-            // 페이지네이션 링크를 postsHtml에 추가
-            postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="">' + data.paginationLinks + '</div></div></div></div>';
-
-            
-            // postsHtml에 게시글 목록과 페이지네이션 링크를 모두 포함시킨 후 #posts-container에 적용
-            $('#posts-container').html(postsHtml);
-        },
-        error: function(error) {
-            console.error('Error:', error);
-        }
-        
-    });
-}
-
-// 전체글 페이지네이션 링크
-$(document).on('click', '.pagination a', function(e) {
-    console.log('클릭됨');
-    e.preventDefault();
-    var page = $(this).attr('href').split('page/')[1];
-        loadPage(page);
-    
-});
 
 function createPostHtml(post) {
     
@@ -512,6 +365,210 @@ function createPostHtml(post) {
 
 
 
+var currentSearchQuery = ""; 
+
+function searchPosts() {
+
+    var selectedPast = document.getElementById('search-past').value;
+
+    var selectedOption = document.getElementById('search-options').value;
+
+    var searchQuery = document.getElementById('search').value;
+
+    currentSearchQuery = searchQuery; 
+
+        $.ajax({
+            url: '/posts/post/search',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                search: searchQuery,
+                option: selectedOption,
+                filter: selectedPast
+            }, // 검색어를 서버로 전송
+            success: function(data) {
+            if (data.search_data.length) {
+                var postsHtml = '';
+                data.search_data.forEach(function(post) {
+                 
+                    postsHtml += createPostHtml(post); 
+                });
+                
+                // 페이지네이션 링크를 postsHtml에 추가
+                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
+                console.log(data.paginationLinks);
+                $('#posts-container').html(postsHtml); 
+                
+            } else {
+                $('#posts-container').html('<div class="flex justify-center m-4 font-bold text-lg">' + data.no_results + '</div>');
+                
+            }
+        }
+        
+    });
+
+    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    var href = $(this).attr('href');
+    console.log('다음페이지주소:', href); // 디버깅을 위한 로그
+    
+    var urlParams = new URLSearchParams(href.split('?')[1]);
+    var page = urlParams.get('page');
+
+    console.log('번호추출', page);
+    loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
+    });
+
+    
+
+    return false;
+}
+
+
+
+function loadPage(page, sort, channelId) {
+
+
+    console.log('페이지:',page,'정렬:',sort,'채널아이디:',channelId);
+
+    var url = '/posts/all/page/' +page
+
+    if (channelId) {
+        url = '/posts/channel_id/' + channelId + '/page/' + page;
+    } 
+
+    if (sort === 'thumb') {
+        url = '/posts/all/thumb/page/' + page;
+    }
+
+    if (sort === 'newest') {
+        url = '/posts/all/newest/page/' + page;
+    }
+
+    if (sort === 'views') {
+        url = '/posts/all/views/page/' + page;
+    }
+
+      if (sort === 'search') {
+
+        url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
+  
+    } 
+    
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var postsHtml = '';
+
+            var postsArray = sort === 'search' ? data.search_data : data.posts;
+            if (postsArray && Array.isArray(postsArray)) {
+                postsArray.forEach(function(post) {
+                    postsHtml += createPostHtml(post);
+                });
+            } else if (data.get_list && Array.isArray(data.get_list)) {
+                data.get_list.forEach(function(post) {
+                    postsHtml += createPostHtml(post);
+                });
+
+                
+            } else {
+                console.error("Invalid data format or empty array");
+            }
+
+
+            // 기존 페이지네이션 링크 제거
+            $('.pagination').remove();
+
+            // 새 페이지네이션 링크 추가
+            if (data.link) {
+                postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4">' + data.link + '</div></div></div>';
+            }
+
+            $('#posts-container').html(postsHtml);
+            
+
+
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+        
+    });
+}
+
+
+// 전체글 페이지네이션 링크
+// http://localhost/posts/all/page/2
+// http://localhost/posts/channel_id/6/page/2
+$(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+    console.log('클릭됨');
+    e.preventDefault();
+    var page = $(this).attr('href').split('page/')[1];
+    
+    var channelId = null;
+    if (window.location.pathname.includes('/channel_id/')) {
+        channelId = window.location.pathname.split('/channel_id/')[1].split('/')[0];
+    }
+
+    loadPage(page, 'sort', channelId);
+});
+
+
+
+
+var currentChannelId = null;
+
+$(document).ready(function() {
+    $('.grid a').on('click', function(e) {
+        e.preventDefault(); // 기본 동작 방지
+        var channelId = $(this).data('channel-id');
+        window.location.href = '/posts/channel_id/' + channelId;
+        Channel(channelId);
+    });
+});
+
+
+function Channel(channelId) {
+
+    console.log('채널 함수들어옴');
+
+    currentChannelId = channelId;
+
+    console.log(currentChannelId);
+    
+    var url = '/posts/channel_id/' + currentChannelId + '/page/1'; // 'page/1'로 초기 페이지 설정
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var postsHtml = '';
+            data.get_list.forEach(function(post) {
+                postsHtml += createPostHtml(post);
+            });
+            
+            
+            document.getElementById('posts-container').innerHTML = postsHtml;
+
+            
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // 페이지네이션 링크 클릭 이벤트 설정
+    $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+    e.preventDefault();
+    var page = $(this).attr('href').split('page/')[1];
+    loadPage(page, 'sortType', currentChannelId); // 현재 채널 ID를 사용하여 loadPage 호출
+    });
+}
+
 
 
 function LatestOrderBy() {
@@ -528,7 +585,7 @@ function LatestOrderBy() {
             });
 
              // 페이지네이션 링크를 postsHtml에 추가
-             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+             postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
             // 게시글 목록과 페이지네이션 링크 업데이트
             document.getElementById('posts-container').innerHTML = postsHtml;
@@ -564,7 +621,7 @@ $.ajax({
             postsHtml +=createPostHtml(post);
         });
 
-        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
         // 기존 목록을 새 목록으로 대체
         document.getElementById('posts-container').innerHTML = postsHtml;
@@ -603,7 +660,7 @@ $.ajax({
             postsHtml +=createPostHtml(post);
         });
 
-        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.paginationLinks + '</div></div></div></div>';
+        postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
         // 기존 목록을 새 목록으로 대체
         document.getElementById('posts-container').innerHTML = postsHtml;

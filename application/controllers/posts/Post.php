@@ -79,7 +79,7 @@ class Post extends CI_Controller {
   
             $response = [
                 'posts' => $data['get_list'],
-                'paginationLinks' => $this->pagination->create_links()
+                'link' => $this->pagination->create_links()
             ];
     
             echo json_encode($response);
@@ -265,7 +265,7 @@ class Post extends CI_Controller {
             
             $response = [
                 'search_data' => $data['search_data'],
-                'paginationLinks' =>  $this->pagination->create_links(),
+                'link' =>  $this->pagination->create_links(),
                 'no_results' => empty($data['search_data']) ? "검색결과가 없습니다" : "검색 결과가 없습니다" 
             ];
             echo json_encode($response);
@@ -362,7 +362,7 @@ class Post extends CI_Controller {
     
             $response = [
                 'posts' => $data['get_list'],
-                'paginationLinks' => $this->pagination->create_links()
+                'link' => $this->pagination->create_links()
             ];
 
             echo json_encode($response);
@@ -415,7 +415,7 @@ class Post extends CI_Controller {
     
         $response = [
             'posts' => $data['get_list'],
-            'paginationLinks' => $this->pagination->create_links()
+            'link' => $this->pagination->create_links()
         ];
 
         echo json_encode($response);
@@ -469,7 +469,7 @@ class Post extends CI_Controller {
         
             $response = [
                 'posts' => $data['get_list'],
-                'paginationLinks' => $this->pagination->create_links()
+                'link' => $this->pagination->create_links()
             ];
 
             echo json_encode($response);
@@ -525,9 +525,9 @@ class Post extends CI_Controller {
         $config['first_link'] = FALSE;
         $config['display_pages'] = FALSE;
         $config["uri_segment"] = 5;
+
         
-
-
+        
 
         
         //초기화
@@ -548,7 +548,7 @@ class Post extends CI_Controller {
         $data['channel_name'] = $this->Post_model->get_channel_name($channel_id);
         $data['get_list'] = $this->Post_model->get_posts_by_channel($channel_id, $start, $config['per_page']);
 
-
+        
 
         // 순위 데이터 가져오기
         $data['top_poster'] = $this->Post_model->get_top_poster();
@@ -567,8 +567,18 @@ class Post extends CI_Controller {
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
         }
     
-        // $this->load->view('posts/post_list_view', $data);
-        echo json_encode($data);
+        // // $this->load->view('posts/post_list_view', $data);
+        // echo json_encode($data);
+
+        // AJAX 요청인지 확인
+        if ($this->input->is_ajax_request()) {
+            // AJAX 요청일 경우, JSON 반환
+            
+            echo json_encode($data);
+        } else {
+            // AJAX 요청이 아닐 경우, 뷰 로드
+            $this->load->view('posts/post_list_view', $data);
+        }
     }
     
     
@@ -590,7 +600,6 @@ class Post extends CI_Controller {
         $config['display_pages'] = FALSE;
         $config["uri_segment"] = 5;
         
-
         
         //초기화
         $this->pagination->initialize($config);
