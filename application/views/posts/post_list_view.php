@@ -455,6 +455,7 @@ function loadPage(page, sort, channelId) {
   
     } 
     
+    // 목록으로가기 해야함
 
     $.ajax({
         url: url,
