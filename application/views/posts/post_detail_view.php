@@ -88,8 +88,10 @@
 
                     <div name="answer-btn" class="flex justify-between ml-12 mr-12 mt-4 mb-4">
                         <div class="">
+                            <a href="javascript:void(0);" onclick="history.back();"
+                             class="btn bg-gray-500 text-white w-28 h-12">목록으로</a>
                             <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
-                                class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
+                            class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
                         </div>
                         <div class="">
                             <button id="shareButton" class="btn bg-gray-500 text-white w-28 h-12">공유하기</button>
@@ -538,7 +540,11 @@ function thumbUp() {
             if (response.status === 'already_thumbed') {
                 alert('이미 추천한 글입니다.');
                 window.location.href = '/posts/free/' + postId;
-            } else if (response.status === 'success') {
+            } if (response.status === 'self_thumb_not_allowed') {
+                alert('본인의 글은 추천이 불가능합니다.');
+                window.location.href = '/posts/free/' + postId;
+            }
+            else if (response.status === 'success') {
                 alert('글을 추천하셨습니다.');
                 window.location.href = '/posts/free/' + postId;
 

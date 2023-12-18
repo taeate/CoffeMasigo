@@ -29,7 +29,7 @@
                             <input type="file" class="hidden" id="file-input" name="profile_image">
                             <a id="imgchange-btn" onclick="openFileUploader();" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">프로필사진 변경</a>
                             <button type="submit" onclick="saveProfile(event)" id="save-btn" class="btn btn-accent hidden">저장</button>
-                            <button onclick="cancelProfileChange()" id="cancel-btn" class="btn btn-error hidden">취소</button>
+                            <button onclick="cancelProfileChange(event)" id="cancel-btn" class="btn btn-error hidden">취소</button>
                             </form>
                         
                         </div>
@@ -238,14 +238,21 @@ function saveProfile(event) {
     }
 }
 
-function cancelProfileChange() {
+function cancelProfileChange(event) {
+    
+    if (event) {
+        event.preventDefault();  // 기본 동작 중단
+    }
+
     document.getElementById('file-input').value = ''; // 파일 입력 필드 초기화
     document.getElementById('imgchange-btn').style.display = 'inline-block'; // 프로필 변경 버튼 표시
     document.getElementById('save-btn').style.display = 'none'; // 저장 버튼 숨김
     document.getElementById('cancel-btn').style.display = 'none'; // 취소 버튼 숨김
-    // 취소 로직을 추가할 수 있습니다.
+
     console.log('프로필 변경을 취소합니다.');
 }
+
+
 
 
 

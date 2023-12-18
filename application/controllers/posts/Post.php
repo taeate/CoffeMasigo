@@ -302,6 +302,16 @@ class Post extends CI_Controller {
         $post_id = $this->input->post('postId');
         $user_id = $this->session->userdata('user_id');
 
+
+         // 게시물의 작성자 ID 가져오기
+        $post_user_id = $this->Post_model->getPostUserId($post_id);
+
+        if ($user_id == $post_user_id) {
+            // 사용자가 게시물의 작성자인 경우
+            echo json_encode(array('status' => 'self_thumb_not_allowed'));
+            return;
+        }
+
         if(!$this->Post_model->hasUserAlreadyThumb($post_id, $user_id)){
             
             // 사용자가 추천안했다면 증가

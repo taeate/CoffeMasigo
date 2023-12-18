@@ -291,6 +291,19 @@ public function find_detail($post_id) {
        
     }
     
+    public function getPostUserId($post_id){
+        $this->db->select('user_id');
+        $this->db->from('post');
+        $this->db->where('post_id', $post_id);
+        $query = $this->db->get();
+    
+        if ($query->num_rows() > 0) {
+            return $query->row()->user_id;
+        } else {
+            return null; 
+        }
+    }
+    
 
     public function addThumbRecord($post_id, $user_id) {
         $data = array(
