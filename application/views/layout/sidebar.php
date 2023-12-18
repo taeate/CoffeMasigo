@@ -7,7 +7,7 @@
                 <div name="profile-image" class="">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
                         <div class="w-500 rounded-full">
-                            <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
+                            <a href="/mypage"><img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" /></a>
                         </div>
                     </label>
                 </div>
