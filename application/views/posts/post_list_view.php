@@ -43,15 +43,15 @@
                     <div name="order-by">
                         <div class="flex">
                             <div>
-                                <button class="btn btn-sm btn-accent hover:text-white" onclick="LatestOrderBy()">
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="LatestOrderBy(getChannelIdFromUrl())">
                                 <i class="fa-solid fa-clock-rotate-left"></i>최신</button>
                             </div>
                             <div class="ml-4">
-                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ThumbOrderBy()">
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ThumbOrderBy(getChannelIdFromUrl())">
                                 <i class="fa-solid fa-thumbs-up"></i>추천수</button>
                             </div>
                             <div class="ml-4">
-                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ViewsOrderBy()">
+                                <button class="btn btn-sm btn-accent hover:text-white" onclick="ViewsOrderBy(getChannelIdFromUrl())">
                                 <i class="fa-solid fa-eye"></i>조회수</button>
                             </div>
                            
@@ -431,31 +431,43 @@ function loadPage(page, sort, channelId) {
 
     console.log('페이지:',page,'정렬:',sort,'채널아이디:',channelId);
 
-    var url = '/posts/all/page/' +page
+    var url = '/posts/all/page/' + page;
 
+    // 먼저 channelId가 있는 경우 처리
     if (channelId) {
         url = '/posts/channel_id/' + channelId + '/page/' + page;
-    } 
-
-    if (sort === 'thumb') {
-        url = '/posts/all/thumb/page/' + page;
     }
 
+    // 그 다음 sort에 따라 URL 조정
     if (sort === 'newest') {
-        url = '/posts/all/newest/page/' + page;
-    }
+        if (channelId) {
+            // 특정 채널의 'newest' 정렬된 페이지 URL
+            url = '/posts/post/LatestOrderBy_Channel/' + channelId + '/page/' + page;     
+            
+        } else {
+            url = '/posts/all/newest/page/' + page;
+        }
 
-    if (sort === 'views') {
-        url = '/posts/all/views/page/' + page;
-    }
-
-      if (sort === 'search') {
-
+    } else if (sort === 'thumb') {
+        if (channelId){
+            url = '/posts/post/ThumbOrderBy_Channel/' + channelId + '/page/' + page;
+        } else {
+            url = '/posts/all/thumb/page/' + page;
+        }
+        
+    } else if (sort === 'views') {
+        if (channelId){
+            url = '/posts/post/ViewsOrderBy_Channel/' + channelId + '/page/' + page;
+        } else {
+            url = '/posts/all/views/page/' + page;
+        }
+        
+    } else if (sort === 'search') {
         url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
-  
-    } 
+    }
+
+    console.log(url);
     
-    // 목록으로가기 해야함
 
     $.ajax({
         url: url,
@@ -572,10 +584,36 @@ function Channel(channelId) {
 
 
 
-function LatestOrderBy() {
+function getChannelIdFromUrl() {
+    var pathSegments = window.location.pathname.split('/');
+    // URL의 경로 부분을 '/' 기준으로 나누어 배열로 만들기
+    // 예: "http://localhost/posts/channel_id/6" -> ["", "posts", "channel_id", "6"]
+
+    var channelIdIndex = pathSegments.indexOf('channel_id');
+    // 'channel_id' 문자열이 있는 인덱스를 찾기
+
+    if (channelIdIndex > -1 && channelIdIndex < pathSegments.length - 1) {
+        return pathSegments[channelIdIndex + 1];
+        // 'channel_id' 다음 세그먼트가 실제 ID 값
+    }
+
+    return null; // 'channel_id'가 URL에 없는 경우
+}
+
+
+
+function LatestOrderBy(channelId) {
+
+    var url = '/posts/post/LatestOrderBy';
+    if (channelId) {
+        url = '/posts/post/LatestOrderBy_Channel/' + channelId;
+    }
+
+    
+    console.log(url);
  
     $.ajax({
-        url: '/posts/post/LatestOrderBy',
+        url: url,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -585,6 +623,8 @@ function LatestOrderBy() {
                postsHtml += createPostHtml(post);
             });
 
+            // 기존 페이지네이션 링크 제거
+            $('.pagination').remove();
              // 페이지네이션 링크를 postsHtml에 추가
              postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
@@ -602,18 +642,28 @@ function LatestOrderBy() {
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
         e.preventDefault();
         var page = $(this).attr('href').split('page/')[1];
-        loadPage(page, 'newest');
+        var channelId = null;
+        if (window.location.pathname.includes('/channel_id/')) {
+            channelId = window.location.pathname.split('/channel_id/')[1].split('/')[0];
+        }
+        loadPage(page, 'newest',channelId);
     });
 }
 
 
 
-function ThumbOrderBy() {
+function ThumbOrderBy(channelId) {
 
+    var url = '/posts/post/ThumbOrderBy';
+    if (channelId) {
+        url = '/posts/post/ThumbOrderBy_Channel/' + channelId;
+    }
+
+    console.log(url);
 
 // AJAX 요청을 통해 서버에 최신순 정렬 요청
 $.ajax({
-    url: '/posts/post/ThumbOrderBy',
+    url: url,
     type: 'GET',
     dataType: 'json',
     success: function(data) {
@@ -621,6 +671,9 @@ $.ajax({
         data.posts.forEach(function(post) {
             postsHtml +=createPostHtml(post);
         });
+
+        // 기존 페이지네이션 링크 제거
+        $('.pagination').remove();
 
         postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
@@ -638,7 +691,12 @@ $(document).off('click', '.pagination a').on('click', '.pagination a', function(
     var href = $(this).attr('href');
     console.log('다음페이지주소:', href); 
     var page = $(this).attr('href').split('page/')[1];
-    loadPage(page, 'thumb');
+
+    var channelId = null;
+    if (window.location.pathname.includes('/channel_id/')) {
+        channelId = window.location.pathname.split('/channel_id/')[1].split('/')[0];
+    }
+    loadPage(page, 'thumb', channelId);
 });
 
 
@@ -647,12 +705,19 @@ $(document).off('click', '.pagination a').on('click', '.pagination a', function(
 
 
 
-function ViewsOrderBy() {
+function ViewsOrderBy(channelId) {
+
+    var url = '/posts/post/ViewsOrderBy';
+    if (channelId) {
+        url = '/posts/post/ViewsOrderBy_Channel/' + channelId;
+    }
+
+    console.log(url);
 
 
 // AJAX 요청을 통해 서버에 최신순 정렬 요청
 $.ajax({
-    url: '/posts/post/ViewsOrderBy',
+    url: url,
     type: 'GET',
     dataType: 'json',
     success: function(data) {
@@ -660,6 +725,9 @@ $.ajax({
         data.posts.forEach(function(post) {
             postsHtml +=createPostHtml(post);
         });
+
+        // 기존 페이지네이션 링크 제거
+        $('.pagination').remove();
 
         postsHtml += '<div class="mt-6 mb-6"><div class="flex justify-center"><div class="pagination mb-4"><div class="pagination">' + data.link + '</div></div></div></div>';
 
@@ -673,9 +741,13 @@ $.ajax({
 
     // 페이지네이션 링크 클릭 이벤트 설정
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            var page = $(this).attr('href').split('page/')[1];
-            loadPage(page, 'views');
+        e.preventDefault();
+        var page = $(this).attr('href').split('page/')[1];
+        var channelId = null;
+        if (window.location.pathname.includes('/channel_id/')) {
+            channelId = window.location.pathname.split('/channel_id/')[1].split('/')[0];
+        }
+        loadPage(page, 'views', channelId);
     });
 }
 

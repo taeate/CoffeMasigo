@@ -91,6 +91,16 @@ $route['posts/channel_id/(:num)/page/(:num)'] = 'posts/post/get_channel_posts/$1
 
 
 
+$route['posts/post/LatestOrderBy_Channel/(:num)'] = 'posts/Post/LatestOrderBy_Channel/$1';
+$route['posts/post/ThumbOrderBy_Channel/(:num)'] = 'posts/Post/ThumbOrderBy_Channel/$1';
+$route['posts/post/ViewsOrderBy_Channel/(:num)'] = 'posts/Post/ViewsOrderBy_Channel/$1';
+
+
+
+
+
+
+
 $route['posts/channel_id/is_notice'] = 'posts/post/is_notice';
 $route['posts/channel_id/is_notice/page/(:num)'] = 'posts/post/is_notice/$1';
 
