@@ -49,6 +49,19 @@ class Wrote_model extends CI_Model {
         return $this->db->count_all_results('comment');
     }
 
+    public function get_user_data($user_id) {
+        
+        $query = $this->db->get_where('user', array('user_id' => $user_id));
+    
+        $user_data = $query->row();
+
+        if ($user_data) {
+            return $user_data;
+        } else {
+            return null; 
+        }
+    }
+
 
 
     public function get_wrote_thumb_post($userid, $start = 0, $limit = 15) {

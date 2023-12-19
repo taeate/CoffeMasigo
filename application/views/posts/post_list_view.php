@@ -14,7 +14,7 @@
     <!-- 리스트 페이지 컨텐츠 -->
     <div id="content" class="flex w-3/4 flex-col contentbox ml-4 z-10">
 
-        <div name="top-box" class="flex flex-col w-full">
+        <div name="top-box" class="flex flex-col ">
             <div name="search-nav" class="searchbox z-30 h-auto bg-base-100 place-items-center shadow-md">
 
                 <div class="m-4">
@@ -140,7 +140,7 @@
             
         </div>
     </div>
-            <body class="bg-base-300">
+            <body class="bg-gray-500">
                     
                 <!-- 리스트 페이지의 내용 -->
                 <div class="bg-base-100 mt-4">
@@ -296,7 +296,17 @@
             
 
     </div>
-        
+    <button id="scrollTopBtn" id="scrollBottomBtn" class="w-24 fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    <button id="scrollBottomBtn" class="w-24 fixed bottom-16 right-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+    <i class="fa-solid fa-arrow-down"></i>
+    </button>
+  
+    
+ 
+    
+
   
     <!-- <?php $this->load->view('layout/rightbar'); ?> -->
    
@@ -314,6 +324,46 @@
 <script>
 
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+    // 페이지 로드 시 초기 스크롤 위치에 따라 버튼 표시 여부 결정
+    if (window.scrollY > 200) {
+        scrollTopBtn.classList.remove('hidden');
+    } else {
+        scrollTopBtn.classList.add('hidden');
+    }
+
+    // 스크롤 이벤트 리스너 추가
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 200) {
+            scrollTopBtn.classList.remove('hidden');
+        } else {
+            scrollTopBtn.classList.add('hidden');
+        }
+    });
+
+    // 버튼 클릭 이벤트 리스너 추가
+    scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollBottomBtn = document.getElementById('scrollBottomBtn');
+
+    // 버튼 클릭 이벤트 리스너 추가
+    scrollBottomBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    });
+});
 
 
 
@@ -839,43 +889,45 @@ function redirectToURL() {
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const navbar = document.querySelector('nav');
-    const search = document.querySelector('.searchbox');
-    const sidebar = document.querySelector('.sidebarbox');
+// document.addEventListener('DOMContentLoaded', function () {
+//     const navbar = document.querySelector('nav');
+//     const search = document.querySelector('.searchbox');
+//     const sidebar = document.querySelector('.sidebarbox');
 
-    // 원래 sidebar의 너비 계산
-    const originalSidebarWidth = sidebar.offsetWidth + 'px';
-    const originalSearchWidth = search.offsetWidth + 'px';
+ 
 
-    if (navbar && content && sidebar) {
+//     // 원래 sidebar의 너비 계산
+//     const originalSidebarWidth = sidebar.offsetWidth + 'px';
+//     const originalSearchWidth = search.offsetWidth + 'px';
 
-        const navbarHeight = navbar.offsetHeight;
-        const contentTop = content.getBoundingClientRect().top + window.scrollY - navbarHeight;
+//     if (navbar && content && sidebar) {
 
-        window.addEventListener('scroll', function(){
-            if(window.scrollY >= contentTop){
-                sidebar.classList.add('fixed');
-                search.classList.add('fixed');
-                sidebar.style.top = `${navbarHeight}px`;
-                search.style.top = `${navbarHeight}px`;
+//         const navbarHeight = navbar.offsetHeight;
+//         const contentTop = content.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
-                sidebar.style.width = originalSidebarWidth; 
-                search.style.width = originalSearchWidth; // 고정 상태에서 원래 너비 적용
-            } else {
-                sidebar.classList.remove('fixed');
-                sidebar.style.top = '';
-                sidebar.style.width = ''; // 너비 스타일 제거
+//         window.addEventListener('scroll', function(){
+//             if(window.scrollY >= contentTop){
+//                 sidebar.classList.add('fixed');
+//                 search.classList.add('fixed');
+//                 sidebar.style.top = `${navbarHeight}px`;
+//                 search.style.top = `${navbarHeight}px`;
 
-                 // searchbox 스타일 초기화
-                search.classList.remove('fixed');
-                search.style.top = '';
-                search.style.width = '';
-                search.style.zIndex = '50';
-                search.style.backgroundColor = '';
-            }
-        });
-    } 
-});
+//                 sidebar.style.width = originalSidebarWidth; 
+//                 search.style.width = originalSearchWidth; // 고정 상태에서 원래 너비 적용
+//             } else {
+//                 sidebar.classList.remove('fixed');
+//                 sidebar.style.top = '';
+//                 sidebar.style.width = ''; // 너비 스타일 제거
+
+//                  // searchbox 스타일 초기화
+//                 search.classList.remove('fixed');
+//                 search.style.top = '';
+//                 search.style.width = '';
+//                 search.style.zIndex = '50';
+//                 search.style.backgroundColor = '';
+//             }
+//         });
+//     } 
+// });
 
 </script>

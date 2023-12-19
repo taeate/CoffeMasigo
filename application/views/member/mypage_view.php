@@ -121,12 +121,34 @@
                                     <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                         <div class="p-6">
                                             <div class="font-bold text-lg">소개글</div>
-                                            <div class="text-gray-500 mt-4">소개글입니다.소개글입니다.소개글입니다.소개글입니다.소개글입니다.</div>
+                                            <div class="text-gray-500 mt-4"><?php echo $user_data->introduction ?></div>
                                         </div>
                                         
                                         <hr>
                                         <div class="p-6">
-                                             <a class="text-blue-500" href="">소개글 재설정</a>
+                                             <button onclick="my_modal_2.showModal()" class="text-blue-500" href="">소개글 재설정</button>
+                                             <dialog id="my_modal_2" class="modal">
+                                                <div class="modal-box">
+                                                    <h3 class="font-bold text-xl mt-4 mb-4">소개글 변경</h3>
+                                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal()">✕</button> 
+                                                    <form id="intro-form" class="space-y-4" action="#" method="post">
+                                                
+                                                        <div>
+                                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
+                                                            <input type="text" name="intro" id="intro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                            <?php if ($this->session->flashdata('error')): ?>
+                                                            <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
+                                                            <?php endif; ?>
+                                                            <!-- <div class="text-red-500" id="password_error_0"><?php echo form_error('password0'); ?></div> -->
+                                                            
+                                                        </div>
+                                                        
+                                                        <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">변경하기</button>
+                                                        
+                                                    </form>
+                                                    
+                                                </div>
+                                            </dialog>
                                         </div>
                                     </div>
                             </div>
@@ -268,6 +290,43 @@ function closeModal() {
     var modal = document.getElementById('my_modal_1');
     modal.close();
 }
+
+
+function closeModal() {
+    var modal = document.getElementById('my_modal_2');
+    modal.close();
+}
+
+$("#intro-form").submit(function(event) {
+    console.log('시작');
+    event.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "/member/Mypage/change_intro",
+        dataType: 'json',
+        data: {
+            intro: $('#intro').val() // 소개글 값을 가져와서 전달
+        },
+        success: function(response) {
+            console.log('s');
+            if (response.error) {
+                $('#intro_error').html(response.errors.intro_error);
+            } else {
+                // 성공 처리
+                alert(response.message); // 성공 메시지 표시 후
+                window.location.href = "/mypage";
+            }
+        },
+        error: function(response) {
+            // 오류 메시지 표시
+            // 모달을 열어 둠
+        }
+    });
+    console.log('끝');
+});
+
+
+
 $("#password-form").submit(function(event){
     console.log('시작');
     event.preventDefault();

@@ -1,16 +1,16 @@
 <!-- 헤더 -->
 <?php $this->load->view('layout/header'); ?>
 
-
+<body class="">
 <!-- 컨텐츠영역 -->
-<div class="flex flex-container xl:mx-[400px] gap-10">
+<div class="flex flex-col lg:flex-row flex-container ml-[350px] mr-[350px] mt-[200px] mb-[200px]">
 
     <!-- 사이드바 -->
-    <div class="w-80 hidden md:block">
+    <div class="w-80">
         <?php $this->load->view('layout/sidebar'); ?>
     </div>
 
-    <div class="bg-base-100 p-10 w-full">
+    <div class="bg-base-100 p-10 ml-4 w-3/4">
         <div class="">
             <div class="">
                 <div name="title" class="flex flex-col gap-3">
@@ -237,8 +237,8 @@
 
         </div>
 
-        <body class="mt-96">
-        </body>
+
+       
 
     </div>
 
@@ -246,6 +246,7 @@
     <?php $this->load->view('layout/rightbar'); ?>
     </div> -->
 </div>
+</body>
 
 <script>
 // post_id 설정
@@ -313,31 +314,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.querySelector('nav');
-    const sidebar = document.querySelector('.sidebarbox');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const navbar = document.querySelector('nav');
+//     const sidebar = document.querySelector('.sidebarbox');
 
-    // 원래 sidebar의 너비 계산
-    const originalSidebarWidth = sidebar.offsetWidth + 'px';
+//     // 원래 sidebar의 너비 계산
+//     const originalSidebarWidth = sidebar.offsetWidth + 'px';
 
-    if (navbar && sidebar) {
+//     if (navbar && sidebar) {
 
-        const navbarHeight = navbar.offsetHeight;
-        const sidebarTop = sidebar.getBoundingClientRect().top + window.scrollY - navbarHeight;
+//         const navbarHeight = navbar.offsetHeight;
+//         const sidebarTop = sidebar.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
-        window.addEventListener('scroll', function() {
-            if (window.scrollY >= sidebarTop) {
-                sidebar.classList.add('fixed');
-                sidebar.style.top = `${navbarHeight}px`;
-                sidebar.style.width = originalSidebarWidth; // 고정 상태에서 원래 너비 적용
-            } else {
-                sidebar.classList.remove('fixed');
-                sidebar.style.top = '';
-                sidebar.style.width = ''; // 너비 스타일 제거
-            }
-        });
-    }
-});
+//         window.addEventListener('scroll', function() {
+//             if (window.scrollY >= sidebarTop) {
+//                 sidebar.classList.add('fixed');
+//                 sidebar.style.top = `${navbarHeight}px`;
+//                 sidebar.style.width = originalSidebarWidth; // 고정 상태에서 원래 너비 적용
+//             } else {
+//                 sidebar.classList.remove('fixed');
+//                 sidebar.style.top = '';
+//                 sidebar.style.width = ''; // 너비 스타일 제거
+//             }
+//         });
+//     }
+// });
 
 
 var activeCommentForm = null; // 활성화된 댓글 폼 추적

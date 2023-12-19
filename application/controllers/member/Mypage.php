@@ -60,11 +60,46 @@ class Mypage extends CI_Controller {
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+            $data['user_data'] = $this->Wrote_model->get_user_data($user_id);
+            
 
    
             $this->load->view('member/mypage_view',$data);
         }
     }
+    
+
+    public function change_intro() {
+        // AJAX 요청인 경우만 처리
+        if ($this->input->is_ajax_request()) {
+            $intro = $this->input->post('intro');
+            $user_id = $this->session->userdata('user_id'); // 세션에서 사용자 ID 가져오기 또는 사용자 식별 방법에 따라 변경
+        
+            // 데이터베이스에서 사용자 소개글 업데이트
+            $data = array(
+                'introduction' => $intro
+            );
+        
+            $this->db->where('user_id', $user_id);
+            $this->db->update('user', $data);
+        
+            $response = array();
+        
+            if ($this->db->affected_rows() > 0) {
+                // 업데이트가 성공했을 때
+                $response['error'] = false;
+                $response['message'] = '소개글이 변경되었습니다.';
+            } else {
+                // 업데이트가 실패했을 때
+                $response['error'] = true;
+                $response['errors']['intro_error'] = '소개글 업데이트에 실패했습니다.';
+            }
+        
+            // JSON 응답 반환
+            echo json_encode($response);
+        }
+    }
+    
     
 
 public function password_check($password) {
