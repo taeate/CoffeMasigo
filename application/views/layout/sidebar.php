@@ -6,7 +6,7 @@
             <div class="flex mt-12 ml-8">
                 <div name="profile-image" class="">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
-                        <div class="w-500 rounded-full">
+                        <div class="w-500 rounded-full border-t border-b border-l border-r">
                             <a href="/mypage"><img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" /></a>
                         </div>
                     </label>

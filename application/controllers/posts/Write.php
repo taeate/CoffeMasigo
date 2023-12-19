@@ -321,6 +321,7 @@ class Write extends CI_Controller {
                 "fileName" => $fileName,
                 'url' => base_url($savedImageUrl) // 저장된 이미지의 URL
             ];
+            
             echo json_encode($response);
             return;
     }

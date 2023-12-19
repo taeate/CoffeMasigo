@@ -202,7 +202,7 @@
                                             <?php if($post->file_count > 0): ?>
                                                 <div  class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>
                                             <?php endif; ?>
-                                            <?php if($post->content && strpos($post->content, '<img') !== false): ?>
+                                            <?php if ($post->content && preg_match('/!\[.*\]\(http.*\)/', $post->content)): ?>
                                                 <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
                                             <?php endif; ?>
                                             <!-- <div class="ml-1 text-red-500"><i class="fa-regular fa-n"></i></div> -->
@@ -342,7 +342,7 @@ function createPostHtml(post) {
     if (post.file_count > 0) {
     postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
     }
-    if (post.content && post.content.includes('<img')) {
+    if (post.content && /!\[.*\]\(http.*\)/.test(post.content)) {
         postHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
     }             
     postHtml += '            </div>';
@@ -783,7 +783,7 @@ function loadReplies(postId) {
                                         repliesHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
                                         }
                                         
-                                        if (reply.content && reply.content.includes('<img')) {
+                                        if (reply.content && /!\[.*\]\(http.*\)/.test(reply.content)) {
                                             repliesHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
                                             } 
 

@@ -60,7 +60,9 @@
                     <?php endforeach; ?>
                     <?php endif; ?>
 
+                    
                     <div class="m-12 w-full">
+                        
                         <?php echo $content ?>
                     </div>
                 </div>
@@ -249,40 +251,6 @@
 // post_id 설정
 var postId = document.getElementById('post-container').getAttribute('data-post-id');
 
-// 등록순 버튼 클릭 이벤트
-document.getElementById('comment_orderBy_create').addEventListener('click', function() {
-    fetchComments('ASC');
-});
-
-// 최신순 버튼 클릭 이벤트
-document.getElementById('comment_orderBy_last').addEventListener('click', function() {
-    fetchComments('DESC');
-});
-
-function fetchComments(order) {
-    $.ajax({
-        url: '/posts/post/comment_orderBy_create',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            post_id: postId,
-            order: order
-        },
-        success: function(response) {
-            console.log(response)
-            var commentsHtml = '';
-            response.forEach(function(comment) {
-                commentsHtml += createCommentHtml(comment);
-            });
-
-            $('#commentsContainer').html(commentsHtml);
-
-        },
-        error: function(error) {
-            console.error('Error:', error);
-        }
-    });
-}
 
 
 

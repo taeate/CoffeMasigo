@@ -19,6 +19,8 @@ class Join extends CI_Controller {
 		$this->form_validation->set_rules('password1', '비밀번호', 'required');
 		$this->form_validation->set_rules('password2', '비밀번호 확인', 'required|matches[password1]');
 		$this->form_validation->set_rules('email', '이메일', 'required|valid_email|callback_checkEmail');
+		
+
 
 
 			if ($this->form_validation->run() === FALSE) {
@@ -55,6 +57,7 @@ class Join extends CI_Controller {
 				$password = $this->input->post('password1');
 				$hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
+		
 
 				//데이터베이스에 저장
 				$data = [
@@ -62,7 +65,8 @@ class Join extends CI_Controller {
 					'user_id' => $this->input->post('userid'),
 					'email' => $this->input->post('email'),
 					'password_hash' => $hashed_password,
-					'profile_image' => $profile_image_path
+					'profile_image' => $profile_image_path,
+					'introduction' => $this->input->post('intro'),
 				];
 
 				

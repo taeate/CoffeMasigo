@@ -5,7 +5,7 @@
     <div class="w-80">
         <?php $this->load->view('layout/sidebar'); ?>
     </div>
-    <!-- <body class="mt-96"> -->
+    <body class="mt-96">
     <div class="content ml-8" style="flex: 3;">
         <div class="flex flex-col w-full ">
             <div class="h-auto bg-base-100">
@@ -70,11 +70,11 @@
                                 value="<?php echo set_value('title'); ?>">
                             <?php echo form_error('title'); ?>
                         </div>
-                        <div class="mb-6">
+                        <div class="mb-6" id="editor">
 
 
                             <label for="content"
-                                class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
+                                class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"></label>
 
                             <textarea class="h-36 form-control ckeditor" type="text" name="content" id="content"
                                 value="<?php echo set_value('content'); ?>"></textarea>
@@ -165,16 +165,16 @@
                             <?php echo form_error('title', '<div class="error">', '</div>'); ?>
 
                         </div>
-                        <div class="mb-6">
+                        <div class="mb-6" id="editor">
 
 
                             <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"
-                                value="<?php echo set_value('content'); ?>">내용</label>
+                                value="<?php echo set_value('content'); ?>"></label>
 
                             <textarea class="h-36" type="text" name="content" id="content"></textarea>
                             <?php echo form_error('content', '<div class="error">', '</div>'); ?>
 
-
+                            
                         </div>
 
                         <div class="flex justify-between">
@@ -212,7 +212,8 @@
 
 
 
-
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
 
 
@@ -223,27 +224,59 @@
 
 
 <script>
-ClassicEditor
-        .create( document.querySelector( '#content' ), {
+
+const editor = new toastui.Editor({
+    el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
+    height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+    initialEditType: 'markdown',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+    initialValue: '',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+    previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
+    hooks: {
+        addImageBlobHook: async (blob, callback) => {
+            // FormData를 사용하여 이미지 파일을 서버로 전송
+            const formData = new FormData();
+            formData.append('upload', blob); 
+
+            try {
+                // 이미지를 서버에 업로드하는 요청 보내기
+                const response = await fetch('/posts/write/saveImage', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                // callback 함수를 사용하여 에디터에 이미지 URL 삽입
+                callback(data.url, '이미지 설명'); // 서버에서 반환된 이미지 URL
+            } catch (error) {
+                console.error('이미지 업로드 실패', error);
+            }
+        }
+    }
+});
+
+
+
+// ClassicEditor
+//         .create( document.querySelector( '#content' ), {
     
-        language: "ko",
-        simpleUpload: {
-            uploadUrl: '/posts/write/saveImage'
-        },
-        ckfinder : {
-            uploadUrl: "/posts/write/saveImage",
-            withCredentials: true
-        },
-        removePlugins: [ 'Heading' ],
+//         language: "ko",
+//         simpleUpload: {
+//             uploadUrl: '/posts/write/saveImage'
+//         },
+//         ckfinder : {
+//             uploadUrl: "/posts/write/saveImage",
+//             withCredentials: true
+//         },
+//         removePlugins: [ 'Heading' ],
         
 
-        } )
-        .then(editor => {
-            globalEditor = editor; // 전역 변수에 인스턴스 저장
-        })
-        .catch(error => {
-            console.error(error);
-        });
+//         } )
+//         .then(editor => {
+//             globalEditor = editor; // 전역 변수에 인스턴스 저장
+//         })
+//         .catch(error => {
+//             console.error(error);
+//         });
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -253,28 +286,27 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('answer_form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-        if (globalEditor) {
-            var content = globalEditor.getData();
-            document.getElementById('content').value = content;
-        }
 
-        // 제목과 내용이 비어 있는지 검사
-        let title = document.getElementById('title').value.trim();
+        let formData = new FormData(this);
+        let post_id = $('#answer_form').attr('data-post-id'); 
+        var editorContent = editor.getMarkdown(); // 또는 editor.getHtml() 사용
+        formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
+        formData.append('channel_id', document.querySelector('select[name="answer_channel_id"]').value);
+
+
         
-
+        // 제목 검사
+        let title = document.getElementById('title').value.trim();
         if (title === '' ) {
             alert('제목을 입력해주세요.');
             return;
         }
 
-        if (content === '' ) {
+        // 내용 검사
+        if (editorContent.trim() === '' ) {
             alert('내용을 입력해주세요.');
             return;
         }
-
-        let formData = new FormData(this);
-        let post_id = $('#answer_form').attr('data-post-id'); 
-        formData.append('channel_id', document.querySelector('select[name="answer_channel_id"]').value);
 
         console.log(post_id);
 
@@ -310,8 +342,22 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             var formData = new FormData(this);
-            
+            var editorContent = editor.getMarkdown(); // 또는 editor.getHtml() 사용
+            formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
             formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
+
+               // 제목 검사
+                let title = document.getElementById('title').value.trim();
+                if (title === '' ) {
+                    alert('제목을 입력해주세요.');
+                    return;
+                }
+
+                // 내용 검사
+                if (editorContent.trim() === '' ) {
+                    alert('내용을 입력해주세요.');
+                    return;
+                }
 
                 fetch('/posts/write', {
                         method: 'POST',
@@ -385,8 +431,3 @@ function removeFile(index) {
 
 
 </script>
-<style>
-.ck-editor__editable {
-    min-height: 200px;
-}
-</style>

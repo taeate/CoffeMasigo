@@ -1,18 +1,20 @@
 <?php $this->load->view('layout/header'); ?>
 <body class="">
 <div class="hero min-h-screen bg-base-200 ">
-<img src="/application/views/images/city.jpg" class="h-screen w-screen" alt="">
+  
+<img src="/application/views/images/car.jpg" class="h-screen w-screen" alt="">
   <div class="hero-content flex-col lg:flex-row-reverse w-5/6">    
-    
+ 
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-gray-700 ">
-
-    
-      
+  
 
       <form id="join_form" class="card-body" method="post" action="<?php echo site_url('member/join'); ?>" enctype="multipart/form-data">
         <div class="form-control">
-        <div class="flex justify-center mt-2 mb-4"><span class="text-white">프로필이미지</span></div>
-        <div class="avatar justify-center group">
+        <div class="flex flex-col items-center justify-center mt-2 mb-4">
+          <span class="text-white">프로필이미지</span>
+          
+        </div>
+        <div class="flex flex-col avatar justify-center items-center group">
           <label for="file-upload" class="btn btn-ghost btn-circle w-28 h-28 rounded-full ring ring-offset-base-100 ring-offset-2 hover:bg-gray-500" style="display: flex; justify-content: center; align-items: center; cursor: pointer;">
           
             <div class="w-full h-full rounded-full overflow-hidden">
@@ -24,10 +26,10 @@
             
             <input id="file-upload" type="file" name="profile_image" style="display: none;" onchange="previewImage(this)">
           </label>
+          <span class="text-white text-xs mt-4 mb-4">프로필을 설정하지 않으면 기본 이미지로 대체됩니다.</span>
         </div>
 
-        
-
+      
 
 
           <label class="label">
@@ -61,17 +63,23 @@
               <p id="emailStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
               
 
-            <label class="label">
-            <span class="label-text text-white">비밀번호</span>
-            </label>
+              <label class="label">
+              <span class="label-text text-white">비밀번호</span>
+              </label>
               <input type="password" name="password1" id="password1" placeholder="비밀번호를 입력해주세요." class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('password1'); ?>" />
               <span id="password1_error"class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('password1'); ?></span>
 
               <label class="label">
-            <span class="label-text text-white">비밀번호확인</span>
-            </label>
+              <span class="label-text text-white">비밀번호확인</span>
+              </label>
               <input type="password" name="password2" id="password2" placeholder="비밀번호를 입력해주세요." class="input input-bordered bg-gray-600 text-white"  />
               <span id="password2_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('password2'); ?></span>
+
+              <label class="label">
+              <span class="label-text text-white">소개글</span>
+              </label>
+              <input type="text" name="intro" id="intro" placeholder="소개글을 작성해주세요." class="input input-bordered bg-gray-600 text-white"  />
+              <span id="intro_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('intro'); ?></span>
         </div>
         
         
@@ -82,9 +90,11 @@
     </div>
     <div class="text-center lg:text-left text-white">
       
-      <h1 class="text-6xl font-bold">Welcome Cafe Masigo!</h1>
-      <p class="py-6">Provident qwer voluptatem et in. Quaerat qwer ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi. 
-      Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
+      <h1 class="text-6xl font-bold">Welcome Ford Mustang!</h1>
+      <p class="py-6">The Ford Mustang, an American icon and a symbol of automotive freedom, debuted in 1964
+                  and revolutionized the muscle car industry with its captivating blend of power, style, and
+                  performance. With a heritage rooted in American culture, it has become a ontinues to captivate with
+                  its unique combination of performance, style, and legacy.
 
       </p>
     </div>
@@ -221,6 +231,9 @@ $(document).ready(function(){
           $("#password2").on('input', function() {
           $("#password2_error").text("");
           });
+         
+        
+        
 
 
           // 클라이언트 측 유효성 검사
@@ -229,9 +242,17 @@ $(document).ready(function(){
           var email = $('#email').val();
           var password1 = $('#password1').val();
           var password2 = $('#password2').val();
+          var username = $('#username').val();
           var isValid = true; // 유효성 검사 플래그
 
+         
 
+          if (!/^[\p{Hangul}]+$/.test(username)) {
+              isValid = false;
+              $('#username_error').text('한글만 입력 가능합니다.');
+            }else{
+              isValid = true;
+            }
 
           // 아이디가 비어있지 않고 알파벳 소문자 및 숫자로만 구성되었는지 확인
           if (!userid || !userid.match(/^[a-z0-9]+$/)) {
@@ -250,6 +271,8 @@ $(document).ready(function(){
           }
 
           console.log("이메일 체크 후");
+          
+
           // 이름이 비어있는지
           if (username == ""){
             isValid = false;
@@ -283,6 +306,7 @@ $(document).ready(function(){
               isValid = false;
               $('#password2_error').text('비밀번호가 일치하지 않습니다.');
           }
+
 
 
           console.log("이메일 체크 끝");

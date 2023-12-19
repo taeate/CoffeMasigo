@@ -79,10 +79,10 @@
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="<?php echo $title; ?>">
                             
                             </div>
-                            <div class="mb-6">
+                            <div class="mb-6" id="editor">
                 
 
-                                <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">내용</label>
+                                <label for="content" class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"></label>
                                
                                 <textarea class="h-36" type="text" name="content" id="content"><?php echo $content; ?></textarea>
                         
@@ -130,7 +130,8 @@
 
                          
 
-                        
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
 
         </body>
@@ -140,56 +141,61 @@
 
 <script>
 
-    
-ClassicEditor
-        .create( document.querySelector( '#content' ), {
-    
-        language: "ko",
-        simpleUpload: {
-            uploadUrl: '/posts/write/saveImage'
-        },
-        ckfinder : {
-            uploadUrl: "/posts/write/saveImage",
-            withCredentials: true
-        },
-        removePlugins: [ 'Heading' ],
-        
 
-        } )
-        .then(editor => {
-            globalEditor = editor; // 전역 변수에 인스턴스 저장
-        })
-        .catch(error => {
-            console.error(error);
-        });
+const editor = new toastui.Editor({
+    el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
+    height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+    initialEditType: 'markdown',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+    initialValue: document.querySelector('#content').value,     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+    previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
+    hooks: {
+        addImageBlobHook: async (blob, callback) => {
+            // FormData를 사용하여 이미지 파일을 서버로 전송
+            const formData = new FormData();
+            formData.append('upload', blob); 
+
+            try {
+                // 이미지를 서버에 업로드하는 요청 보내기
+                const response = await fetch('/posts/write/saveImage', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                // callback 함수를 사용하여 에디터에 이미지 URL 삽입
+                callback(data.url, '이미지 설명'); // 서버에서 반환된 이미지 URL
+            } catch (error) {
+                console.error('이미지 업로드 실패', error);
+            }
+        }
+    }
+});
 
 
 
 document.getElementById('edit_form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    if (globalEditor) {
-        var content = globalEditor.getData();
-        document.getElementById('content').value = content;
-    }
+    let formData = new FormData(this);
+    var editorContent = editor.getMarkdown(); // 또는 editor.getHtml() 사용
+    formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
+    formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
+    let post_id = $('#edit_form').attr('data-post-id');
 
-    // 제목과 내용이 비어 있는지 검사
+    // 제목 검사
     let title = document.getElementById('title').value.trim();
-    
 
     if (title === '' ) {
         alert('제목을 입력해주세요.');
         return;
     }
 
-    if (content === '' ) {
+    // 내용 검사
+    if (editorContent.trim() === '' ) {
         alert('내용을 입력해주세요.');
         return;
     }
-
-    let formData = new FormData(this);
-    formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
-    let post_id = $('#edit_form').attr('data-post-id');
+   
 
 
     axios.post('/posts/write/post_edit/'+post_id, formData)
@@ -214,6 +220,7 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
 
 
 
+var uploadedFiles = []; // 이미 업로드된 파일 목록을 저장할 배열
 
 document.getElementById('file').addEventListener('change', function(e) {
     var files = e.target.files;
@@ -221,29 +228,61 @@ document.getElementById('file').addEventListener('change', function(e) {
 
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
-        var fileElement = document.createElement('div');
-        fileElement.className = 'new-file'; 
-        fileElement.innerHTML = file.name + ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(' + i + ')">X</button>';
-        filesList.appendChild(fileElement);
+        
+        // 이미 업로드된 파일인지 확인
+        if (!uploadedFiles.includes(file.name)) {
+            uploadedFiles.push(file.name); // 새로운 파일을 배열에 추가
+            
+            var fileElement = document.createElement('div');
+            fileElement.className = 'new-file'; 
+            fileElement.id = 'file-' + uploadedFiles.length; // 파일 요소에 고유한 ID 할당
+            fileElement.innerHTML = file.name + ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(' + (uploadedFiles.length - 1) + ')">X</button>';
+            filesList.appendChild(fileElement);
+        }
     }
 });
 
 function newfile_remove(index) {
-        var filesInput = document.getElementById('file');
-        var dataTransfer = new DataTransfer();
-        
-        Array.from(filesInput.files).forEach((file, i) => {
-            if (i !== index) {
-                dataTransfer.items.add(file);
-            }
-        });
+    var filesInput = document.getElementById('file');
+    var dataTransfer = new DataTransfer();
+    
+    // 선택된 파일을 제외하고 나머지 파일들을 DataTransfer 객체에 추가
+    Array.from(filesInput.files).forEach((file, i) => {
+        if (i !== index) {
+            dataTransfer.items.add(file);
+        }
+    });
 
-        filesInput.files = dataTransfer.files;
-        // 파일 목록을 새로고침
-        var event = new Event('change');
-        filesInput.dispatchEvent(event);
-        
+    // filesInput의 파일들을 업데이트
+    filesInput.files = dataTransfer.files;
+
+    // 파일 목록을 새로고침
+    var event = new Event('change');
+    filesInput.dispatchEvent(event);
+
+    // DOM에서 해당 파일 요소를 제거
+    var fileElement = document.getElementById('file-' + (index + 1)); // ID를 찾을 때 인덱스를 올바르게 조정
+    if (fileElement) {
+        fileElement.parentNode.removeChild(fileElement);
+        uploadedFiles.splice(index, 1); // 배열에서도 파일 이름을 제거
     }
+}
+
+function removeFile(index) {
+var filesInput = document.getElementById('file');
+var dataTransfer = new DataTransfer();
+
+Array.from(filesInput.files).forEach((file, i) => {
+    if (i !== index) {
+        dataTransfer.items.add(file);
+    }
+});
+
+filesInput.files = dataTransfer.files;
+// 파일 목록을 새로고침
+var event = new Event('change');
+filesInput.dispatchEvent(event);
+}
 
 
 
@@ -270,31 +309,9 @@ function deleteFile(fileId, postId) {
 }
 
 
-function removeFile(index) {
-var filesInput = document.getElementById('file');
-var dataTransfer = new DataTransfer();
-
-Array.from(filesInput.files).forEach((file, i) => {
-    if (i !== index) {
-        dataTransfer.items.add(file);
-    }
-});
-
-filesInput.files = dataTransfer.files;
-// 파일 목록을 새로고침
-var event = new Event('change');
-filesInput.dispatchEvent(event);
-}
 
 
 
 </script>
-<style>
-	.ck.ck-editor {
-    	
-	}
-	.ck-editor__editable {
-	    min-height: 200px;
-	}
-</style>
+
  

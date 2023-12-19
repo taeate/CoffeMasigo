@@ -43,27 +43,27 @@ class Post_model extends CI_Model {
     
     
 
-    
-public function find_detail($post_id) {
-    // 게시물 정보와 채널 정보를 가져오기
-    $this->db->select('post.*, channel.name as channel_name');
-    $this->db->from('post');
-    $this->db->where('post.post_id', $post_id);
-    $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); // 채널 정보를 조인
+        
+    public function find_detail($post_id) {
+        // 게시물 정보와 채널 정보를 가져오기
+        $this->db->select('post.*, channel.name as channel_name');
+        $this->db->from('post');
+        $this->db->where('post.post_id', $post_id);
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); // 채널 정보를 조인
 
-    $post_info = $this->db->get()->row();
+        $post_info = $this->db->get()->row();
 
-    // 파일 정보 가져오기
-    $this->db->select('file_name, file_path');
-    $this->db->where('post_id', $post_id);
-    $files = $this->db->get('uploadfile')->result();
+        // 파일 정보 가져오기
+        $this->db->select('file_name, file_path');
+        $this->db->where('post_id', $post_id);
+        $files = $this->db->get('uploadfile')->result();
 
-    // 게시물 정보와 파일 정보를 함께 반환
-    return [
-        'post_info' => $post_info,
-        'files' => $files
-    ];
-}
+        // 게시물 정보와 파일 정보를 함께 반환
+        return [
+            'post_info' => $post_info,
+            'files' => $files
+        ];
+    }
 
     
     
@@ -201,12 +201,26 @@ public function find_detail($post_id) {
         return $this->db->count_all_results('post');
     }
 
-    public function increment_views($post_id) {
-        $this->db->set('views', 'views+1', FALSE);
-        $this->db->where('post_id', $post_id);
-        $this->db->update('post');
-    
+    public function increment_views($post_id, $user_id) {
+        // 게시물별로 마지막 조회 시간을 세션에서 가져오기
+        $last_view_time_key = 'last_view_time_' . $user_id . '_' . $post_id;
+        $last_view_time = $this->session->userdata($last_view_time_key);
+        
+        // 현재 시간
+        $current_time = time();
+        
+        // 마지막 조회 시간이 없거나 30분 이상 지난 경우에만 조회수를 증가
+        if (!$last_view_time || ($current_time - $last_view_time) >= 1800) {
+            $this->db->set('views', 'views+1', FALSE);
+            $this->db->where('post_id', $post_id);
+            $this->db->update('post');
+            
+            // 사용자의 게시물별 마지막 조회 시간을 현재 시간으로 업데이트
+            $this->session->set_userdata($last_view_time_key, $current_time);
+        }
     }
+    
+    
 
 
 
