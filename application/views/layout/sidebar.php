@@ -1,57 +1,61 @@
 
 <div class=" bg-base-100 h-auto w-auto rounded sidebarbox">
-    <div name="sidebar-container" class="rounded">
-        <div class=" bg-base-100 h-auto flex">
-            <?php if ($this->session->userdata('profile_image')): ?>
-            <div class="flex mt-12 ml-8">
-                <div name="profile-image" class="">
-                    <label tabindex="0" class="btn btn-ghost btn-circle avatar w-32 h-20 mr-4">
-                        <div class="w-500 rounded-full border-t border-b border-l border-r">
-                            <a href="/mypage"><img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" /></a>
-                        </div>
-                    </label>
-                </div>
-                <?php endif;?>
-                <?php if ($this->session->userdata('user_id')): ?>
-                <div name="flex justify-center sidebar-text" class="flex flex-col justify-center h-full"> 
-                    <div class="text-xl font-bold mb-2">
-                        <?php echo $this->session->userdata('user_id'); ?>
+    <div name="sidebar-container" class="rounded w-[300px]">
+
+        <div class="p-2">
+            <div class="flex flex-col p-2">
+            <?php if ($this->session->userdata('user_id')): ?>
+                <div class="flex">
+                    <div name="profile-image" class="">
+                        <?php if ($this->session->userdata('profile_image')): ?>
+                            <label tabindex="0" class="btn btn-ghost btn-circle avatar w-20 h-12">
+                                <div class="w-500 rounded-full border-t border-b border-l border-r">
+                                    <a href="/mypage"><img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" /></a>
+                                </div>
+                            </label>
+                        <?php endif;?>
                     </div>
-                    <?php endif;?>
-                
-                    <div class="text-sm">
-                        <a href="/member/wrote/post" class="hover:text-blue-500">내가 쓴 글  <?php echo $post_count; ?>개</a>
+                    <div class="mt-1 ml-2 w-full">
+                       <div class="flex text-xl font-bold">
+                           
+                                    <?php echo $this->session->userdata('user_id'); ?>
+                         
+                       </div>
+                       <div>    
+                            <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-blue-700 dark:text-white">레벨 1</span>
+                            <span class="text-sm font-medium text-blue-700 dark:text-white">45%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+                            </div>
+                       </div>
+                    </div>
+                </div>
+                <div class="w-full mt-4">
+                    <div class="flex flex-cols-2 gap-2 w-full">
+                        <a href="/member/wrote/post" class="text-sm text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">내가 쓴글</a>
+                        <a href="/member/wrote/comment" class="text-sm text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">내가 쓴 댓글</a>
+                    </div>
+                    <div class="mt-2 flex flex-cols-2 gap-2 w-full">
+                        <a href="/member/wrote/thumb_post" class="text-sm text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">내가 추천한 글</a>
+                        <a href="/mypage" class="text-sm text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">마이페이지</a>
                     </div>
                    
-                    <div class="text-sm mt-1">
-                       <a href="/member/wrote/comment" class="hover:text-blue-500"> 내가 쓴 댓글  <?php echo $comment_count; ?>개</a>
-                    </div>
-                    <div class="text-sm mt-1">
-                       <a href="/member/wrote/thumb_post" class="hover:text-blue-500"> 내가 추천한 글 <?php echo $wrote_thumb_post_count; ?>개</a>
-                    </div>
-                    <div class="text-sm mt-1">
-                        <a href="/mypage" class="hover:text-blue-500">마이페이지</a>
-                    </div>
                 </div>
-             
-
+                    <div class="mt-2">
+                        <a href="/posts/write" class="text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">글작성</a>
+                    </div>
+                <?php else:?>
+                    <div class="mt-2">
+                        <a href="/login" class="text-white rounded-lg bg-blue-500 w-full h-12 flex items-center justify-center">로그인</a>
+                    </div>
+                <?php endif;?>
             </div>
-            
         </div>
-        <div>
-        <div name="login-write-but" class="flex justify-center mt-8">
-            <?php if ($this->session->userdata('user_id')): ?>
-                <!-- 로그인한 사용자에게는 글작성 버튼 표시 -->
-                <a href="/posts/write" class="btn btn-primary w-40 h-12 rounded-lg">글작성하기</a>
-            <?php else: ?>
-                <!-- 비로그인 사용자에게는 로그인 버튼 표시 -->
-                <a href="/login"  class="btn btn-primary w-40 h-12 rounded-lg">로그인</a>
-            <?php endif; ?>
-        </div>
+       
 
-        </div>
-
-        <hr class="mt-8">
+        <hr class="mt-2">
         
 
         <div name="sec-side-box" class="mt-4 ml-8 flex flex-col gap-2">
