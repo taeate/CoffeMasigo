@@ -232,24 +232,42 @@ class Post_model extends CI_Model {
         return $this->db->count_all_results('post');
     }
 
-    public function increment_views($post_id, $user_id) {
-        // 게시물별로 마지막 조회 시간을 세션에서 가져오기
-        $last_view_time_key = 'last_view_time_' . $user_id . '_' . $post_id;
-        $last_view_time = $this->session->userdata($last_view_time_key);
-        
+    public function increment_views($post_id, $user_ip) {
         // 현재 시간
         $current_time = time();
-        
+    
+        // 'post_views' 테이블에서 마지막 조회 정보 가져오기
+        $this->db->select('view_time');
+        $this->db->where('post_id', $post_id);
+        $this->db->where('user_ip', $user_ip);
+        $query = $this->db->get('post_views');
+        $last_view = $query->row_array();
+    
         // 마지막 조회 시간이 없거나 30분 이상 지난 경우에만 조회수를 증가
-        if (!$last_view_time || ($current_time - $last_view_time) >= 1800) {
+        if (!$last_view || ($current_time - strtotime($last_view['view_time'])) >= 1800) {
+            // 'post' 테이블의 조회수 업데이트
             $this->db->set('views', 'views+1', FALSE);
             $this->db->where('post_id', $post_id);
             $this->db->update('post');
-            
-            // 사용자의 게시물별 마지막 조회 시간을 현재 시간으로 업데이트
-            $this->session->set_userdata($last_view_time_key, $current_time);
+    
+            // 'post_views' 테이블에 조회 정보 업데이트 또는 삽입
+            if ($last_view) {
+                // 기존 레코드 업데이트
+                $this->db->set('view_time', date('Y-m-d H:i:s', $current_time));
+                $this->db->where('post_id', $post_id);
+                $this->db->where('user_ip', $user_ip);
+                $this->db->update('post_views');
+            } else {
+                // 새 레코드 삽입
+                $this->db->insert('post_views', array(
+                    'post_id' => $post_id,
+                    'user_ip' => $user_ip,
+                    'view_time' => date('Y-m-d H:i:s', $current_time)
+                ));
+            }
         }
     }
+    
     
     
 
@@ -367,6 +385,7 @@ class Post_model extends CI_Model {
         );
         $this->db->insert('post_thumb', $data);
     }
+    
 
     public function count_thumb($post_id){
         $this->db->select('thumb');
