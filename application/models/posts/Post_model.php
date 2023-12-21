@@ -1006,17 +1006,18 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
 
     public function get_hot_posts($limit = 40) {
-        $this->db->select('p.post_id, p.title, p.content, p.create_date, p.views, COUNT(c.comment_id) AS comment_count, p.thumb AS thumb_count, ch.name AS channel_name');
+        $this->db->select('p.post_id, p.title, p.content, p.create_date, p.views, COUNT(c.comment_id) AS comment_count, p.thumb AS thumb_count, (COUNT(c.comment_id) + p.thumb) AS total_score, ch.name AS channel_name'); // 종합점수 계산 추가
         $this->db->from('post AS p');
         $this->db->join('comment AS c', 'p.post_id = c.post_id', 'LEFT');
         $this->db->join('channel AS ch', 'p.channel_id = ch.channel_id', 'LEFT');
         $this->db->group_by('p.post_id, p.title, p.content, p.create_date, p.views, p.thumb, ch.name');
-        $this->db->order_by('comment_count', 'DESC'); // 댓글 수 기준으로 내림차순 정렬
+        $this->db->order_by('total_score', 'DESC'); // 종합점수 기준으로 내림차순 정렬
         $this->db->limit($limit);
     
         $query = $this->db->get();
         return $query->result_array();
     }
+    
     
     
     
