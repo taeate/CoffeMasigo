@@ -200,6 +200,7 @@ class Write extends CI_Controller {
                 $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
                 $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
                 $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+                $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
                 // 폼에서 데이터가 전송되지 않았을 경우
                 $post_info = $this->Write_model->get_post($post_id);
@@ -271,6 +272,7 @@ class Write extends CI_Controller {
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+            $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
             $this->load->view('posts/post_edit_view', $data);
         }
@@ -300,9 +302,16 @@ class Write extends CI_Controller {
     }
 
     public function post_delete($post_id){
+
+        $user_id = $this->session->userdata('user_id');
         
         if (!empty($post_id)) {
+
+            $this->Write_model->update_experience_points($user_id, -2);
+
             $this->Write_model->delete_post($post_id);
+
+            
             
         }
     }

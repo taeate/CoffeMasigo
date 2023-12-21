@@ -23,6 +23,7 @@ class Wrote extends CI_Controller {
          //사이드바 정보
          $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
          $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
+         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
     
         $this->load->view('member/wrote_view', $data);
     }
@@ -89,6 +90,7 @@ class Wrote extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
         $data['wrote_post'] = $this->Wrote_model->get_wrote_post($userid,$start,$config['per_page']);
         $data['wrote_count'] = $this->Wrote_model->count_wrote_posts($userid);
@@ -172,6 +174,7 @@ class Wrote extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
         $data['wrote_comment'] = $this->Wrote_model->get_wrote_comment($userid,$start,$config['per_page']);
         $data['wrote_comment_count'] = $this->Wrote_model->count_wrote_comment($userid);
@@ -256,7 +259,7 @@ class Wrote extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
-
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
 
         $data['wrote_thumb_post'] = $this->Wrote_model->get_wrote_thumb_post($userid,$start,$config['per_page']);

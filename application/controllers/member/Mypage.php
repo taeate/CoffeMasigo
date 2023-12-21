@@ -61,6 +61,7 @@ class Mypage extends CI_Controller {
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
             $data['user_data'] = $this->Wrote_model->get_user_data($user_id);
+            $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
             
 
    

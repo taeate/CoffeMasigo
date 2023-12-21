@@ -767,6 +767,20 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         $this->db->delete('comment');
     }
 
+    public function get_comment_user_id($comment_id) {
+        $this->db->select('user_id');
+        $this->db->from('comment');
+        $this->db->where('comment_id', $comment_id);
+        $query = $this->db->get();
+    
+        if ($query->num_rows() > 0) {
+            return $query->row()->user_id;
+        } else {
+            return false;
+        }
+    }
+    
+
     public function get_files($post_id) {
         $this->db->select('*');
         $this->db->from('uploadfile');
@@ -945,6 +959,8 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         return $query->row();
 
     }
+
+
 
 
     public function get_exp_level_info($user_id) {

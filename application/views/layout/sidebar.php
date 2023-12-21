@@ -5,7 +5,7 @@
         <div class="p-2">
             <div class="flex flex-col p-2">
             <?php if ($this->session->userdata('user_id')): ?>
-                <div class="flex">
+                <div class="flex px-4 py-6">
                     <div name="profile-image" class="">
                         <?php if ($this->session->userdata('profile_image')): ?>
                             <label tabindex="0" class="btn btn-ghost btn-circle avatar w-20 h-12">

@@ -165,6 +165,7 @@ class Post extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
         
         
         // 댓글 저장
@@ -185,6 +186,9 @@ class Post extends CI_Controller {
             } else {
                 $this->Post_model->create_comment(NULL, $post_id, $comment_content, $user_id); // NULL을 첫 번째 인자로 전달
             }
+
+            // 경험치 업데이트
+            $this->Write_model->update_experience_points($user_id, 2);
     
             // 페이지 새로고침 또는 리디렉트
             redirect('posts/free/'.$post_id); // 상세 페이지로 리디렉트하여 새 댓글 표시
@@ -224,19 +228,31 @@ class Post extends CI_Controller {
     }
 
     public function comment_delete() {
-        $comment_id = $this->input->post('comment_id');
-        
-        if (!empty($comment_id)) {
-         
+    $comment_id = $this->input->post('comment_id');
+
+    if (!empty($comment_id)) {
+        // 댓글 작성자의 user_id 가져오기
+        $user_id = $this->Post_model->get_comment_user_id($comment_id);
+
+        if ($user_id) {
+            // 경험치 2 포인트 차감
+            $this->Write_model->update_experience_points($user_id, -2);
+
+            // 댓글 삭제
             $this->Post_model->delete_comment($comment_id);
-            
+
             // 성공적으로 삭제되었다는 응답 보내기
             echo 'Deleted';
         } else {
-            // 오류 처리
-            show_error('잘못된 요청입니다.');
+            // 오류 처리: 댓글 작성자 정보를 찾을 수 없음
+            show_error('댓글 작성자 정보를 찾을 수 없습니다.');
         }
+    } else {
+        // 오류 처리: 잘못된 요청
+        show_error('잘못된 요청입니다.');
     }
+}
+
     
 
     public function search() {
@@ -793,6 +809,7 @@ class Post extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
         foreach ($data['get_list'] as $post) {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
@@ -860,6 +877,7 @@ class Post extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['link'] = $this->pagination->create_links();
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
         foreach ($data['get_list'] as &$post) {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
