@@ -29,6 +29,33 @@ class Write_model extends CI_Model {
         return $new_post_id;
     }
 
+
+    public function update_experience_points($user_id, $points) {
+        // 현재 사용자의 경험치와 레벨 가져오기
+        $this->db->select('exp_point, level');
+        $this->db->where('user_id', $user_id);
+        $user = $this->db->get('user')->row();
+    
+        // 새로운 경험치 계산
+        $new_points = $user->exp_point + $points;
+    
+        // 레벨별로 필요한 경험치 계산
+        $level_up_points = $user->level * 100;
+    
+        // 레벨 업 체크
+        if ($new_points >= $level_up_points) {
+            $new_level = $user->level + 1;
+    
+            // 레벨과 경험치 업데이트 (경험치를 0으로 초기화)
+            $this->db->update('user', array('level' => $new_level, 'exp_point' => 0), array('user_id' => $user_id));
+        } else {
+            // 경험치만 업데이트
+            $this->db->update('user', array('exp_point' => $new_points), array('user_id' => $user_id));
+        }
+    }
+    
+    
+
     public function get_post($post_id) {
 
         $query = $this->db->get_where('post',array('post_id'=> $post_id));

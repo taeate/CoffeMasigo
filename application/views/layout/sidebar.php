@@ -23,13 +23,15 @@
                        </div>
                        <div>    
                             <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-blue-700 dark:text-white">레벨 1</span>
-                            <span class="text-sm font-medium text-blue-700 dark:text-white">45%</span>
+                            <span class="text-sm font-medium text-blue-700 dark:text-white">레벨 <?php echo $exp_level_info['level'] ?></span>
+                            <span class="text-sm font-medium text-blue-700 dark:text-white"><?php echo round($exp_level_info['progress_percentage']); ?>%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?php echo $exp_level_info['progress_percentage']; ?>%"></div>
+                            <span class="text-sm font-medium text-blue-700 dark:text-white">point <?php echo $exp_level_info['exp_point'] ?></span>
                             </div>
                        </div>
+                       
                     </div>
                 </div>
                 <div class="w-full mt-4">

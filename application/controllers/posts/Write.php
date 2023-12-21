@@ -52,6 +52,10 @@ class Write extends CI_Controller {
                 
                 // 글 저장 후 생성된 post_id 획득
                 $post_id = $this->Write_model->set_article($title, $content, $user_id, $is_notice, $channel_id);
+
+
+                // 경험치 업데이트
+                $this->Write_model->update_experience_points($user_id, 5);
                 
                 echo json_encode(['success' => true, 'redirect' => '/posts']);
 
@@ -69,6 +73,7 @@ class Write extends CI_Controller {
             $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
+            $data['exp_level_info'] = $this->Post_model->get_exp_level_info($user_id);
 
             // AJAX 요청이 아닐 경우 기존의 로직 수행
             $data['post_data'] = null;

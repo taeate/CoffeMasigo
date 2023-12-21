@@ -2,7 +2,7 @@
 
 <body>
 
-    <div class="flex flex-col bg-gray-500 h-auto">
+    <div class="flex flex-col bg-gray-200 h-auto">
     <img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
         <!-- Header -->
         <header class="bg-gray-800 text-white text-center">
@@ -10,7 +10,7 @@
         </header>
 
         <!-- Body -->
-        <div class="flex flex-1 mt-[300px] gap-4 mx-[300px] z-10 relative">
+        <div class="flex flex-1 mt-[350px] gap-4 mx-[300px] z-10 relative">
             <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
@@ -357,7 +357,7 @@
             </main>
 
             <!-- Rightbar -->
-            <aside class="bg-base-100 w-64 ">
+            <aside class="bg-base-100 w-64">
                 <?php $this->load->view('layout/rightbar'); ?>
             </aside>
         </div>

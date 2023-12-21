@@ -22,6 +22,11 @@ class Post_model extends CI_Model {
             $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+             // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글 가져오기
@@ -34,6 +39,11 @@ class Post_model extends CI_Model {
         $this->db->order_by('create_date', 'DESC');
         $this->db->limit($limit, $start);
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -49,21 +59,31 @@ class Post_model extends CI_Model {
         $this->db->select('post.*, channel.name as channel_name');
         $this->db->from('post');
         $this->db->where('post.post_id', $post_id);
-        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); // 채널 정보를 조인
-
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
         $post_info = $this->db->get()->row();
-
+    
+        // 날짜 형식 변경
+        if ($post_info && $post_info->create_date) {
+            $post_info->create_date = (new DateTime($post_info->create_date))->format('Y.m.d H:i');
+        }
+    
         // 파일 정보 가져오기
         $this->db->select('file_name, file_path');
         $this->db->where('post_id', $post_id);
         $files = $this->db->get('uploadfile')->result();
 
+         // 파일 개수 계산
+        $file_count = count($files);
+
+    
         // 게시물 정보와 파일 정보를 함께 반환
         return [
             'post_info' => $post_info,
-            'files' => $files
+            'files' => $files,
+            'file_count' => $file_count
         ];
     }
+    
 
     
     
@@ -75,6 +95,12 @@ class Post_model extends CI_Model {
         $this->db->where('post.parent_post_id', $post_id);
         $this->db->where('post.delete_status', NULL);
         $query = $this->db->get();
+        $replies = $query->result();
+
+         // 날짜 형식 변경
+        foreach ($replies as $reply) {
+            $reply->create_date = (new DateTime($reply->create_date))->format('Y.m.d H:i');
+        }
         return $query->result();
     }
 
@@ -88,6 +114,13 @@ class Post_model extends CI_Model {
         $this->db->order_by('re_step', 'ASC');
         $this->db->order_by('re_level', 'ASC');
         $query = $this->db->get();
+        $replies = $query->result();
+
+        // 날짜 형식 변경
+        foreach ($replies as $reply) {
+            $reply->create_date = (new DateTime($reply->create_date))->format('Y.m.d H:i');
+        }
+
         return $query->result();
     }
     
@@ -174,17 +207,15 @@ class Post_model extends CI_Model {
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
     
- 
-       
-
-    
         $query = $this->db->get();
+        $comments = $query->result();
     
-        if ($query->num_rows() > 0) {
-            return $query->result();
-        } else {
-            return array();
+        // 날짜 형식 변경
+        foreach ($comments as $comment) {
+            $comment->create_date = (new DateTime($comment->create_date))->format('Y.m.d H:i');
         }
+    
+        return $comments;
     }
 
     public function count_comment($post_id){
@@ -266,16 +297,16 @@ class Post_model extends CI_Model {
         if (!empty($selectedPast)) {
             switch($selectedPast) {
                 case 'last_day':
-                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 day')));
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 day')));
                     break;
                 case 'last_week':
-                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 week')));
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 week')));
                     break;
                 case 'last_month':
-                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 month')));
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 month')));
                     break;
                 case 'last_year':
-                    $this->db->where('create_date >=', date('Y-m-d H:i:s', strtotime('-1 year')));
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 year')));
                     break;
             }
         }
@@ -283,8 +314,18 @@ class Post_model extends CI_Model {
         $this->db->limit($limit, $start);
         $query = $this->db->get();
     
-        return $query->result_array();
-    }
+        $posts = $query->result_array();
+
+
+        // 날짜 형식 변경
+        foreach ($posts as &$post) {
+            if (isset($post['create_date'])) {
+                $post['create_date'] = (new DateTime($post['create_date']))->format('Y.m.d H:i');
+            }
+        }
+
+        return $posts;
+        }
     
     
     
@@ -379,6 +420,11 @@ class Post_model extends CI_Model {
             $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+            // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글 
@@ -395,6 +441,11 @@ class Post_model extends CI_Model {
         }
         $this->db->order_by('create_date', 'DESC');
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -421,6 +472,11 @@ class Post_model extends CI_Model {
         $this->db->order_by('create_date', 'DESC');
         $this->db->limit(3);
         $notices = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($notices as $notice) {
+            $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+        }
     }
 
     // 일반 글 
@@ -436,6 +492,11 @@ class Post_model extends CI_Model {
     }
     $this->db->order_by('create_date', 'DESC');
     $posts = $this->db->get('post')->result();
+
+    // 날짜 형식 변경
+    foreach ($posts as $post) {
+        $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+    }
 
     // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
     return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -462,6 +523,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         $this->db->order_by('thumb', 'DESC');
         $this->db->limit(3);
         $notices = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($notices as $notice) {
+            $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+        }
     }
 
     // 일반 글 
@@ -478,6 +544,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
     $this->db->order_by('thumb', 'DESC');
     $posts = $this->db->get('post')->result();
+
+    // 날짜 형식 변경
+    foreach ($posts as $post) {
+        $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+    }
 
     // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
     return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -513,6 +584,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+            // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글
@@ -528,6 +604,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->limit($limit, $start);
         }
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -555,6 +636,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->order_by('views', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+            // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글 
@@ -571,6 +657,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         }
         $this->db->order_by('views', 'DESC');
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -606,6 +697,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->order_by('create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+            // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글
@@ -621,6 +717,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->limit($limit, $start);
         }
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -628,17 +729,17 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     
     
 
-    public function comment_orderby_created($post_id,$order)  {
-        $this->db->select('COMMENT.*, USER.profile_image');
-        $this->db->from('COMMENT');
-        $this->db->join('USER', 'USER.user_id = COMMENT.user_id', 'left');
-        $this->db->where('COMMENT.post_id', $post_id);
-        $this->db->order_by('COMMENT.create_date', $order);
+    // public function comment_orderby_created($post_id,$order)  {
+    //     $this->db->select('COMMENT.*, USER.profile_image');
+    //     $this->db->from('COMMENT');
+    //     $this->db->join('USER', 'USER.user_id = COMMENT.user_id', 'left');
+    //     $this->db->where('COMMENT.post_id', $post_id);
+    //     $this->db->order_by('COMMENT.create_date', $order);
 
-        $query = $this->db->get();
+    //     $query = $this->db->get();
     
-        return $query->result();
-    }
+    //     return $query->result();
+    // }
 
 
     
@@ -709,6 +810,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $this->db->order_by('post.create_date', 'DESC');
             $this->db->limit(3);
             $notices = $this->db->get('post')->result();
+
+            // 날짜 형식 변경
+            foreach ($notices as $notice) {
+                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+            }
         }
     
         // 일반 글
@@ -725,6 +831,11 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         }
         $this->db->order_by('post.create_date', 'DESC');
         $posts = $this->db->get('post')->result();
+
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
     
         // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
         return $start == 0 ? array_merge($notices, $posts) : $posts;
@@ -755,7 +866,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         }
     }
 
-    public function get_posts_is_notice($start,$limit) {
+    public function get_posts_is_notice($start, $limit) {
         // file_count를 계산하고 channel_name을 포함하기 위한 서브쿼리와 조인
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         
@@ -768,13 +879,20 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         
         // 정렬 및 기타 조건 설정
         $this->db->order_by('create_date', 'DESC');
-
         $this->db->limit($limit, $start);
     
         // 쿼리 실행 및 결과 반환
         $query = $this->db->get();
-        return $query->result();
+        $posts = $query->result();
+    
+        // 날짜 형식 변경
+        foreach ($posts as $post) {
+            $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+        }
+    
+        return $posts;
     }
+    
     
     public function count_is_notice_posts(){
         $this->db->select('*');
@@ -827,6 +945,34 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         return $query->row();
 
     }
+
+
+    public function get_exp_level_info($user_id) {
+        $this->db->select('exp_point, level');
+        $this->db->from('user');
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get();
+    
+        // 결과 반환
+        if ($query->num_rows() > 0) {
+            $exp_level_info = $query->row_array();
+    
+            // 다음 레벨까지 필요한 총 경험치 계산
+            $total_exp_for_next_level = $exp_level_info['level'] * 100;
+    
+            // 현재 경험치를 기반으로 진행률 계산
+            $progress_percentage = ($exp_level_info['exp_point'] / $total_exp_for_next_level) * 100;
+    
+            // 진행률을 100%를 초과하지 않도록 제한
+            $exp_level_info['progress_percentage'] = min($progress_percentage, 100);
+    
+            return $exp_level_info;
+        } else {
+            return null;
+        }
+    }
+    
+    
 
  
     

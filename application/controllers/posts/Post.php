@@ -23,7 +23,7 @@ class Post extends CI_Controller {
         $data['post_count'] = $this->Post_model->count_wrote_posts_sidebar($userid);
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
-
+        $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
 
         //페이지네이션 설정
         $config = array();
@@ -97,7 +97,7 @@ class Post extends CI_Controller {
 
     public function detail($post_id) {
 
-        $this->form_validation->set_rules('comment', '댓글 내용', 'required|min_length[2]');
+        $this->form_validation->set_rules('comment', '댓글 내용', 'required');
 
 
         $user_id = $this->session->userdata('user_id');
@@ -124,6 +124,8 @@ class Post extends CI_Controller {
                 
                 $data['detail_info'] = $detail_info['post_info'];
                 $data['files'] = $detail_info['files'];
+                $data['file_count'] = $detail_info['file_count'];
+                
                 
 
                  // Markdown을 HTML로 변환

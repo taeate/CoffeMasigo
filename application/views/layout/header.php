@@ -29,7 +29,7 @@
 
 
 </head>
-<nav class="flex  w-full z-50 headerbox">
+<nav class="flex  w-full z-0 headerbox">
     <div class="navbar bg-gray-700 h-16 relative">
         <div class="navbar-start">
             <div class="dropdown">
@@ -40,7 +40,7 @@
                             d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
                 </label>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white rounded-box w-52">
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-gray-600 text-white rounded-box w-52">
                     <li>
                         <a href="/posts">전체 글보기</a>
                     </li>
@@ -92,6 +92,7 @@
 
             <?php else: ?>
             <div class="dropdown dropdown-bottom dropdown-end">
+                
                 <label tabindex="0" class="btn btn-ghost btn-circle avatar w-10 h-20 mr-4">
                     <div class="w-500 rounded-full">
                         <img src="<?php echo '/uploads/' . $this->session->userdata('profile_image'); ?>" />
@@ -99,8 +100,7 @@
                 </label>
 
 
-                <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 x-[1] p-2 shadow bg-gray-700 text-white rounded-box w-52">
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-gray-600 text-white rounded-box w-52">
                     <li><a href="/mypage">프로필 변경</a></li>
 
                     <?php if ($this->session->userdata('is_logged_in')): ?>
