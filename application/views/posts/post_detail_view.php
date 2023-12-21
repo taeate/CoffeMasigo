@@ -189,9 +189,17 @@
                         </form>
                         </div>
                         <?php else: ?>
-                        <div class="w-96 m-auto">
-                            <p class="text-red-500 font-bold text-base ml-16 mt-12 mb-12">댓글을 작성하려면 <a
-                                    href="/login">로그인</a>해주세요.</p>
+                        <div class="flex items-center justify-center py-8">
+                        
+                            <div class="mx-1">댓글을 작성하려면</div>
+                            <div class="mx-1">
+                                <a class="hover:text-blue-500 w-20 h-8 bg-blue-500 rounded-lg text-white flex items-center justify-center" href="/login">로그인</a>
+                            </div>
+                            <div class="mx-1">해주세요.</div>
+                      
+
+
+
                         </div>
                         <?php endif; ?>
 

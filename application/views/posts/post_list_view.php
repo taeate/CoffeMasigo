@@ -357,7 +357,7 @@
             </main>
 
             <!-- Rightbar -->
-            <aside class="bg-base-100 w-64">
+            <aside class="w-84">
                 <?php $this->load->view('layout/rightbar'); ?>
             </aside>
         </div>

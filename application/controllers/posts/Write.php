@@ -74,6 +74,7 @@ class Write extends CI_Controller {
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
             $data['exp_level_info'] = $this->Post_model->get_exp_level_info($user_id);
+            $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
             // AJAX 요청이 아닐 경우 기존의 로직 수행
             $data['post_data'] = null;
@@ -201,6 +202,7 @@ class Write extends CI_Controller {
                 $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
                 $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
                 $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+                $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
                 // 폼에서 데이터가 전송되지 않았을 경우
                 $post_info = $this->Write_model->get_post($post_id);
@@ -273,6 +275,7 @@ class Write extends CI_Controller {
             $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
             $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+            $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
             $this->load->view('posts/post_edit_view', $data);
         }

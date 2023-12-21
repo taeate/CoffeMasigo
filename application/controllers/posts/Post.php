@@ -24,6 +24,7 @@ class Post extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
         //페이지네이션 설정
         $config = array();
@@ -166,7 +167,8 @@ class Post extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
-        
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
+
         
         // 댓글 저장
         if ($this->input->post()) {
@@ -810,6 +812,7 @@ class Post extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
         foreach ($data['get_list'] as $post) {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
@@ -878,6 +881,7 @@ class Post extends CI_Controller {
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['link'] = $this->pagination->create_links();
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
         foreach ($data['get_list'] as &$post) {
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
