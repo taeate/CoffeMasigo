@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(data => {
                         if (data.success) {
                             // 성공 메시지 표시 및 리디렉션
-                            window.location.href = '/posts';
+                            window.location.href = data.redirect;
                         } else {
                             // 에러 메시지 표시
                             alert(data.message);

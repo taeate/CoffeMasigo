@@ -1,0 +1,70 @@
+<div name="commnet-area" class="bg-base-200">
+                        <div name="title" class="m-5 flex">
+                            <div>
+                                ┗
+                            </div>
+                            <div class="ml-2 flex-grow"> <!-- flex-grow를 사용하여 맨 오른쪽까지 확장 -->
+                                <div class="flex justify-normal">
+                                    <div class="flex flex-none">
+                                        <div class="text-base font-bold">kakzzzz</div>    
+                                        <div class="ml-4">2021-06-12 12:00</div>    
+                                    </div>
+                                    <div class="grow"></div>
+                                </div>
+                                <div class="flex mt-2">             
+                                    <div class="">댓글쓰는곳인데 웃고만있네</div>
+                                </div>
+                                <div class="flex justify-between">
+                                    <div class="flex mt-2 text-sm">
+                                        <div>
+                                            댓글쓰기
+                                        </div>
+                                        <div>
+                                        <a class="mt-4 ml-4 text-sm text-red-500">댓글보기</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <a class="mt-4 text-sm">수정하기</a>
+                                        <a class="mt-4 ml-4 text-sm">삭제하기</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div name="commnet-area" class="bg-base-200">
+                        <div name="title" class="m-5 flex">
+                            <div>
+                                ┗
+                            </div>
+                            <div class="ml-2 flex-grow"> <!-- flex-grow를 사용하여 맨 오른쪽까지 확장 -->
+                                <div class="flex justify-normal">
+                                    <div class="flex flex-none">
+                                        <div class="text-base font-bold">admin</div>    
+                                        <div class="ml-4">2021-06-12 12:00</div>    
+                                    </div>
+                                    <div class="grow"></div>
+                                </div>
+                                <div class="flex mt-2">             
+                                    <div class="">다 정지 시켜버린다?</div>
+                                </div>
+                                <div class="flex justify-between">
+                                    <div class="flex mt-2 text-sm">
+                                        <div>
+                                            댓글쓰기
+                                        </div>
+                                        <div>
+                                        <a class="mt-4 ml-4 text-sm text-red-500">댓글보기</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <a class="mt-4 text-sm">수정하기</a>
+                                        <a class="mt-4 ml-4 text-sm">삭제하기</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>

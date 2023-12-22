@@ -57,7 +57,7 @@ class Write extends CI_Controller {
                 // 경험치 업데이트
                 $this->Write_model->update_experience_points($user_id, 5);
                 
-                echo json_encode(['success' => true, 'redirect' => '/posts']);
+                echo json_encode(['success' => true, 'redirect' => '/posts/free/'.$post_id]);
 
                 // 파일 업로드 로직
                 $this->upload_files($post_id, $user_id);

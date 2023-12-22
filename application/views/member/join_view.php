@@ -245,7 +245,15 @@ $(document).ready(function(){
           var username = $('#username').val();
           var isValid = true; // 유효성 검사 플래그
 
-        
+           // 이름 유효성 검사 (한글만 허용)
+           $('#username').on('input', function() {
+              var username = $('#username').val();
+              $('#username_error').text('');
+
+              if (!/^[\p{Hangul}]+$/.test(username)) {
+                  $('#username_error').text('한글만 입력 가능합니다.');
+              }
+          });
 
       
 

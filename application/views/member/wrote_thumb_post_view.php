@@ -44,12 +44,12 @@
                     </li>
                 </ul>
 
-                <ul class="p-4">
+                <!-- <ul class="p-4">
                     <div class="">
                         <input type="checkbox">
                         <span>전체선택</span>
                     </div>
-                </ul>
+                </ul> -->
             </div>
 
 

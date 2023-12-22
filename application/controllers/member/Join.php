@@ -15,7 +15,7 @@ class Join extends CI_Controller {
 	public function index(){
 
 		$this->form_validation->set_rules('userid', '아이디', 'required|alpha_numeric|callback_checkUserId');
-		$this->form_validation->set_rules('username', '이름', 'required|callback_check_korean');
+		// $this->form_validation->set_rules('username', '이름', 'required|callback_check_korean');
 		$this->form_validation->set_rules('password1', '비밀번호', 'required');
 		$this->form_validation->set_rules('password2', '비밀번호 확인', 'required|matches[password1]');
 		$this->form_validation->set_rules('email', '이메일', 'required|valid_email|callback_checkEmail');

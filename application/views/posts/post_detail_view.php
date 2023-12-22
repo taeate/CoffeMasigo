@@ -116,7 +116,7 @@
                                 ?>
                                 <button class="btn bg-gray-500 text-white w-16 h-8 mr-2"
                                     onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
-                                <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-8"
+                                <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-6"
                                     data-postid="<?=$post_id?>">삭제</button>
 
 
@@ -130,7 +130,7 @@
 
                             <div name="answer-btn" class="flex justify-between">
                                 <div class="">
-                                    <a href="javascript:void(0);" onclick="history.back();"
+                                    <a href="/posts" 
                                     class="btn bg-gray-500 text-white w-28 h-12">목록으로</a>
                                     <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
                                     class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
@@ -256,8 +256,11 @@
 
                                             <div class="ml-2"><?php echo $createdate; ?></div>
                                             <div>
-                                                <button class="reply-btn ml-2 text-sm text-red-500"
+                                                <?php if ($this->session->userdata('user_id')): ?>
+                                                    <button class="reply-btn ml-2 text-sm text-red-500"
                                                     data-comment-id="<?= $comment_id ?>">댓글쓰기</button>
+                                                <?php endif;?>
+                                            
                                                 <?php if ($this->session->userdata('user_id') == $user_id): ?>
                                                 <button class="reply-modify-btn text-sm"
                                                     data-post-id="<?= $comment->post_id ?>"
@@ -416,17 +419,32 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const shareButton = document.getElementById('shareButton');
 
     shareButton.addEventListener('click', function() {
-        // 현재 페이지의 URL을 복사
         const url = window.location.href;
-        navigator.clipboard.writeText(url).then(() => {
-            // 복사 성공 시 알림 표시
-            alert('URL이 복사되었습니다.');
-        }).catch(err => {
-            // 복사 실패 시 오류 처리
-            console.error('URL 복사에 실패했습니다.', err);
-        });
+
+        // 임시 텍스트 영역 생성
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+
+        // 텍스트 영역의 내용을 선택
+        textArea.select();
+        textArea.setSelectionRange(0, 99999); // 모바일 브라우저를 위한 추가
+
+        // 선택한 텍스트를 클립보드에 복사
+        try {
+            const successful = document.execCommand('copy');
+            const msg = successful ? '성공적으로 복사되었습니다.' : '복사에 실패했습니다.';
+            alert(msg);
+        } catch (err) {
+            console.error('복사에 실패했습니다.', err);
+        }
+
+        // 임시 텍스트 영역 제거
+        document.body.removeChild(textArea);
     });
 });
+
+
 
 
 

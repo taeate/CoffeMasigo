@@ -237,9 +237,12 @@
                                                 <div class="flex-[4] m-auto">
                                                     <div class="flex">
                                                         <div><?php echo $post->title; ?></div>
-                                                        <div class="ml-2 text-red-500">
-                                                            [<?php echo $post->comment_count; ?>]
-                                                        </div>
+                                                        <?php if ($post->comment_count > 0): ?>
+                                                            <div class="ml-2 text-red-500">
+                                                                [<?php echo $post->comment_count; ?>]
+                                                            </div>
+                                                        <?php endif; ?>
+
                                                         <?php if($post->file_count > 0): ?>
                                                         <div class="ml-2 text-blue-500"><i
                                                                 class="fa-solid fa-paperclip"></i></div>
@@ -265,7 +268,7 @@
                                                         <?php if($post->replies > 1): ?>
                                                         <a href="#"
                                                             class="view-replies ml-2 text-red-500 hover:text-blue-800"
-                                                            onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                            onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기[3] count 미구현</a>
                                                         <?php endif; ?>
 
 
@@ -444,7 +447,9 @@ function createPostHtml(post) {
     postHtml += '        <div class="flex-[4] m-auto">';
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="' + titleStyle + '">' + post.title + '</div>';
-    postHtml += '                <div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+    if (post.comment_count > 0) {
+    postHtml += '<div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+}
     if (post.file_count > 0) {
         postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
     }
@@ -461,7 +466,7 @@ function createPostHtml(post) {
     }
     postHtml += '            </div>';
     postHtml += '        </div>';
-    postHtml += '        <div class="flex-[2] m-auto ' + titleStyle + ' "><i class="fa-solid fa-user mr-2"></i>' + post
+    postHtml += '        <div class="flex-[2] m-auto ' + titleStyle + ' ">' + post
         .user_id + '</div>';
     postHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye mr-2"></i>' + post.views + '</div>';
     postHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + post.create_date +
@@ -881,8 +886,14 @@ function ViewsOrderBy(channelId) {
 
 function loadReplies(postId) {
 
+    var repliesContainer = $('#replies-container-' + postId);
 
-    $.ajax({
+    // 답글이 이미 표시되어 있으면 숨김
+    if (repliesContainer.is(":visible")) {
+        repliesContainer.hide();
+    } else {
+
+        $.ajax({
         url: '/posts/post/get_replies',
         data: {
             post_id: postId
@@ -937,6 +948,10 @@ function loadReplies(postId) {
             }
         }
     });
+    }
+
+
+    
 
 
 }
