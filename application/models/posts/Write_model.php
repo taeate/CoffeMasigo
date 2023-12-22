@@ -181,7 +181,7 @@ class Write_model extends CI_Model {
 
     public function saveFileData($post_id, $file_name, $file_path, $file_type, $file_size, $user_id) {
         // 파일 이름을 안전하게 만들기
-        $file_name = $this->sanitizeFileName($file_name);
+        // $file_name = $this->sanitizeFileName($file_name);
 
         // 파일 데이터 배열 생성
         $data = array(
@@ -202,14 +202,14 @@ class Write_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    private function sanitizeFileName($fileName) {
-        // 파일 이름에서 불필요하거나 위험한 문자 제거
-        $fileName = str_replace(" ", "-", $fileName);
-        $fileName = preg_replace("/[^a-zA-Z0-9\-\.가-힣]/u", "", $fileName);
+    // private function sanitizeFileName($fileName) {
+    //     // 파일 이름에서 불필요하거나 위험한 문자 제거
+    //     $fileName = str_replace(" ", "-", $fileName);
+    //     $fileName = preg_replace("/[^a-zA-Z0-9\-\.가-힣]/u", "", $fileName);
 
 
-        return $fileName;
-    }
+    //     return $fileName;
+    // }
 
     public function saveImageFile($file, $fileName) {
         // 파일 저장 디렉토리 설정

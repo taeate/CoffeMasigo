@@ -93,7 +93,7 @@ class Write extends CI_Controller {
         $config['max_size'] = 500; // 정수로 설정
         // $config['encrypt_name'] = TRUE; // 파일명을 암호화하여 무작위 생성
         // $config['file_ext_tolower'] = TRUE; // 파일 확장자를 소문자로 변환
-        $config['remove_spaces'] = TRUE; // 파일 이름에서 공백 제거
+        $config['remove_spaces'] = FALSE; // 파일 이름에서 공백 제거
         // $config['xss_clean'] = TRUE; // XSS 필터링 적용
 
         $this->load->library('upload', $config);
@@ -129,28 +129,47 @@ class Write extends CI_Controller {
 
 
     public function downloadFile($file_name) {
+       // URL 디코딩 적용
+    $decoded_file_name = urldecode($file_name);
+    
+    // 파일 경로 설정
+    $file_path = './uploads/' . $decoded_file_name; 
 
-        $file_name = iconv("UTF-8", "시스템 인코딩", $file_name);
-
-        $file_path = './uploads/' . $file_name; // 파일 경로 설정 (uploads 폴더에 저장된 파일)
     
         if (file_exists($file_path)) {
+            // 파일 확장자에 따른 Content-Type 설정
+            $file_extension = strtolower(pathinfo($decoded_file_name, PATHINFO_EXTENSION));
+            switch ($file_extension) {
+                case 'jpg':
+                case 'jpeg':
+                    $content_type = 'image/jpeg';
+                    break;
+                case 'png':
+                    $content_type = 'image/png';
+                    break;
+                default:
+                    $content_type = 'application/octet-stream';
+            }
+    
             header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . $file_name . '"');
-            header('Content-Disposition: attachment; filename="' . rawurlencode($file_name) . '"');
+            header('Content-Type: ' . $content_type);
+            header('Content-Disposition: attachment; filename="' . rawurlencode(basename($decoded_file_name)) . '"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
             header('Content-Length: ' . filesize($file_path));
-    
+            
             readfile($file_path);
             exit;
         } else {
-            // 파일이 존재하지 않는 경우
             echo '파일이 존재하지 않습니다.';
         }
     }
+    
+    
+    
+    
+    
 
     
 
