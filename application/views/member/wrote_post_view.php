@@ -15,11 +15,11 @@
         <div class="flex w-2/3 flex-col contentbox ml-4 z-10">
 
             <div
-                class="flex bg-base-100 text-base font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-2 justify-between">
+                class="flex bg-white text-base font-medium text-center text-gray-500 border-b border-gray-200  mb-2 justify-between">
                 <ul class="flex flex-wrap -mb-px">
                     <li class="me-2">
                         <a href="/member/wrote/post" 
-                            class="flex gap-2 inline-block p-4 text-blue-600 border-blue-600 active border-b-2  rounded-t-lg dark:hover:text-gray-300">
+                            class="flex gap-2 inline-block p-4 text-blue-600 border-blue-600 active border-b-2  rounded-t-lg ">
                             <span>내가 쓴 글</span>
                             <div></div>
                         </a>
@@ -27,7 +27,7 @@
                     <li class="me-2">
                         <a href="/member/wrote/comment" 
                         
-                            class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
+                            class="inline-block p-4 border-b-2 rounded-t-lg active "
                             aria-current="page">
                             <span>내가 쓴 댓글</span>
                             <div></div>
@@ -36,7 +36,7 @@
                     <li class="me-2">
                         <a href="/member/wrote/thumb_post" 
                         
-                            class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
+                            class="inline-block p-4 border-b-2 rounded-t-lg active "
                             aria-current="page">
                             <span>내가 추천한 글</span>
                             <div></div>
@@ -54,13 +54,13 @@
 
 
             <!-- 초기로드 -->
-            <div id="dynamic-content" class="bg-base-300">
+            <div id="dynamic-content" class="bg-gray-200">
                 <!-- 초기 로드된 콘텐츠 컨테이너 -->
                 <div id="initial-wrote-container">
                     <?php if(isset($wrote_post) && !empty($wrote_post)): ?>
                     <?php foreach ($wrote_post as $post): ?>
                     <!-- 리스트 페이지의 내용 -->
-                    <div class="bg-base-100">
+                    <div class="bg-white">
                         <div class="flex flex-col border-b hover:bg-blue-100">
                             <a href="/posts/free/<?php echo $post['post_id']; ?>">
                                 <div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer">
@@ -123,7 +123,7 @@
                     <div class="shadow-md">
                         <!-- 내용이 없을 때의 메시지 -->
                         <div class="flex flex-col border-b">
-                            <div class="flex flex-1 p-2 bg-base-100 border-gray-300 cursor-pointer justify-center">
+                            <div class="flex flex-1 p-2 bg-white border-gray-300 cursor-pointer justify-center">
                                 <div class="p-4">작성된 글이 없습니다.</div>
                             </div>
                         </div>

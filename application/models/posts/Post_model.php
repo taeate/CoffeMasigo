@@ -290,6 +290,8 @@ class Post_model extends CI_Model {
 
         // 기존의 from 절 유지
         $this->db->from('post');
+
+        $this->db->where('post.delete_status', 0);
     
         // 검색 옵션에 따른 검색 조건 설정
         switch($search_option) {
@@ -1006,12 +1008,13 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
 
     public function get_hot_posts($limit = 40) {
-        $this->db->select('p.post_id, p.title, p.content, p.create_date, p.views, COUNT(c.comment_id) AS comment_count, p.thumb AS thumb_count, (COUNT(c.comment_id) + p.thumb) AS total_score, ch.name AS channel_name'); // 종합점수 계산 추가
+        $this->db->select('p.post_id, p.title, p.content, p.create_date, p.views, COUNT(c.comment_id) AS comment_count, p.thumb AS thumb_count, (COUNT(c.comment_id) + p.thumb) AS total_score, ch.name AS channel_name');
         $this->db->from('post AS p');
         $this->db->join('comment AS c', 'p.post_id = c.post_id', 'LEFT');
         $this->db->join('channel AS ch', 'p.channel_id = ch.channel_id', 'LEFT');
+        $this->db->where('p.delete_status', 0); 
         $this->db->group_by('p.post_id, p.title, p.content, p.create_date, p.views, p.thumb, ch.name');
-        $this->db->order_by('total_score', 'DESC'); // 종합점수 기준으로 내림차순 정렬
+        $this->db->order_by('total_score', 'DESC');
         $this->db->limit($limit);
     
         $query = $this->db->get();

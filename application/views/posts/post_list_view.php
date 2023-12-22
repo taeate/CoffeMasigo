@@ -19,14 +19,14 @@
             <main class="flex-1">
                 <div id="content" class="flex flex-col contentbox z-10">
                     <div name="top-box" class="flex flex-col ">
-                        <div name="search-nav" class="searchbox z-30 h-auto bg-base-100 place-items-center shadow-md">
+                        <div name="search-nav" class="searchbox z-30 h-auto bg-white place-items-center shadow-md">
 
                             <div class="m-4">
                                 <div class="flex justify-between w-full">
                                     <div class="flex">
                                         <div class="text-xl font-bold">
                                             <?php if (isset($channel_name)): ?>
-                                            <h1><?php echo $channel_name; ?></h1>
+                                            <h1><?php echo htmlspecialchars($channel_name); ?></h1>
                                             <?php else: ?>
                                             <h1>전체글</h1>
                                             <?php endif; ?>
@@ -76,7 +76,7 @@
 
                                             <div name="select-box" class="ml-auto">
                                                 <select id="search-past"
-                                                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                                     <option selected>전체</option>
                                                     <option value="last_day">지난 1일</option>
                                                     <option value="last_week">지난 1주일</option>
@@ -86,13 +86,13 @@
                                             </div>
                                             <!-- Label for Email (hidden for screen readers) -->
                                             <label for="location-search"
-                                                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your
+                                                class="mb-2 text-sm font-medium text-gray-900 sr-only">Your
                                                 Email</label>
 
                                             <!-- Select Dropdown for Search Options -->
                                             <div name="select-box" class="ml-auto">
                                                 <select id="search-options"
-                                                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                                     <option value="title-content" selected>제목+내용</option>
                                                     <option value="title">제목</option>
                                                     <option value="content">내용</option>
@@ -103,10 +103,10 @@
                                             <!-- Search Input -->
                                             <div class="relative w-full">
                                                 <input type="text" name="search" id="search"
-                                                    class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg  border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                                                    class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg  border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                                                     placeholder="검색" required>
                                                 <button type="submit"
-                                                    class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-black rounded-e-lg border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                    class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-black rounded-e-lg border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                                     <svg class="w-4 h-4" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 20 20">
@@ -128,7 +128,7 @@
                         </div>
 
                         <!-- <div class="grid h-20 card bg-base-300 rounded-box place-items-center mt-4">랭킹</div> -->
-                        <div name="rankingbar" class="flex shadow mt-4 bg-base-100">
+                        <div name="rankingbar" class="flex shadow mt-4 bg-white">
                             <!--랭킹바 -->
 
                             <div class="stat border-r">
@@ -136,8 +136,8 @@
                                     <i class="fa-solid fa-pen-nib fa-xl"></i>
                                 </div>
                                 <div class="stat-title">글을 가장 많이 쓴사람</div>
-                                <div class="text-primary font-bold text-xl"><?php echo $top_poster->user_id ?></div>
-                                <div class="stat-desc mt-1">누적 게시글수: <?php echo $top_poster->post_count ?></div>
+                                <div class="text-primary font-bold text-xl"><?php echo htmlspecialchars($top_poster->user_id) ?></div>
+                                <div class="stat-desc mt-1">누적 게시글수: <?php echo htmlspecialchars($top_poster->post_count) ?></div>
                                 <!-- 게시글 수 표시 -->
                             </div>
 
@@ -146,9 +146,9 @@
                                     <i class="fa-solid fa-comment fa-xl"></i>
                                 </div>
                                 <div class="stat-title">댓글을 가장 많이 쓴 사람</div>
-                                <div class=" text-secondary font-bold text-xl"><?php echo $top_commenter->user_id ?>
+                                <div class=" text-secondary font-bold text-xl"><?php echo htmlspecialchars($top_commenter->user_id) ?>
                                 </div>
-                                <div class="stat-desc mt-1">누적 댓글수: <?php echo $top_commenter->comment_count ?></div>
+                                <div class="stat-desc mt-1">누적 댓글수: <?php echo htmlspecialchars($top_commenter->comment_count) ?></div>
                                 <!-- 댓글 수 표시 -->
                             </div>
 
@@ -157,8 +157,8 @@
                                     <i class="fa-solid fa-thumbs-up fa-xl"></i>
                                 </div>
                                 <div class="stat-title ">추천수를 제일 많이 받은사람</div>
-                                <div class="font-bold text-xl"><?php echo $top_thumb->user_id ?></div>
-                                <div class="stat-desc mt-1">누적 추천수: <?php echo $top_thumb->thumb_count ?></div>
+                                <div class="font-bold text-xl"><?php echo htmlspecialchars($top_thumb->user_id) ?></div>
+                                <div class="stat-desc mt-1">누적 추천수: <?php echo htmlspecialchars($top_thumb->thumb_count) ?></div>
                                 <!-- 추천 수 표시 -->
                             </div>
 
@@ -167,7 +167,7 @@
 
                     <!-- 두번째 리스트 컨텐츠 이게 메인 -->
                     <div class="">
-                        <div class="bg-base-100 mt-4">
+                        <div class="bg-white mt-4">
 
                             <div class="overflow-x-auto shadow-md">
                                 <!-- 메인 글 -->
@@ -179,7 +179,8 @@
                                     <div
                                         class="flex flex-col border-b answer-row <?= $post->is_notice == 1 ? 'notice-post' : '' ?>">
                                         <div class="flex flex-1 p-2 border-b border-gray-300 bg-blue-100 cursor-pointer "
-                                            onclick="window.location.href='/posts/free/<?=$post->post_id?>'">
+                                             onclick="window.location.href='/posts/free/<?= htmlspecialchars(urlencode($post->post_id)) ?>'">
+
                                             <div class="ml-4 flex-[1] flex flex-col items-center ">
                                                 <div class="m-auto">
                                                     <div class="text-red-500 bg-red-200 rounded-lg">공지</div>
@@ -188,9 +189,9 @@
                                             </div>
                                             <div class="flex-[4] m-auto">
                                                 <div class="flex">
-                                                    <div class="text-blue-500 font-bold"><?php echo $post->title; ?>
+                                                    <div class="text-blue-500 font-bold"><?php echo htmlspecialchars($post->title); ?>
                                                     </div>
-                                                    <div class="ml-1 text-red-500">[<?php echo $post->comment_count; ?>]
+                                                    <div class="ml-1 text-red-500">[<?php echo htmlspecialchars($post->comment_count); ?>]
                                                     </div>
                                                     <?php if($post->file_count > 0): ?>
                                                     <div>[파일있음]</div>
@@ -199,31 +200,31 @@
                                                 </div>
                                                 <div class="flex">
                                                     <div class="font-base text-gray-500">
-                                                        <?php echo $post->channel_name ?>
+                                                        <?php echo htmlspecialchars($post->channel_name) ?>
                                                     </div>
 
                                                     <!-- 답글이 있을 때만 버튼이 보임 -->
                                                     <?php if($post->replies > 1): ?>
                                                     <a href="#"
                                                         class="view-replies ml-2 text-red-500 hover:text-blue-800"
-                                                        onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기</a>
+                                                        onclick="event.stopPropagation(); loadReplies(<?= htmlspecialchars(urlencode($post->post_id))?>); return false;">답글보기</a>
                                                     <?php endif; ?>
 
 
                                                 </div>
                                             </div>
                                             <div class="flex-[2] m-auto text-blue-500 font-bold">
-                                                <?php echo $post->user_id ?></div>
+                                                <?php echo htmlspecialchars($post->user_id) ?></div>
                                             <div class="flex-1 m-auto">
                                                 <i class="fa-solid fa-eye"></i>
-                                                <?php echo $post->views ?>
+                                                <?php echo htmlspecialchars($post->views) ?>
                                             </div>
                                             <div class="flex-[2] m-auto"><i
-                                                    class="fa-regular fa-clock mr-2"></i><?php echo $post->create_date?>
+                                                    class="fa-regular fa-clock mr-2"></i><?php echo htmlspecialchars($post->create_date)?>
                                             </div>
 
                                         </div>
-                                        <div id="replies-container-<?=$post->post_id?>" style="display: none;"></div>
+                                        <div id="replies-container-<?= htmlspecialchars(urlencode($post->post_id))?>" style="display: none;"></div>
 
                                         <?php else: ?>
                                         <div class="flex flex-col border-b answer-row">
@@ -893,7 +894,7 @@ function loadReplies(postId) {
                 var repliesHtml = '';
                 response.data.forEach(function(reply) {
                     repliesHtml += '<div class="overflow-x-auto shadow-md">'
-                    repliesHtml += '    <div class="flex flex-col border-b bg-base-200 ">';
+                    repliesHtml += '    <div class="flex flex-col border-b bg-white ">';
                     repliesHtml += '    <div class="flex flex-1 p-1 ml-36 mt-2 mb-2">';
                     repliesHtml += '        <div class="ml-' + (reply.re_level * 12) +
                         ' flex-[0.1] flex items-center">';

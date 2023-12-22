@@ -116,10 +116,10 @@ class Post extends CI_Controller {
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
             
-
+            $user_ip = $_SERVER['REMOTE_ADDR'];
             
             // 조회수 증가
-            $this->Post_model->increment_views($post_id, $user_id);
+            $this->Post_model->increment_views($post_id, $user_ip);
 
             if ($detail_info) {
                 

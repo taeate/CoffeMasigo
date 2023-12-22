@@ -11,7 +11,7 @@
     </div>
     
     <!-- 리스트 페이지 컨텐츠 -->
-    <div id="content" class="contentbox ml-4 z-10 bg-base-100" style="flex: 3;" >
+    <div id="content" class="contentbox ml-4 z-10 bg-white" style="flex: 3;" >
         <?php if($this->session->userdata('user_id')):?>
         <div class="container">
                 <div class="flex flex-col items-center p-14">
@@ -22,8 +22,8 @@
                             <img id="userimage" src="<?php echo ('uploads/' . $this->session->userdata('profile_image')); ?>" class="object-cover object-center h-full w-full" />
                             <img style="display: none;" onchange="previewImage(this)" id="image-preview"  alt="프로필 미리보기" class="object-cover object-center h-full w-full" />
                         </div>
-                        <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 dark:text-white"><?php echo $this->session->userdata('username');?></h5>
-                        <span class="text-sm text-gray-500 font-medium dark:text-gray-400"><?php echo $this->session->userdata('user_id');?></span>
+                        <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 "><?php echo $this->session->userdata('username');?></h5>
+                        <span class="text-sm text-gray-500 font-medium"><?php echo $this->session->userdata('user_id');?></span>
                         <div class="flex mt-4 md:mt-6">
                             <form action="member/Mypage/change_image" method="post">
                             <input type="file" class="hidden" id="file-input" name="profile_image">

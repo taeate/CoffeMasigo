@@ -1,5 +1,5 @@
 
-<div class="bg-base-100 h-auto w-[300px] rounded rightbox">
+<div class="bg-white h-auto w-[300px] rounded rightbox">
     
 <div class="flex flex-col gap-2 p-4  border-b rounded w-[300px]">
 

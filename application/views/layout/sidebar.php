@@ -1,5 +1,5 @@
 
-<div class=" bg-base-100 h-auto w-auto rounded sidebarbox">
+<div class=" bg-white h-auto w-auto rounded sidebarbox">
     <div name="sidebar-container" class="rounded w-[300px]">
 
         <div class="p-2">
@@ -24,12 +24,12 @@
                        </div>
                        <div>    
                             <div class="flex justify-between mb-1">
-                            <span class="text-sm font-medium text-blue-700 dark:text-white">레벨 <?php echo $exp_level_info['level'] ?></span>
-                            <span class="text-sm font-medium text-blue-700 dark:text-white"><?php echo round($exp_level_info['progress_percentage']); ?>%</span>
+                            <span class="text-sm font-medium text-blue-700">레벨 <?php echo $exp_level_info['level'] ?></span>
+                            <span class="text-sm font-medium text-blue-700"><?php echo round($exp_level_info['progress_percentage']); ?>%</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
                             <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?php echo $exp_level_info['progress_percentage']; ?>%"></div>
-                            <span class="text-sm font-medium text-blue-700 dark:text-white">point <?php echo $exp_level_info['exp_point'] ?></span>
+                            <span class="text-sm font-medium text-blue-700">point <?php echo $exp_level_info['exp_point'] ?></span>
                             </div>
                        </div>
                        
@@ -64,17 +64,17 @@
         <div name="sec-side-box" class="mt-4 ml-8 flex flex-col gap-2">
             <div class="">
                 
-                <button  class="hover:bg-base-200">
+                <button  class="hover:bg-gray-100">
                     <a href="/posts" data-channel-id="1">전체글보기</a>
                 </button> 
             </div>
             <div>
-                <button  class="hover:bg-base-200">
+                <button  class="hover:bg-gray-100">
                     <a href="/posts/channel_id/is_notice">공지사항</a>
                 </button>
             </div>
             <div>
-                <button  class="hover:bg-base-200">
+                <button  class="hover:bg-gray-100">
                     <a href="/posts/channel_id/3">자유게시판</a>
                 </button>
             </div>

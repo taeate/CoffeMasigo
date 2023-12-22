@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafe Masigo</title>
+    <title>Ford Mustang</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -119,7 +119,7 @@
 
 
     <div class="flex text-white">
-        머스탱의 무물보 스피릿을 받아들이고 그 소리를 영혼 깊숙히 울려보세요
+        머스탱의 스피릿을 받아들이고 그 소리를 영혼 깊숙히 울려보세요
     </div>
 
 

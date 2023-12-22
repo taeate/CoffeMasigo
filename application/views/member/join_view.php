@@ -245,14 +245,9 @@ $(document).ready(function(){
           var username = $('#username').val();
           var isValid = true; // 유효성 검사 플래그
 
-         
+        
 
-          if (!/^[\p{Hangul}]+$/.test(username)) {
-              isValid = false;
-              $('#username_error').text('한글만 입력 가능합니다.');
-            }else{
-              isValid = true;
-            }
+      
 
           // 아이디가 비어있지 않고 알파벳 소문자 및 숫자로만 구성되었는지 확인
           if (!userid || !userid.match(/^[a-z0-9]+$/)) {

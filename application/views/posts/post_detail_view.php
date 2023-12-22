@@ -21,7 +21,7 @@
         <!-- 컨텐츠영역 -->
 
             <?php if ($detail_info) : ?>
-            <div class="bg-base-100">
+            <div class="bg-white">
 
                 <div name="title" class="p-8 border-b">
 
@@ -80,14 +80,14 @@
                     <div class="flex-none">
                         <div class="dropdown dropdown-end">
                             <div tabindex="0" role="button" class="m-1 hover:text-blue-500 text-gray-500">첨부파일 <?php echo $file_count; ?>개 <i class="fa-solid fa-caret-down"></i></div>
-                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">
                             <?php foreach ($files as $file): ?>
-                                <li class="flex">
-                                    <div class="flex justify-between items-center w-full"> <!-- Flexbox 컨테이너 -->
+                             
+                                    <div class="flex flex-col"> <!-- Flexbox 컨테이너 -->
                                         <a href="<?php echo $file->file_path; ?>" class="flex-1"><?php echo $file->file_name; ?></a>
                                         <a class="text-blue-500" href="<?php echo '/posts/write/downloadFile/' . $file->file_name; ?>">다운로드</a>
                                     </div>
-                                </li>
+                            
                             <?php endforeach; ?>
                             </ul>
                         </div>
@@ -150,8 +150,8 @@
         <div name="댓글">
 
             <div class="flex flex-col w-full mt-4 ">
-                <div name="commnet-name" class="h-auto card bg-base-100">
-                    <div class="bg-base-200 ">
+                <div name="commnet-name" class="h-auto card bg-white">
+                    <div class="bg-white ">
                         <div class="flex p-4 text-lg">
                             <div class="font-bold">
                                 댓글
@@ -171,16 +171,16 @@
                         <div class="p-4">
                         <form class="comment-form" method="post" id="">
                             <div
-                                class="w-full border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                                <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+                                class="w-full border border-gray-200 rounded-lg bg-gray-50">
+                                <div class="px-4 py-2 bg-white rounded-t-lg ">
                                     <label for="comment" class="sr-only">Your comment</label>
                                     <textarea id="comment" name="comment" rows="4"
-                                        class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                                        class="w-full px-0 text-sm text-gray-900 bg-white border-0 "
                                         placeholder="댓글은 여기에 작성해주세요" required></textarea>
                                 </div>
-                                <div class="flex flex-none items-center justify-between px-3 py-2 border-t dark:border-gray-600">
+                                <div class="flex flex-none items-center justify-between px-3 py-2 border-t ">
                                     <button type="submit"
-                                        class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                        class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200  hover:bg-blue-800">
                                         작성
                                     </button>
 

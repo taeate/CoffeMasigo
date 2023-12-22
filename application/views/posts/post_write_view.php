@@ -5,7 +5,7 @@
     <div class="w-80">
         <?php $this->load->view('layout/sidebar'); ?>
     </div>
-    <body class="mt-96">
+    <body class="">
     <div class="content ml-8" style="flex: 3;">
         <div class="flex flex-col w-full ">
             <div class="h-auto bg-base-100">
