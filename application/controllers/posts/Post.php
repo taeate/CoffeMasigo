@@ -343,6 +343,18 @@ class Post extends CI_Controller {
         echo json_encode([ 'status' => TRUE, 'data' =>$replies]);
     }
 
+    public function get_notices($channelId = null) {
+        if ($channelId !== null) {
+            // 특정 채널의 공지사항을 가져오는 경우
+            $get_notices = $this->Post_model->get_notice_by_channel($channelId);
+        } else {
+            // 모든 공지사항을 가져오는 경우
+            $get_notices = $this->Post_model->get_notice();
+        }
+    
+        echo json_encode(['status' => TRUE, 'data' => $get_notices]);
+    }
+
     public function thumbUp(){
         
         $user_id = $this->session->userdata('user_id');

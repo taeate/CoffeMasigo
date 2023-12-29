@@ -5,29 +5,7 @@ class Post_model extends CI_Model {
 
     public function get_posts($start = 0, $limit = 15){
 
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 최신 3개의 공지사항 가져오기
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('delete_status', FALSE);
-            $this->db->where('parent_post_id', null);
-            $this->db->where('is_notice', TRUE);
-            $this->db->where('post.create_date >=', $week_ago);
-            $this->db->order_by('create_date', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
-
-             // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
+        date_default_timezone_set('Asia/Seoul');
     
         // 일반 글 가져오기
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
@@ -35,24 +13,19 @@ class Post_model extends CI_Model {
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->where('is_notice', FALSE);
-        $this->db->or_where('post.create_date <', $week_ago);
         $this->db->order_by('create_date', 'DESC');
         $this->db->limit($limit, $start);
         $posts = $this->db->get('post')->result();
-
+    
         // 날짜 형식 변경
         foreach ($posts as $post) {
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
-    
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+        
+        return $posts;
     }
     
-
-    
-    
-
+ 
         
     public function find_detail($post_id) {
         // 게시물 정보와 채널 정보를 가져오기
@@ -110,6 +83,7 @@ class Post_model extends CI_Model {
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); 
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
+        $this->db->where('delete_status', null);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
         $this->db->order_by('re_level', 'ASC');
@@ -1024,6 +998,57 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         return $query->result_array();
     }
     
+
+    public function get_notice() {
+        $this->db->select('post.post_id, post.title, post.content, post.create_date, post.views, post.thumb, post.user_id, post.channel_id, channel.name as channel_name, (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) as comment_count');
+        $this->db->from('post');
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        $this->db->where('post.is_notice', 1); 
+        $this->db->where('post.delete_status', 0);
+        $this->db->order_by('post.create_date', 'DESC');
+    
+        $query = $this->db->get();
+        $notices = $query->result();
+    
+        // 날짜 형식 변경 및 답글 수 추가
+        foreach ($notices as $notice) {
+        $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+
+        // 각 공지사항에 대한 답글 수
+        $replies = $this->get_reply_to_post($notice->post_id);
+        $notice->reply_count = count($replies);
+    }
+    
+        return $notices;
+    }
+    
+    
+    
+    public function get_notice_by_channel($channelId) {
+        $this->db->select('post.post_id, post.title, post.content, post.create_date, post.views, post.thumb, post.user_id, post.channel_id, channel.name as channel_name, (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id) as comment_count');
+        $this->db->from('post');
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        $this->db->where('post.channel_id', $channelId);
+        $this->db->where('post.is_notice', 1);
+        $this->db->where('post.delete_status', 0);
+        $this->db->order_by('post.create_date', 'DESC');
+        
+        $query = $this->db->get();
+        $notices = $query->result();
+    
+        // 날짜 형식 변경
+        foreach ($notices as $notice) {
+
+        $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+
+        // 각 공지사항에 대한 답글 수
+        $replies = $this->get_reply_to_post($notice->post_id);
+        $notice->reply_count = count($replies);
+
+        }
+    
+        return $notices;
+    }
     
     
     

@@ -88,6 +88,7 @@ $route['posts/channel_id/(:num)'] = 'posts/post/get_channel_posts/$1';
 $route['posts/channel_id/(:num)/page'] = 'posts/post/get_channel_posts/$1';
 $route['posts/channel_id/(:num)/page/(:num)'] = 'posts/post/get_channel_posts/$1';
 
+$route['posts/post/get_notices/channel/(:num)'] = 'posts/post/get_notices/$1';
 
 
 

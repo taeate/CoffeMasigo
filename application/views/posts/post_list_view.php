@@ -62,6 +62,15 @@
                                                 onclick="ViewsOrderBy(getChannelIdFromUrl())">
                                                 <i class="fa-solid fa-eye"></i>조회수</button>
                                         </div>
+                                        <div class="ml-4">
+                                            <label class="btn btn-sm btn-accent hover:text-white">
+                                                
+                                                <input type="checkbox" id="toggleNoticesCheckbox" onchange="hideNotices();">
+
+                                                <i class="fa-solid fa-eye"></i> 공지숨기기
+                                            </label>
+                                        </div>
+
 
                                     </div>
                                 </div>
@@ -170,9 +179,13 @@
                         <div class="bg-white mt-4">
 
                             <div class="overflow-x-auto shadow-md">
+
+                            <div id="notices-container" style="display: none;">
+                                        
+                            </div>
                                 <!-- 메인 글 -->
                                 <?php if(isset($get_list)): ?>
-
+                                   
                                 <div id="posts-container">
                                     <?php foreach($get_list as $post): ?>
                                     <?php if($post->is_notice == 1): ?>
@@ -538,7 +551,6 @@ function searchPosts() {
     });
 
 
-
     return false;
 }
 
@@ -878,9 +890,112 @@ function ViewsOrderBy(channelId) {
 }
 
 
+$(document).ready(function() {
+    var isNoticesHidden = localStorage.getItem('noticesHidden') === 'true';
+    $('#toggleNoticesCheckbox').prop('checked', isNoticesHidden);
+    hideNotices(); 
+    loadNotices();
+});
 
 
 
+function hideNotices() {
+    var noticesContainer = $('#notices-container');
+    var isNoticesHidden = $('#toggleNoticesCheckbox').is(':checked');
+
+    if (isNoticesHidden) {
+        noticesContainer.hide();
+    } else {
+        noticesContainer.show();
+    }
+
+    localStorage.setItem('noticesHidden', isNoticesHidden.toString());
+
+    
+}
+
+
+function toggleNoticesVisibility() {
+    var noticesContainer = $('#notices-container');
+    var isNoticesHidden = $('#toggleNoticesCheckbox').is(':checked');
+
+    if (isNoticesHidden) {
+        noticesContainer.hide();
+    } else {
+        noticesContainer.show();
+    }
+}
+
+
+
+function loadNotices() {
+
+    var url = window.location.pathname;
+    var isChannelPage = url.includes('/channel_id/');
+    var apiUrl = '/posts/post/get_notices';
+
+    if (isChannelPage) {
+        var channelId = url.split('/channel_id/')[1];
+        apiUrl += '/channel/' + channelId; // 채널별 API 경로 조정
+    }
+    
+    console.log(apiUrl);
+
+    $.ajax({
+        url: apiUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var noticesHtml = '';
+            if (response && response.data && Array.isArray(response.data)) {
+                var noticesHtml = '';
+                response.data.forEach(function(notice) {
+                    noticesHtml += '<div class="flex flex-col border-b answer-row ' + (notice.is_notice == 1 ? 'notice-post' : '') + '">';
+                    noticesHtml += '    <div class="flex flex-1 p-2 border-b border-gray-300 bg-blue-100 cursor-pointer" onclick="window.location.href=\'/posts/free/' + encodeURIComponent(notice.post_id) + '\'">';
+                    noticesHtml += '        <div class="ml-4 flex-[1] flex flex-col items-center ">';
+                    noticesHtml += '            <div class="m-auto">';
+                    noticesHtml += '                <div class="text-red-500 bg-red-200 rounded-lg">공지</div>';
+                    noticesHtml += '            </div>';
+                    noticesHtml += '        </div>';
+                    noticesHtml += '        <div class="flex-[4] m-auto">';
+                    noticesHtml += '            <div class="flex">';
+                    noticesHtml += '                <div class="text-blue-500 font-bold">' + notice.title + '</div>';
+                    if (notice.comment_count > 0) {
+                        noticesHtml += '<div class="ml-1 text-red-500">[' + notice.comment_count + ']</div>';
+                    }
+                    if (notice.file_count > 0) {
+                        noticesHtml += '            <div>[파일있음]</div>';
+                    }
+                    noticesHtml += '            </div>';
+                    noticesHtml += '            <div class="flex">';
+                    noticesHtml += '                <div class="font-base text-gray-500">' + notice.channel_name + '</div>';
+                    if (notice.reply_count > 0) {
+                        noticesHtml += '            <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' + encodeURIComponent(notice.post_id) + '); return false;">답글보기</a>';
+                    }
+                    noticesHtml += '            </div>';
+                    noticesHtml += '        </div>';
+                    noticesHtml += '        <div class="flex-[2] m-auto text-blue-500 font-bold">' + notice.user_id + '</div>';
+                    noticesHtml += '        <div class="flex-1 m-auto"><i class="fa-solid fa-eye mr-1"></i>' + notice.views + '</div>';
+                    noticesHtml += '        <div class="flex-[2] m-auto"><i class="fa-regular fa-clock mr-2"></i>' + notice.create_date + '</div>';
+                    noticesHtml += '    </div>';
+                    noticesHtml += '    <div id="replies-container-' + encodeURIComponent(notice.post_id) + '" style="display: none;"></div>';
+                    noticesHtml += '</div>';
+                });
+
+                $('#notices-container').html(noticesHtml).show();
+            }
+            else {
+                console.error("Invalid response format");
+            }
+            $('#notices-container').html(noticesHtml);
+            toggleNoticesVisibility();
+        },
+
+        error: function() {
+            // 에러 처리
+        }
+    });
+}
 
 
 
