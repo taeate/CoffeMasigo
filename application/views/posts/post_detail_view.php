@@ -223,6 +223,14 @@
                         <?php $createdate = $comment->create_date; ?>
 
 
+                        <?php if ($comment->delete_status == 1): ?>
+                            <!-- 삭제된 댓글 표시 -->
+                            <div class="p-4 border-b flex justify-center">
+                                <div class="text-sm font-bold">삭제된 댓글입니다</div>
+                            </div>
+                        <?php else: ?>
+
+
 
                         <div class="p-4 border-b">
                             <div name="comment-answer-area" class="<?= 'ml-' . ($comment->re_level * 8) ?> px-10">
@@ -285,7 +293,7 @@
                            
                         </div>
                         
-
+                        <?php endif; ?>            
                         <?php endforeach; ?>
 
                         <div class="bg-gray-300">

@@ -148,6 +148,9 @@ class Post_model extends CI_Model {
 
 
     public function create_comment($parent_comment_id, $post_id, $comment_content, $user_id) {
+
+        date_default_timezone_set('Asia/Seoul');
+
         // 초기화
         $ref = null;
         $re_step = 0;
@@ -198,11 +201,10 @@ class Post_model extends CI_Model {
     }
     
 
-    public function get_comment($post_id){
-
+    public function get_comment($post_id) {
         $this->db->select('comment.*, user.profile_image');
         $this->db->from('comment');
-        $this->db->join('user','user.user_id = comment.user_id');
+        $this->db->join('user', 'user.user_id = comment.user_id');
         $this->db->where('comment.post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
@@ -210,13 +212,22 @@ class Post_model extends CI_Model {
         $query = $this->db->get();
         $comments = $query->result();
     
-        // 날짜 형식 변경
         foreach ($comments as $comment) {
+            // 날짜 형식 변경
             $comment->create_date = (new DateTime($comment->create_date))->format('Y.m.d H:i');
+    
+            // 삭제된 댓글 처리
+            if ($comment->delete_status) {
+                $comment->comment_content = "삭제된 댓글";
+                
+                
+                // 예: $comment->user_id = null; $comment->profile_image = null; 등
+            }
         }
     
         return $comments;
     }
+    
 
     public function count_comment($post_id){
         $this->db->where('post_id', $post_id);
@@ -750,19 +761,6 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     
     
 
-    // public function comment_orderby_created($post_id,$order)  {
-    //     $this->db->select('COMMENT.*, USER.profile_image');
-    //     $this->db->from('COMMENT');
-    //     $this->db->join('USER', 'USER.user_id = COMMENT.user_id', 'left');
-    //     $this->db->where('COMMENT.post_id', $post_id);
-    //     $this->db->order_by('COMMENT.create_date', $order);
-
-    //     $query = $this->db->get();
-    
-    //     return $query->result();
-    // }
-
-
     
     public function update_comment($comment_id, $comment_content, $user_id){
         $this->db->where('comment_id', $comment_id);
@@ -784,9 +782,13 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
 
     public function delete_comment($comment_id) {
+        
+        $data = array('delete_status' => 1);
+        
         $this->db->where('comment_id', $comment_id);
-        $this->db->delete('comment');
+        $this->db->update('comment', $data);
     }
+    
 
     public function get_comment_user_id($comment_id) {
         $this->db->select('user_id');
