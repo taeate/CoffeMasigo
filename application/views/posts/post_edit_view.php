@@ -270,6 +270,7 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
 
     let formData = new FormData(this);
     var editorContent = editor.getMarkdown(); // 또는 editor.getHtml() 사용
+    editorContent = editorContent.replace(/\n/g, "  \n");
     formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
     formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
     let post_id = $('#edit_form').attr('data-post-id');

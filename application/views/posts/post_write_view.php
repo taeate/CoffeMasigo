@@ -255,33 +255,10 @@ const editor = new toastui.Editor({
 });
 
 
-
-// ClassicEditor
-//         .create( document.querySelector( '#content' ), {
-    
-//         language: "ko",
-//         simpleUpload: {
-//             uploadUrl: '/posts/write/saveImage'
-//         },
-//         ckfinder : {
-//             uploadUrl: "/posts/write/saveImage",
-//             withCredentials: true
-//         },
-//         removePlugins: [ 'Heading' ],
-        
-
-//         } )
-//         .then(editor => {
-//             globalEditor = editor; // 전역 변수에 인스턴스 저장
-//         })
-//         .catch(error => {
-//             console.error(error);
-//         });
-
-
 document.addEventListener('DOMContentLoaded', function () {
     var answerForm = document.getElementById('answer_form');
     if (answerForm) {
+
     //답글작성폼
     document.getElementById('answer_form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -343,6 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var formData = new FormData(this);
             var editorContent = editor.getMarkdown(); // 또는 editor.getHtml() 사용
+            editorContent = editorContent.replace(/\n/g, "  \n");
             formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
             formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
 

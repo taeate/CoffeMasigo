@@ -996,7 +996,8 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $total_exp_for_next_level = $exp_level_info['level'] * 100;
     
             // 현재 경험치를 기반으로 진행률 계산
-            $progress_percentage = ($exp_level_info['exp_point'] / $total_exp_for_next_level) * 100;
+            $progress_percentage = ($total_exp_for_next_level != 0) ? ($exp_level_info['exp_point'] / $total_exp_for_next_level) * 100 : 0;
+
     
             // 진행률을 100%를 초과하지 않도록 제한
             $exp_level_info['progress_percentage'] = min($progress_percentage, 100);
