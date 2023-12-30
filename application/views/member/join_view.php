@@ -128,9 +128,62 @@ $(document).ready(function(){
             // input 데이터랑  db 에 있는 데이터랑 일치한다면 " 사용 불가능 "
             // input 데이터랑  db 에 있는 데이터랑 일치하지않는다면 " 사용 가능 "
 
+            // 이름 입력 필드에 대한 실시간 유효성 검사
+            $('#username').on('input', function() {
+                var username = $(this).val();
+                var usernamePattern = /^[가-힣]+$/;
+
+                var usernameError = $('#username_error');
+
+                if (usernamePattern.test(username)) {
+                    // 입력된 값이 정규식과 일치하면 오류 메시지를 지우고 유효성 플래그를 true로 설정
+                    usernameError.text('');
+                } else {
+                    // 입력된 값이 정규식과 일치하지 않으면 오류 메시지를 표시하고 유효성 플래그를 false로 설정
+                    usernameError.text('한글만 입력 가능합니다.');
+                }
+            });
+
+            // 아이디 입력 필드에 대한 실시간 유효성 검사
+            $('#userid').on('input', function() {
+                
+                var userid = $(this).val();
+                var useridPattern = /^[a-z0-9]{4,}$/; // 영어 소문자와 숫자만 허용하며, 최소 4글자 이상
+                var useridError = $('#userid_error');
+
+                if (userid === '') {
+                    // 아이디 필드가 비어있을 때
+                    useridError.text('작성필수');
+                } else if (!useridPattern.test(userid)) {
+                    // 아이디 패턴과 일치하지 않을 때
+                    useridError.text('아이디는 영어 소문자와 숫자로만 작성해주세요. 최소 4글자 이상이어야 합니다.');
+                    isUserIdAvailable = false;
+                } else {
+                    // 유효한 아이디일 때
+                    useridError.text('');
+                    isUserIdAvailable = false;
+                }
+            });
+
+            // 이메일 입력 필드에 대한 실시간 유효성 검사
+            $('#email').on('input', function() {
+                var email = $(this).val();
+                var emailPattern = /^[a-zA-Z0-9._]+@(?!-)[a-zA-Z0-9.-]+(?<!-)\.[a-zA-Z]{2,}$/;
+                var emailError = $('#email_error');
+
+                if (emailPattern.test(email)) {
+                    // 이메일 형식이 유효하면 오류 메시지를 지우고
+                    emailError.text('');
+                } else {
+                    // 이메일 형식이 유효하지 않으면 오류 메시지를 표시
+                    emailError.text('유효한 이메일 주소를 입력해주세요.');
+                }
+                // 이메일이 변경되었으므로 중복 확인을 다시 해야 함
+                isEmailAvailable = false;
+            });
 
              // 아이디 중복확인
-              $('#check_login_id').click(function(e) {
+             $('#check_login_id').click(function(e) {
                 e.preventDefault();
                   var userid = $('#userid').val();
                   var useridPattern = /^[a-z0-9]{4,}$/; // 영어 소문자와 숫자만 허용하며, 최소 4글자 이상
@@ -167,8 +220,9 @@ $(document).ready(function(){
                   }
               });
 
-                  // 이메일 중복확인
-                  $('#checkEmail').click(function(e) {
+
+              // 이메일 중복확인
+              $('#checkEmail').click(function(e) {
                       e.preventDefault();
                       var email = $('#email').val();
                       $('#email_error').text('');
@@ -201,19 +255,20 @@ $(document).ready(function(){
                       }
                   });
 
+                  
+
           function isValidEmail(email) {
               var pattern = /^[a-zA-Z0-9._]+@(?!-)[a-zA-Z0-9.-]+(?<!-)\.[a-zA-Z]{2,}$/;
               return pattern.test(email);
           }
 
-              
+
 
 
 
         $('#join_form').on('submit', function(e) {
 
           e.preventDefault(); // 기본 이벤트를 중지
-
           // 사용자 ID 입력 필드에 입력이 있을 때마다 상태 메시지를 초기화
 
           $("#username").on('input', function() {
@@ -320,9 +375,13 @@ $(document).ready(function(){
             e.preventDefault();
 
             if (!isUserIdAvailable) {
+                $('#useridStatus_failed').text('');
+                $('#useridStatus_success').text('');
                 $('#userid_error').text('아이디 중복 확인을 해주세요.');
             }
             if (!isEmailAvailable) {
+                $('#emailStatus_failed').text('');
+                $('#emailStatus_success').text('');
                 $('#email_error').text('이메일 중복 확인을 해주세요.');
             }
             return false; 
@@ -334,6 +393,8 @@ $(document).ready(function(){
 
           // 모든 유효성 검사를 통과했을 때만 서버에 요청
           if (isValid) {
+            $('#emailStatus_success').text('');
+            $('#useridStatus_success').text('');
             var formData = new FormData($('#join_form')[0]);
               $.ajax({
                   type: 'POST',
