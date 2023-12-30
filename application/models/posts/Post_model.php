@@ -411,30 +411,8 @@ class Post_model extends CI_Model {
 
 
     public function get_posts_ordered_by_latest_for_channel($channel_id, $start = 0, $limit = 10) {
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 특정 채널의 최신 3개의 공지사항
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('delete_status', FALSE);
-            $this->db->where('parent_post_id', null);
-            $this->db->where('is_notice', TRUE);
-            $this->db->where('channel.channel_id', $channel_id); 
-            // 다른 채널의 게시물을 포함하지 않도록 수정
-            $this->db->order_by('create_date', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
-
-            // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
+      
+        date_default_timezone_set('Asia/Seoul');
     
         // 일반 글 
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
@@ -443,11 +421,6 @@ class Post_model extends CI_Model {
         $this->db->where('parent_post_id', null);
         $this->db->where('is_notice', FALSE);
         $this->db->where('channel.channel_id', $channel_id); 
-        if ($start == 0) {
-            $this->db->limit($limit - count($notices));
-        } else {
-            $this->db->limit($limit, $start);
-        }
         $this->db->order_by('create_date', 'DESC');
         $posts = $this->db->get('post')->result();
 
@@ -456,101 +429,47 @@ class Post_model extends CI_Model {
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
     
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+      
+        return $posts;
     }
     
     
 
     public function get_posts_ordered_by_latest($start = 0, $limit = 20) {
 
-    // 최근 일주일 날짜 계산
-    $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
+    date_default_timezone_set('Asia/Seoul');
 
-    // 초기화
-    $notices = [];
-
-    // 첫 페이지일 경우에만 최신 3개의 공지사항
-    if ($start == 0) {
-        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', TRUE);
-        $this->db->or_where('post.create_date <', $week_ago);
-        $this->db->order_by('create_date', 'DESC');
-        $this->db->limit(3);
-        $notices = $this->db->get('post')->result();
-
-        // 날짜 형식 변경
-        foreach ($notices as $notice) {
-            $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-        }
-    }
-
-    // 일반 글 
-    $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-    $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-    $this->db->where('delete_status', FALSE);
-    $this->db->where('parent_post_id', null);
-    $this->db->where('is_notice', FALSE);
-    if ($start == 0) {
-        $this->db->limit($limit - count($notices));
-    } else {
-        $this->db->limit($limit, $start);
-    }
-    $this->db->order_by('create_date', 'DESC');
-    $posts = $this->db->get('post')->result();
-
-    // 날짜 형식 변경
-    foreach ($posts as $post) {
-        $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
-    }
-
-    // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-    return $start == 0 ? array_merge($notices, $posts) : $posts;
+     // 일반 글만 조회
+     $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+     $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+     $this->db->where('delete_status', FALSE);
+     $this->db->where('parent_post_id', null);
+     $this->db->where('is_notice', FALSE); // 공지사항 제외
+     $this->db->limit($limit, $start);
+     $this->db->order_by('create_date', 'DESC');
+     $posts = $this->db->get('post')->result();
+ 
+     // 날짜 형식 변경
+     foreach ($posts as $post) {
+         $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
+     }
+ 
+     // 일반 글만 반환
+     return $posts;
 }
 
 
 
 public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, $limit = 10) {
-    // 최근 일주일 날짜 계산
-    $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
 
-    // 초기화
-    $notices = [];
+    date_default_timezone_set('Asia/Seoul');
 
-    // 첫 페이지일 경우에만 특정 채널의 최신 3개의 공지사항
-    if ($start == 0) {
-        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', TRUE);
-        $this->db->where('channel.channel_id', $channel_id); 
-        // 다른 채널의 게시물을 포함하지 않도록 수정
-        $this->db->order_by('thumb', 'DESC');
-        $this->db->limit(3);
-        $notices = $this->db->get('post')->result();
-
-        // 날짜 형식 변경
-        foreach ($notices as $notice) {
-            $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-        }
-    }
-
-    // 일반 글 
     $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
     $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
     $this->db->where('delete_status', FALSE);
     $this->db->where('parent_post_id', null);
     $this->db->where('is_notice', FALSE);
     $this->db->where('channel.channel_id', $channel_id); 
-    if ($start == 0) {
-        $this->db->limit($limit - count($notices));
-    } else {
-        $this->db->limit($limit, $start);
-    }
     $this->db->order_by('thumb', 'DESC');
     $posts = $this->db->get('post')->result();
 
@@ -559,8 +478,8 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
     }
 
-    // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-    return $start == 0 ? array_merge($notices, $posts) : $posts;
+    
+    return $posts;
 }
 
 
@@ -576,94 +495,42 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     
 
     public function get_posts_ordered_by_thumb($start = 0, $limit = 20) {
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 최신 3개의 공지사항
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('delete_status', FALSE);
-            $this->db->where('parent_post_id', null);
-            $this->db->where('is_notice', TRUE);
-            $this->db->or_where('post.create_date <', $week_ago);
-            $this->db->order_by('create_date', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
 
-            // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
-    
-        // 일반 글
+        date_default_timezone_set('Asia/Seoul');
+
+        
+   
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', FALSE);
+        $this->db->where('is_notice', FALSE); // 공지사항 제외
         $this->db->order_by('thumb', 'DESC');
-        if ($start == 0) {
-            $this->db->limit($limit - count($notices));
-        } else {
-            $this->db->limit($limit, $start);
-        }
+        $this->db->limit($limit, $start);
         $posts = $this->db->get('post')->result();
 
         // 날짜 형식 변경
         foreach ($posts as $post) {
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
-    
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+
+        // 일반 글만 반환
+        return $posts;
     }
 
 
 
 
     public function get_posts_ordered_by_views_for_channel($channel_id, $start = 0, $limit = 10) {
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 특정 채널의 최신 3개의 공지사항
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('delete_status', FALSE);
-            $this->db->where('parent_post_id', null);
-            $this->db->where('is_notice', TRUE);
-            $this->db->where('channel.channel_id', $channel_id); 
-            // 다른 채널의 게시물을 포함하지 않도록 수정
-            $this->db->order_by('views', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
 
-            // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
-    
-        // 일반 글 
+        date_default_timezone_set('Asia/Seoul');
+
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
         $this->db->where('is_notice', FALSE);
         $this->db->where('channel.channel_id', $channel_id); 
-        if ($start == 0) {
-            $this->db->limit($limit - count($notices));
-        } else {
-            $this->db->limit($limit, $start);
-        }
         $this->db->order_by('views', 'DESC');
         $posts = $this->db->get('post')->result();
 
@@ -672,8 +539,8 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
     
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+      
+        return $posts;
     }
     
 
@@ -689,51 +556,28 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
 
     public function get_posts_ordered_by_views($start = 0, $limit = 20) {
-        // 최근 일주일 날짜 계산
-        $week_ago = date('Y-m-d H:i:s', strtotime('-1 week'));
-    
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 최신 3개의 공지사항
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('delete_status', FALSE);
-            $this->db->where('parent_post_id', null);
-            $this->db->where('is_notice', TRUE);
-            $this->db->or_where('post.create_date <', $week_ago);
-            $this->db->order_by('create_date', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
 
-            // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
-    
-        // 일반 글
+        
+        date_default_timezone_set('Asia/Seoul');
+
+  
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
         $this->db->where('delete_status', FALSE);
         $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', FALSE);
+        $this->db->where('is_notice', FALSE); // 공지사항 제외
         $this->db->order_by('views', 'DESC');
-        if ($start == 0) {
-            $this->db->limit($limit - count($notices));
-        } else {
-            $this->db->limit($limit, $start);
-        }
+        $this->db->limit($limit, $start);
         $posts = $this->db->get('post')->result();
 
         // 날짜 형식 변경
         foreach ($posts as $post) {
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
-    
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+
+        // 일반 글만 반환
+        return $posts;
+        
     }
     
     
