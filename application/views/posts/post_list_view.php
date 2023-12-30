@@ -67,7 +67,7 @@
                                                 
                                                 <input type="checkbox" id="toggleNoticesCheckbox" onchange="hideNotices();">
 
-                                                <i class="fa-solid fa-eye"></i> 공지숨기기
+                                                 공지숨기기
                                             </label>
                                         </div>
 
@@ -278,10 +278,10 @@
                                                         </div>
 
                                                         <!-- 답글이 있을 때만 버튼이 보임 -->
-                                                        <?php if($post->replies > 1): ?>
+                                                        <?php if($post->replies > 0): ?>
                                                         <a href="#"
                                                             class="view-replies ml-2 text-red-500 hover:text-blue-800"
-                                                            onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기[3] count 미구현</a>
+                                                            onclick="event.stopPropagation(); loadReplies(<?=$post->post_id?>); return false;">답글보기[<?= $post->replies ?>]</a>
                                                         <?php endif; ?>
 
 
@@ -475,7 +475,7 @@ function createPostHtml(post) {
     if (post.replies > 1) {
         postHtml +=
             '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' +
-            post.post_id + '); return false;">답글보기</a>';
+            post.post_id + '); return false;">답글보기[' + post.replies + ']</a>';
     }
     postHtml += '            </div>';
     postHtml += '        </div>';
@@ -521,6 +521,9 @@ function searchPosts() {
 
                     postsHtml += createPostHtml(post);
                 });
+
+                 // 기존 페이지네이션 링크 제거
+                $('.pagination').remove();
 
                 // 페이지네이션 링크를 postsHtml에 추가
                 postsHtml +=

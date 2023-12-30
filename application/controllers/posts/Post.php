@@ -309,7 +309,7 @@ class Post extends CI_Controller {
         
         foreach ($data['search_data'] as &$post) { // 참조를 사용하여 각 게시글을 수정
             $post['comment_count'] = $this->Post_model->count_comment($post['post_id']);
-         
+            $post['replies'] = $this->Post_model->get_reply_to_post_count($post['post_id']);
         }
 
         

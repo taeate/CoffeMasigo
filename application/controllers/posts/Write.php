@@ -329,10 +329,16 @@ class Write extends CI_Controller {
         
         if (!empty($post_id)) {
 
-            $this->Write_model->update_experience_points($user_id, -2);
+            $post = $this->Write_model->get_post_by_id($post_id);
 
-            $this->Write_model->delete_post($post_id);
-
+            if ($post && $post->user_id == $user_id) {
+                // 사용자가 게시글의 작성자인 경우에만 삭제 수행
+                $this->Write_model->update_experience_points($user_id, -2);
+                $this->Write_model->delete_post($post_id);
+            }else {
+               
+                redirect('/posts/free/'.$post_id);
+            }
             
             
         }

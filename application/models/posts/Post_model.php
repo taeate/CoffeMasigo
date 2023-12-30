@@ -62,11 +62,11 @@ class Post_model extends CI_Model {
     
 
     public function get_replies($post_id) {
-        $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id AND subpost.delete_status IS NULL) as replies_count');
+        $this->db->select('post.*, parent.title as parent_title, (SELECT COUNT(*) FROM post as subpost WHERE subpost.parent_post_id = post.post_id AND subpost.delete_status = 0) as replies_count');
         $this->db->from('post');
         $this->db->join('post as parent', 'post.parent_post_id = parent.post_id', 'left');
         $this->db->where('post.parent_post_id', $post_id);
-        $this->db->where('post.delete_status', NULL);
+        $this->db->where('post.delete_status', 0);
         $query = $this->db->get();
         $replies = $query->result();
 
@@ -83,7 +83,7 @@ class Post_model extends CI_Model {
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); 
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
-        $this->db->where('delete_status', null);
+        $this->db->where('delete_status', 0);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
         $this->db->order_by('re_level', 'ASC');
@@ -103,9 +103,12 @@ class Post_model extends CI_Model {
     public function get_reply_to_post_count($post_id){
         $this->db->from('post');
         $this->db->where('ref', $post_id);
+        $this->db->where('post_id !=', $post_id); 
+        $this->db->where('delete_status', 0); 
         return $this->db->count_all_results();
     }
-
+    
+    
  
     
     public function get_answer_posts() {
@@ -807,50 +810,30 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     public function get_posts_by_channel($channel_id, $start, $limit = 10) {
 
         
-        // 초기화
-        $notices = [];
-    
-        // 첫 페이지일 경우에만 최신 3개의 공지사항
-        if ($start == 0) {
-            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-            $this->db->where('post.channel_id', $channel_id);
-            $this->db->where('post.delete_status', FALSE);
-            $this->db->where('post.parent_post_id', null);
-            $this->db->where('post.is_notice', TRUE);
-            $this->db->order_by('post.create_date', 'DESC');
-            $this->db->limit(3);
-            $notices = $this->db->get('post')->result();
-
-            // 날짜 형식 변경
-            foreach ($notices as $notice) {
-                $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
-            }
-        }
-    
-        // 일반 글
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
         $this->db->where('post.channel_id', $channel_id);
         $this->db->where('post.delete_status', FALSE);
         $this->db->where('post.parent_post_id', null);
         $this->db->where('post.is_notice', FALSE);
+        
         if ($start == 0) {
-            $this->db->limit($limit - count($notices));
+            $this->db->limit($limit);
         } else {
             $this->db->limit($limit, $start);
         }
+        
         $this->db->order_by('post.create_date', 'DESC');
         $posts = $this->db->get('post')->result();
-
+    
         // 날짜 형식 변경
         foreach ($posts as $post) {
             $post->create_date = (new DateTime($post->create_date))->format('Y.m.d H:i');
         }
     
-        // 첫 페이지에서는 공지사항과 일반 글 결합, 다른 페이지에서는 일반 글만 반환
-        return $start == 0 ? array_merge($notices, $posts) : $posts;
+        return $posts;
     }
+    
 
 
     

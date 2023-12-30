@@ -64,6 +64,20 @@ class Write_model extends CI_Model {
     }
 
 
+    public function get_post_by_id($post_id) {
+        $this->db->from('post'); 
+        $this->db->where('post_id', $post_id); 
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return null; 
+        }
+    }
+    
+
+
     public function save_answer_post($title, $content, $user_id, $parent_post_id, $channel_id) {
     $ref = null;
     $re_step = 0;
