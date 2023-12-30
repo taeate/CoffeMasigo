@@ -146,17 +146,23 @@ $(document).ready(function(){
 
             // 아이디 입력 필드에 대한 실시간 유효성 검사
             $('#userid').on('input', function() {
-                
                 var userid = $(this).val();
-                var useridPattern = /^[a-z0-9]{4,}$/; // 영어 소문자와 숫자만 허용하며, 최소 4글자 이상
+                var useridPattern = /^[a-z0-9]{4,12}$/; // 영어 소문자와 숫자만 허용하며, 최소 4자, 최대 12자
                 var useridError = $('#userid_error');
 
                 if (userid === '') {
                     // 아이디 필드가 비어있을 때
                     useridError.text('작성필수');
+                    isUserIdAvailable = false;
                 } else if (!useridPattern.test(userid)) {
                     // 아이디 패턴과 일치하지 않을 때
-                    useridError.text('아이디는 영어 소문자와 숫자로만 작성해주세요. 최소 4글자 이상이어야 합니다.');
+                    if(userid.length < 4) {
+                        useridError.text('아이디는 최소 4글자 이상이어야 합니다.');
+                    } else if(userid.length > 12) {
+                        useridError.text('아이디는 최대 12글자를 초과할 수 없습니다.');
+                    } else {
+                        useridError.text('아이디는 영어 소문자와 숫자로만 작성해주세요.');
+                    }
                     isUserIdAvailable = false;
                 } else {
                     // 유효한 아이디일 때
@@ -181,7 +187,7 @@ $(document).ready(function(){
                 // 이메일이 변경되었으므로 중복 확인을 다시 해야 함
                 isEmailAvailable = false;
             });
-            
+
 
              // 비밀번호 입력 필드에 대한 실시간 유효성 검사
             $('#password1').on('input', function() {

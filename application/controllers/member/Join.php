@@ -14,7 +14,8 @@ class Join extends CI_Controller {
 
 	public function index(){
 
-		$this->form_validation->set_rules('userid', '아이디', 'required|alpha_numeric|callback_checkUserId');
+		$this->form_validation->set_rules('userid', '아이디', 'required|alpha_numeric|max_length[12]|callback_checkUserId');
+
 		 
 		 $this->form_validation->set_rules(
 			'password1', 
@@ -37,7 +38,7 @@ class Join extends CI_Controller {
 				'matches' => '비밀번호가 일치하지 않습니다.'
 			)
 		);
-		
+
 		$this->form_validation->set_rules('email', '이메일', 'required|valid_email|callback_checkEmail');
 		
 
