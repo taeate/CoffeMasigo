@@ -34,6 +34,7 @@
         </div>
   
         <?php if(isset($findId) && $findId): ?>
+          
           <div class="flex gap-2 text-white">
             당신의 아이디는
             <div class="text-blue-400">"<?php echo $findId; ?>"</div>
@@ -48,6 +49,11 @@
               <a href="/login" class="btn btn-primary bg-blue-600">로그인하러가기</a>
           </div>
         <?php else: ?>
+          <?php if (isset($error_message)): ?>
+            <div class="text-red-500  mt-2 ml-2 ">
+                <?php echo $error_message; ?>
+            </div>
+        <?php endif; ?>
           <div class="flex justify-between">
             <div>
             <a href="/member/findPassword" class="label-text-alt link link-hover text-white hover:text-blue-500">비밀번호 찾기</a>
@@ -60,6 +66,8 @@
           <button type="submit" class="btn btn-primary bg-blue-600">아이디찾기</button>
         </div>
         <?php endif; ?>
+
+        
       </form>
 
 

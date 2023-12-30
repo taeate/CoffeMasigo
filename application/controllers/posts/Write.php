@@ -25,9 +25,14 @@ class Write extends CI_Controller {
         $user_id = $this->session->userdata('user_id');
         
         if (!$user_id) {
-            // AJAX 요청에 대한 응답으로 JSON 반환
-            echo json_encode(['success' => false, 'message' => '로그인 후 이용 가능합니다.']);
-            return; 
+            if ($this->input->is_ajax_request()) {
+                // AJAX 요청인 경우 JSON 응답 반환
+                echo json_encode(['success' => false, 'message' => '로그인 후 이용 가능합니다.']);
+            } else {
+                // 일반 HTTP 요청인 경우 로그인 페이지로 리디렉션
+                redirect('/posts');
+            }
+            return;
         }
     
         $user_role = $this->db->select('role')
@@ -276,6 +281,13 @@ class Write extends CI_Controller {
 
 
         if (!empty($post_id)){
+
+             // 게시물 존재 여부 확인
+            if (!$this->Write_model->post_exists($post_id)) {
+                // 게시물이 존재하지 않으면 404 페이지를 표시합니다.
+                show_404();
+                return;
+            }
 
             $author_id = $this->Write_model->get_post_author_id($post_id);
 

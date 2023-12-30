@@ -75,6 +75,16 @@ class Write_model extends CI_Model {
             return null; 
         }
     }
+
+
+    public function post_exists($post_id) {
+        
+        $query = $this->db->where('post_id', $post_id)
+                          ->get('post');
+    
+        
+        return $query->num_rows() > 0;
+    }
     
 
 

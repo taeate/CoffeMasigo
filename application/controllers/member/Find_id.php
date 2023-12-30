@@ -26,7 +26,12 @@ class Find_id extends CI_Controller {
                 $email = $this->input->post('email');
         
                 $findId = $this->Find_id_model->findById($username, $email);
-                $data['findId'] = $findId;
+                
+                if ($findId) {
+                    $data['findId'] = $findId;
+                } else {
+                    $data['error_message'] = "입력하신 이름과 이메일에 해당하는 아이디가 없습니다.";
+                }
             }
     
             $this->load->view('member/findByid_view', $data);
