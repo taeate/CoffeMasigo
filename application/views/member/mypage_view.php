@@ -23,7 +23,7 @@
                             <img style="display: none;" onchange="previewImage(this)" id="image-preview"  alt="프로필 미리보기" class="object-cover object-center h-full w-full" />
                         </div>
                         <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 "><?php echo $this->session->userdata('username');?></h5>
-                        <span class="text-sm text-gray-500 font-medium"><?php echo $this->session->userdata('user_id');?></span>
+                        <span class="text-sm text-gray-500 font-medium">ID: <?php echo $this->session->userdata('user_id');?></span>
                         <div class="flex mt-4 md:mt-6">
                             <form action="member/Mypage/change_image" method="post">
                             <input type="file" class="hidden" id="file-input" name="profile_image">
@@ -52,7 +52,10 @@
                                             </div>
                                             <div class="mb-3 text-gray-500 flex" name="useremail" class="flex items-center">
                                                 <div><i class="fa-solid fa-calendar mr-2"></i></div>
-                                                <div>2023.11.29</div>
+                                                <?php if(isset($user_data->create_date)): ?>
+                                                <div><?php echo date('Y.m.d', strtotime($user_data->create_date)); ?></div>                                                
+                                                    
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
