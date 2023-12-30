@@ -15,9 +15,29 @@ class Join extends CI_Controller {
 	public function index(){
 
 		$this->form_validation->set_rules('userid', '아이디', 'required|alpha_numeric|callback_checkUserId');
-		// $this->form_validation->set_rules('username', '이름', 'required|callback_check_korean');
-		$this->form_validation->set_rules('password1', '비밀번호', 'required');
-		$this->form_validation->set_rules('password2', '비밀번호 확인', 'required|matches[password1]');
+		 
+		 $this->form_validation->set_rules(
+			'password1', 
+			'비밀번호', 
+			'required|min_length[4]|regex_match[/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/]', 
+			array(
+				'required' => '비밀번호를 입력해주세요.',
+				'min_length' => '비밀번호는 최소 4자 이상이어야 합니다.',
+				'regex_match' => '비밀번호는 영문과 숫자를 조합하여야 합니다.'
+			)
+		);
+	
+		// 비밀번호 확인 유효성 검증
+		$this->form_validation->set_rules(
+			'password2', 
+			'비밀번호 확인', 
+			'required|matches[password1]',
+			array(
+				'required' => '비밀번호 확인을 입력해주세요.',
+				'matches' => '비밀번호가 일치하지 않습니다.'
+			)
+		);
+		
 		$this->form_validation->set_rules('email', '이메일', 'required|valid_email|callback_checkEmail');
 		
 

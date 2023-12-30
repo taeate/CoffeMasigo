@@ -181,6 +181,38 @@ $(document).ready(function(){
                 // 이메일이 변경되었으므로 중복 확인을 다시 해야 함
                 isEmailAvailable = false;
             });
+            
+
+             // 비밀번호 입력 필드에 대한 실시간 유효성 검사
+            $('#password1').on('input', function() {
+                var password = $(this).val();
+                var passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,}$/; // 최소 4자, 영문과 숫자 포함
+                var passwordError = $('#password1_error');
+
+                if (!passwordPattern.test(password)) {
+                    // 비밀번호 패턴과 일치하지 않을 때
+                    passwordError.text('비밀번호는 최소 4자 이상이며, 영문과 숫자를 모두 포함해야 합니다.');
+                } else {
+                    // 유효한 비밀번호일 때
+                    passwordError.text('');
+                }
+            });
+
+            // 비밀번호 확인 입력 필드에 대한 실시간 유효성 검사
+            $('#password2').on('input', function() {
+                var password = $('#password1').val();
+                var confirmPassword = $(this).val();
+                var confirmPasswordError = $('#password2_error');
+
+                if (password !== confirmPassword) {
+                    // 비밀번호와 비밀번호 확인이 일치하지 않을 때
+                    confirmPasswordError.text('비밀번호가 일치하지 않습니다.');
+                } else {
+                    // 비밀번호가 일치할 때
+                    confirmPasswordError.text('');
+                }
+            });
+
 
              // 아이디 중복확인
              $('#check_login_id').click(function(e) {
