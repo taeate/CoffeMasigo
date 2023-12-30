@@ -270,6 +270,9 @@ class Post_model extends CI_Model {
 
     public function search($search_query, $search_option, $selectedPast, $start, $limit) {
 
+        // HTML 이스케이프 처리
+        $search_query = htmlspecialchars($search_query);
+
          // 'channel.name'을 select 절에 포함
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
 
