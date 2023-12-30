@@ -80,7 +80,9 @@
                                                 
 
                                             </div>
-                                            <div class="ml-1 text-red-500">[33]</div>
+                                            <?php if($thumb_post['comment_count'] > 0): ?>
+                                                <div class="ml-1 text-red-500">[<?php echo $thumb_post['comment_count'] ?>]</div>
+                                            <?php endif; ?>
                                             <?php if($thumb_post['content'] && strpos($thumb_post['content'], '<img') !== false): ?>
                                             <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
                                             <?php endif; ?>

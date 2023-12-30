@@ -115,7 +115,7 @@
                                         <div class="p-6 flex flex-col">
                                             <a href="/member/wrote/post" class="mb-2 text-blue-500">내가 작성한 글  <?php echo $post_count; ?>개</a>
                                             <a href="/member/wrote/comment" class="mb-2 text-blue-500">내가 작성한 댓글  <?php echo $comment_count; ?>개</a>
-                                            <a href="/member/wrote/comment" class="mb-2 text-blue-500">내가 추천한 글  <?php echo $wrote_thumb_post_count; ?>개</a>
+                                            <a href="/member/wrote/thumb_post" class="mb-2 text-blue-500">내가 추천한 글  <?php echo $wrote_thumb_post_count; ?>개</a>
                                         </div>
                                     </div>
                             </div>

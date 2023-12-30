@@ -6,7 +6,9 @@ class Wrote_model extends CI_Model {
 
 
     public function get_wrote_post($userid, $start = 0, $limit = 15) {
-        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->select('post.*, channel.name as channel_name, 
+        (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count,
+        (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id AND comment.delete_status = 0) AS comment_count');
     
         // channel 테이블과 조인
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
@@ -84,7 +86,7 @@ class Wrote_model extends CI_Model {
 
 
     public function get_wrote_thumb_post($userid, $start = 0, $limit = 15) {
-        $this->db->select('post.*, channel.name AS channel_name, COUNT(uploadfile.post_id) AS file_count');
+        $this->db->select('post.*, channel.name AS channel_name, COUNT(uploadfile.post_id) AS file_count, (SELECT COUNT(comment_id) FROM comment WHERE comment.post_id = post.post_id AND comment.delete_status = 0) AS comment_count');
         $this->db->from('post_thumb');
         $this->db->join('post', 'post_thumb.post_id = post.post_id');
         $this->db->join('channel', 'post.channel_id = channel.channel_id', 'left');
