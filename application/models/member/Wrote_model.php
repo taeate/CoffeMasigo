@@ -46,6 +46,7 @@ class Wrote_model extends CI_Model {
         $this->db->from('comment as COMMENT');
         $this->db->join('post as POST', 'COMMENT.post_id = POST.post_id', 'left');
         $this->db->where('COMMENT.user_id', $userid);
+        $this->db->where('COMMENT.delete_status', 0);
         $this->db->limit($limit, $start);
     
         $query = $this->db->get();

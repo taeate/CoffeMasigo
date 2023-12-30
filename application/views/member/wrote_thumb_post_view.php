@@ -125,7 +125,7 @@
                         <!-- 내용이 없을 때의 메시지 -->
                         <div class="flex flex-col border-b">
                             <div class="flex flex-1 p-2 bg-base-100 border-gray-300 cursor-pointer justify-center">
-                                <div class="p-4">작성된 글이 없습니다.</div>
+                                <div class="p-4">추천된 글이 없습니다.</div>
                             </div>
                         </div>
                     </div>

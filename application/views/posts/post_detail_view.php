@@ -130,8 +130,7 @@
 
                             <div name="answer-btn" class="flex justify-between">
                                 <div class="">
-                                    <a href="/posts" 
-                                    class="btn bg-gray-500 text-white w-28 h-12">목록으로</a>
+                                <button class="btn bg-gray-500 text-white w-28 h-12" onclick="goBack()">목록으로</button>
                                     <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
                                     class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
                                 </div>
@@ -332,6 +331,15 @@
 
 
 <script>
+
+function goBack() {
+    if (window.location.pathname === '/posts/write') {
+        window.location.href = '/posts'; // 기본 목록 페이지로 이동
+    } else {
+        window.history.back();
+    }
+}
+
     
 document.addEventListener('DOMContentLoaded', function() {
         const scrollTopBtn = document.getElementById('scrollTopBtn');
@@ -455,32 +463,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const navbar = document.querySelector('nav');
-//     const sidebar = document.querySelector('.sidebarbox');
-
-//     // 원래 sidebar의 너비 계산
-//     const originalSidebarWidth = sidebar.offsetWidth + 'px';
-
-//     if (navbar && sidebar) {
-
-//         const navbarHeight = navbar.offsetHeight;
-//         const sidebarTop = sidebar.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
-//         window.addEventListener('scroll', function() {
-//             if (window.scrollY >= sidebarTop) {
-//                 sidebar.classList.add('fixed');
-//                 sidebar.style.top = `${navbarHeight}px`;
-//                 sidebar.style.width = originalSidebarWidth; // 고정 상태에서 원래 너비 적용
-//             } else {
-//                 sidebar.classList.remove('fixed');
-//                 sidebar.style.top = '';
-//                 sidebar.style.width = ''; // 너비 스타일 제거
-//             }
-//         });
-//     }
-// });
 
 
 var activeCommentForm = null; // 활성화된 댓글 폼 추적

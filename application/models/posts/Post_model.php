@@ -163,6 +163,7 @@ class Post_model extends CI_Model {
             'post_id' => $post_id,
             'create_date' => date('Y-m-d H:i:s'),
             'parent_comment_id' => $parent_comment_id,
+            'delete_status' => 0,
             'ref' => $ref,
             're_step' => $re_step,
             're_level' => $re_level
@@ -208,6 +209,7 @@ class Post_model extends CI_Model {
 
     public function count_comment($post_id){
         $this->db->where('post_id', $post_id);
+        $this->db->where('delete_status', 0);
         $this->db->from('comment');;
         return $this->db->count_all_results();
     }
@@ -644,11 +646,13 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     
     public function count_wrote_posts_sidebar($userid) {
         $this->db->where('user_id', $userid);
+        $this->db->where('delete_status', 0);
         return $this->db->count_all_results('post');
     }
     
     public function count_wrote_comments_sidebar($userid) {
         $this->db->where('user_id', $userid);
+        $this->db->where('delete_status', 0);
         return $this->db->count_all_results('comment');
     }
 
