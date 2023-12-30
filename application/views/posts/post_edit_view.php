@@ -190,6 +190,11 @@
     </div>
 </div>
 
+<style>
+    .toastui-editor-mode-switch {
+        display: none !important;
+    }
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -237,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
 const editor = new toastui.Editor({
     el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
     height: '500px', // 에디터 영역의 높이 값 (OOOpx || auto)
-    initialEditType: 'markdown', // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+    initialEditType: 'wysiwyg', // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
     initialValue: document.querySelector('#content').value, // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
     previewStyle: 'vertical', // 마크다운 프리뷰 스타일 (tab || vertical)
     hooks: {
@@ -270,7 +275,11 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
 
     let formData = new FormData(this);
     var editorContent = editor.getMarkdown(); 
-    editorContent = editorContent.replace(/\n/g, "  \n");
+    // 연속된 줄바꿈을 새로운 단락으로 처리
+    editorContent = editorContent.replace(/\n\n+/g, "\n\n");
+
+    // 단일 줄바꿈을 두 개의 공백과 줄바꿈으로 처리
+    editorContent = editorContent.replace(/(?<!\n)\n(?!\n)/g, "  \n");
     formData.append('content', editorContent); 
     formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
     let post_id = $('#edit_form').attr('data-post-id');
