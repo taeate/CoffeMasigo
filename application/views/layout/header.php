@@ -32,7 +32,7 @@
 <nav class="flex  w-full z-0 headerbox">
     <div class="navbar bg-gray-700 h-16 relative">
         <div class="navbar-start">
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -47,7 +47,7 @@
                     <li><a>랭킹</a></li>
                     <li><a>글작성</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
         <div class="navbar-center">
             <a href="/posts" class="btn btn-ghost normal-case text-2xl text-white">
