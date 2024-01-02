@@ -12,7 +12,7 @@ class Post extends CI_Controller {
         $this->load->library('session'); // 세션 라이브러리 로드
         $this->load->library('pagination'); // 페이지네이션 로드
         $this->load->library('form_validation');
-        require 'vendor/autoload.php'; 
+        
     }
     
     public function index() {
@@ -129,27 +129,6 @@ class Post extends CI_Controller {
                 
                 
 
-                 // Markdown을 HTML로 변환
-                $parsedown = new Parsedown(); // 네임스페이스를 명시적으로 지정
-                $content = $detail_info['post_info']->content;
-
-                $htmlContent = $parsedown->text($content);
-           
-
-                // Markdown의 이미지 구문을 HTML 이미지 태그로 변환
-                $htmlContent = preg_replace('/!\[([^\]]+)\]\(([^)]+)\)/', '<img src="$2" alt="$1">', $htmlContent);
-
-                $htmlContent = preg_replace('/<h1>/', '<h1 class="text-2xl font-bold">', $htmlContent);
-                $htmlContent = preg_replace('/<h2>/', '<h2 class="text-xl font-bold">', $htmlContent);
-                $htmlContent = preg_replace('/<h3>/', '<h3 class="text-lg font-bold">', $htmlContent);
-
-
-                // 추가 처리: 체크박스를 HTML 체크박스로 변환
-                $htmlContent = preg_replace('/\[\s\]/', '<input type="checkbox">', $htmlContent);
-                $htmlContent = preg_replace('/\[\x\]/', '<input type="checkbox" checked>', $htmlContent);
-
-                
-                $data['detail_info']->content = $htmlContent;
 
             } else {
                 echo "찾지 못함";

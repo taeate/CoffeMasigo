@@ -98,13 +98,15 @@
                 <?php endif; ?>   
             </div>
 
-
-            <div name="내용" class="flex border-b">
-                <div class="px-8 py-8 w-full">
-                    <?php echo $content ?>
+            <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+            <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+            <div name="내용" class="flex border-b px-8 py-8">
+                <div class=" w-full toastui-editor-contents">
+                    <?php echo htmlspecialchars_decode($content) ?>
                 </div>
                 
             </div>
+    
 
 
             <div name="버튼들" class="flex">

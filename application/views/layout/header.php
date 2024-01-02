@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ford Mustang</title>
 
+    <!-- <link rel="stylesheet" href="/application/views/reset.css">  -->
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
@@ -17,8 +19,6 @@
 
 
 
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
 
 
@@ -29,6 +29,7 @@
 
 
 </head>
+
 <nav class="flex  w-full z-0 headerbox">
     <div class="navbar bg-gray-700 h-16 relative">
         <div class="navbar-start">

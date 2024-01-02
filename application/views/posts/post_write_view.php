@@ -215,8 +215,40 @@
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
+        
+        <script>
+            
+    editor = new toastui.Editor({
+            el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
+            height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+            initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+            initialValue: '',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+            previewStyle: 'vertical',  // 마크다운 프리뷰 스타일 (tab || vertical)
+            
+            hooks: {
+                addImageBlobHook: async (blob, callback) => {
+                    // FormData를 사용하여 이미지 파일을 서버로 전송
+                    const formData = new FormData();
+                    formData.append('upload', blob); 
 
+                    try {
+                        // 이미지를 서버에 업로드하는 요청 보내기
+                        const response = await fetch('/posts/write/saveImage', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
 
+                        // callback 함수를 사용하여 에디터에 이미지 URL 삽입
+                        callback(data.url, '이미지 설명'); // 서버에서 반환된 이미지 URL
+                    } catch (error) {
+                        console.error('이미지 업로드 실패', error);
+                    }
+                }
+            }
+        });
+
+        </script>
 
         </body>
     </div>
@@ -230,35 +262,7 @@
 
 <script>
 
-const editor = new toastui.Editor({
-    el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
-    height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
-    initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-    initialValue: '',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
-    previewStyle: 'vertical', 
-                   // 마크다운 프리뷰 스타일 (tab || vertical)
-    hooks: {
-        addImageBlobHook: async (blob, callback) => {
-            // FormData를 사용하여 이미지 파일을 서버로 전송
-            const formData = new FormData();
-            formData.append('upload', blob); 
 
-            try {
-                // 이미지를 서버에 업로드하는 요청 보내기
-                const response = await fetch('/posts/write/saveImage', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                // callback 함수를 사용하여 에디터에 이미지 URL 삽입
-                callback(data.url, '이미지 설명'); // 서버에서 반환된 이미지 URL
-            } catch (error) {
-                console.error('이미지 업로드 실패', error);
-            }
-        }
-    }
-});
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -272,13 +276,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let formData = new FormData(this);
         let post_id = $('#answer_form').attr('data-post-id'); 
-        var editorContent = editor.getMarkdown();
+        var editorContent = editor.getHTML();
 
-        // 연속된 줄바꿈을 새로운 단락으로 처리
-        editorContent = editorContent.replace(/\n\n+/g, "\n\n");
-
-        // 단일 줄바꿈을 두 개의 공백과 줄바꿈으로 처리
-        editorContent = editorContent.replace(/(?<!\n)\n(?!\n)/g, "  \n");
 
 
         formData.append('content', editorContent); // 에디터 내용을 FormData에 추가
@@ -333,13 +332,8 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
 
             var formData = new FormData(this);
-            var editorContent = editor.getMarkdown(); 
+            var editorContent = editor.getHTML();
 
-            // 연속된 줄바꿈을 새로운 단락으로 처리
-            editorContent = editorContent.replace(/\n\n+/g, "\n\n");
-
-            // 단일 줄바꿈을 두 개의 공백과 줄바꿈으로 처리
-            editorContent = editorContent.replace(/(?<!\n)\n(?!\n)/g, "  \n");
 
 
             formData.append('content', editorContent); // 에디터 내용을 FormData에 추가

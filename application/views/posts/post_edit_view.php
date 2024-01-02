@@ -274,12 +274,8 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
     e.preventDefault();
 
     let formData = new FormData(this);
-    var editorContent = editor.getMarkdown(); 
-    // 연속된 줄바꿈을 새로운 단락으로 처리
-    editorContent = editorContent.replace(/\n\n+/g, "\n\n");
+    var editorContent = editor.getHTML(); 
 
-    // 단일 줄바꿈을 두 개의 공백과 줄바꿈으로 처리
-    editorContent = editorContent.replace(/(?<!\n)\n(?!\n)/g, "  \n");
     formData.append('content', editorContent); 
     formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
     let post_id = $('#edit_form').attr('data-post-id');
