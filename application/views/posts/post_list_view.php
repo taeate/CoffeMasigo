@@ -1058,10 +1058,10 @@ function loadReplies(postId) {
                             '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
                     }
                     
-                    if (reply.content && /!\[.*\]\(http.*\)/.test(reply.content)) {
-                        repliesHtml +=
-                            '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
+                    if (reply.content && /<img\s+[^>]*src="[^"]+"/.test(reply.content)) {
+                        repliesHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
                     }
+
 
                     repliesHtml += '        </div>';
                     repliesHtml += '        <div class="flex">';

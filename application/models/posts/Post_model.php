@@ -93,6 +93,7 @@ class Post_model extends CI_Model {
         // 날짜 형식 변경
         foreach ($replies as $reply) {
             $reply->create_date = (new DateTime($reply->create_date))->format('Y.m.d H:i');
+            $reply->content = htmlspecialchars_decode($reply->content); 
         }
 
         return $query->result();
