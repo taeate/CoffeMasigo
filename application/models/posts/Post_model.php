@@ -83,7 +83,7 @@ class Post_model extends CI_Model {
         $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left'); 
         $this->db->where('ref', $post_id);
         $this->db->where('post_id !=', $post_id); // 원본 게시물 제외
-        $this->db->where('delete_status', 0);
+        // $this->db->where('delete_status', 0);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
         $this->db->order_by('re_level', 'ASC');
@@ -186,6 +186,7 @@ class Post_model extends CI_Model {
         $this->db->where('comment.post_id', $post_id);
         $this->db->order_by('ref', 'ASC');
         $this->db->order_by('re_step', 'ASC');
+        $this->db->order_by('re_level', 'ASC');
     
         $query = $this->db->get();
         $comments = $query->result();

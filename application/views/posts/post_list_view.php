@@ -330,7 +330,7 @@
                                             <div class="flex-1"><?php echo $post['views']; ?>조회 23</div>
                                             <div class="flex-1"><?php echo $post['create_date']; ?></div>
                                         </div>
-                                        <div id="replies-container-<?=$post['post_id']?>"></div>
+                                        <div class="p-4 bg-red-400" id="replies-container-<?=$post['post_id']?>"></div>
 
                                     </div>
                                     <?php endforeach; ?>
@@ -1005,12 +1005,15 @@ function loadNotices() {
 function loadReplies(postId) {
 
     var repliesContainer = $('#replies-container-' + postId);
+    
 
     // 답글이 이미 표시되어 있으면 숨김
     if (repliesContainer.is(":visible")) {
         repliesContainer.hide();
+        
     } else {
 
+        repliesContainer.addClass('p-2 bg-gray-200'); 
         $.ajax({
         url: '/posts/post/get_replies',
         data: {
@@ -1022,9 +1025,14 @@ function loadReplies(postId) {
             if (response.status) {
                 var repliesHtml = '';
                 response.data.forEach(function(reply) {
+
+                    if (reply.delete_status == 0 ){
+                  
                     repliesHtml += '<div class="overflow-x-auto shadow-md">'
                     repliesHtml += '    <div class="flex flex-col border-b bg-white ">';
+                    
                     repliesHtml += '    <div class="flex flex-1 p-1 ml-36 mt-2 mb-2">';
+                    
                     repliesHtml += '        <div class="ml-' + (reply.re_level * 12) +
                         ' flex-[0.1] flex items-center">';
                     repliesHtml += '            <div>↳</div>'; // 들여쓰기 표시
@@ -1034,6 +1042,7 @@ function loadReplies(postId) {
                         reply.post_id + ');">';
                     repliesHtml += '         <div class="flex">';
                     repliesHtml += '           <div>' + reply.title + '</div>';
+                  
                     if (reply.file_count > 0) {
                         repliesHtml +=
                             '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
@@ -1057,6 +1066,45 @@ function loadReplies(postId) {
                     repliesHtml += '    </div>';
                     repliesHtml += '</div>';
                     repliesHtml += '</div>';
+
+                }else{
+                    repliesHtml += '<div class="overflow-x-auto shadow-md">'
+                    repliesHtml += '    <div class="flex flex-col border-b bg-white ">';
+                    
+                    repliesHtml += '    <div class="flex flex-1 p-1 ml-36 mt-2 mb-2">';
+                    
+                    repliesHtml += '        <div class="ml-' + (reply.re_level * 12) +
+                        ' flex-[0.1] flex items-center">';
+                    repliesHtml += '            <div>↳</div>'; // 들여쓰기 표시
+                    repliesHtml += '        </div>';
+                    repliesHtml +=
+                        '        <div class="flex-[3]">';
+                    repliesHtml += '         <div class="flex">';
+                    repliesHtml += '           <div class="text-red-500"> 삭제된 게시글 입니다.</div>';
+                  
+                    if (reply.file_count > 0) {
+                        repliesHtml +=
+                            '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
+                    }
+
+                    if (reply.content && /!\[.*\]\(http.*\)/.test(reply.content)) {
+                        repliesHtml +=
+                            '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
+                    }
+
+                    repliesHtml += '        </div>';
+                    repliesHtml += '        <div class="flex">';
+         
+      
+             
+                        '</div>'; // 조회수
+               
+                    repliesHtml += '           </div>';
+                    repliesHtml += '        </div>';
+                    repliesHtml += '    </div>';
+                    repliesHtml += '</div>';
+                    repliesHtml += '</div>';
+                }
                 });
 
 

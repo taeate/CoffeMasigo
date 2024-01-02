@@ -14,7 +14,7 @@ class Write_model extends CI_Model {
             'ref' => null,
             're_step' => 0,
             're_level' => 0,
-            'delete_status' => FALSE,
+            'delete_status' => 0,
             'is_notice' => $is_notice,
             'channel_id' => $channel_id
         );
@@ -122,6 +122,7 @@ class Write_model extends CI_Model {
         'user_id' => $user_id,
         'parent_post_id' => $parent_post_id,
         'create_date' => date('Y-m-d H:i:s'),
+        'delete_status' => 0,
         'ref' => $ref,
         're_step' => $re_step,
         're_level' => $re_level,
