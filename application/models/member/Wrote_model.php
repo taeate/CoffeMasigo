@@ -35,7 +35,7 @@ class Wrote_model extends CI_Model {
 
     public function count_wrote_posts($userid) {
         $this->db->where('user_id', $userid);
-        $this->db->where('delete_status', FALSE); 
+        $this->db->where('delete_status', 0); 
         $this->db->order_by('create_date','desc');
         return $this->db->count_all_results('post');
     }
@@ -67,6 +67,7 @@ class Wrote_model extends CI_Model {
 
     public function count_wrote_comment($userid) {
         $this->db->where('user_id', $userid);
+        $this->db->where('delete_status', 0);
         return $this->db->count_all_results('comment');
     }
 
