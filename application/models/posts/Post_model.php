@@ -358,6 +358,27 @@ class Post_model extends CI_Model {
         $this->db->update('post');
        
     }
+
+    public function decrementThumb($post_id) {
+        $this->db->set('thumb', 'thumb-1', FALSE);
+        $this->db->where('post_id', $post_id);
+        $this->db->update('post');
+    }
+
+
+    public function removeThumbRecord($post_id, $user_id) {
+        $this->db->where('post_id', $post_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('post_thumb');
+    }
+
+    public function addThumbRecord($post_id, $user_id) {
+        $data = array(
+            'post_id'=> $post_id,
+            'user_id'=> $user_id
+        );
+        $this->db->insert('post_thumb', $data);
+    }
     
     public function getPostUserId($post_id){
         $this->db->select('user_id');
@@ -373,13 +394,7 @@ class Post_model extends CI_Model {
     }
     
 
-    public function addThumbRecord($post_id, $user_id) {
-        $data = array(
-            'post_id'=> $post_id,
-            'user_id'=> $user_id
-        );
-        $this->db->insert('post_thumb', $data);
-    }
+  
     
 
     public function count_thumb($post_id){

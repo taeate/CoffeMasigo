@@ -337,15 +337,14 @@ class Post extends CI_Controller {
     public function thumbUp(){
         
         $user_id = $this->session->userdata('user_id');
+        $post_id = $this->input->post('postId');
+        
 
         if (!$user_id) {
             // 비회원일 경우 로그인 페이지로 리디렉션하기 전에 메시지 설정
             $this->session->set_flashdata('message', '로그인 후 이용 가능합니다.');
             redirect('/');
         }
-
-        $post_id = $this->input->post('postId');
-        $user_id = $this->session->userdata('user_id');
 
 
          // 게시물의 작성자 ID 가져오기
@@ -357,18 +356,19 @@ class Post extends CI_Controller {
             return;
         }
 
-        if(!$this->Post_model->hasUserAlreadyThumb($post_id, $user_id)){
-            
-            // 사용자가 추천안했다면 증가
+        
+        if ($this->Post_model->hasUserAlreadyThumb($post_id, $user_id)) {
+            // 이미 추천했다면 추천 취소
+            $this->Post_model->decrementThumb($post_id);
+            $this->Post_model->removeThumbRecord($post_id, $user_id);
+    
+            echo json_encode(array('status' => 'thumb_removed'));
+        } else {
+            // 추천안했다면 추천 증가
             $this->Post_model->incrementThumb($post_id);
-
-            // 추천 기록추가
             $this->Post_model->addThumbRecord($post_id, $user_id);
-
-            echo json_encode(array('status' => 'success'));
-        }else{
-
-            echo json_encode(array('status' => 'already_thumbed'));
+    
+            echo json_encode(array('status' => 'thumb_added'));
         }
 
     }

@@ -616,40 +616,42 @@ $(document).ready(function() {
 
 function thumbUp() {
 
-    <?php if(!$this->session->userdata('user_id')): ?>
-    alert('로그인이 필요한 기능입니다.');
-    <?php endif; ?>
+<?php if(!$this->session->userdata('user_id')): ?>
+alert('로그인이 필요한 기능입니다.');
+<?php endif; ?>
 
-    var postId = document.getElementById('post-container').getAttribute('data-post-id');
+var postId = document.getElementById('post-container').getAttribute('data-post-id');
 
 
-    // AJAX 요청을 통해 서버에 추천 처리 요청
-    $.ajax({
-        url: '/posts/post/thumbUp',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            postId: postId,
-        },
-        success: function(response) {
-            if (response.status === 'already_thumbed') {
-                alert('이미 추천한 글입니다.');
-                window.location.href = '/posts/free/' + postId;
-            } if (response.status === 'self_thumb_not_allowed') {
-                alert('본인의 글은 추천이 불가능합니다.');
-                window.location.href = '/posts/free/' + postId;
-            }
-            else if (response.status === 'success') {
-                alert('글을 추천하셨습니다.');
-                window.location.href = '/posts/free/' + postId;
-
-            }
-        },
-        error: function(error) {
-            console.error('Error:', error);
+// AJAX 요청을 통해 서버에 추천 처리 요청
+$.ajax({
+    url: '/posts/post/thumbUp',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+        postId: postId,
+    },
+    success: function(response) {
+        if (response.status === 'thumb_added') {
+            alert('글을 추천하셨습니다.');
+        }else if(response.status === 'self_thumb_not_allowed') {
+            alert('본인의 글은 추천이 불가능합니다.');
+            window.location.href = '/posts/free/' + postId;
         }
-    });
+         else if (response.status === 'thumb_removed') {
+            alert('추천을 취소하셨습니다.');
+        } else if (response.status === 'not_logged_in') {
+            alert('로그인이 필요한 기능입니다.');
+        }
+        // 페이지 새로고침 또는 상태 업데이트
+        window.location.reload();
+    },
+    error: function(error) {
+        console.error('Error:', error);
+    }
+});
 }
+
 </script>
 
 <!-- <?php $this->load->view('layout/footer'); ?> -->
