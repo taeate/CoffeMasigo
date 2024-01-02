@@ -52,8 +52,9 @@ class Write extends CI_Controller {
 
                 $title = $this->input->post('title');
                 $content = $this->input->post('content');
-                $content = htmlspecialchars($content);
-
+                $content = strip_tags($content, '<img><p><strong><h1><br>'); 
+                
+              
                 $channel_id = $this->input->post('channel_id'); 
                 $is_notice = $this->input->post('is_notice') && $user_role == 'admin' ? 1 : 0;
                 
@@ -211,7 +212,7 @@ class Write extends CI_Controller {
                     // 검사 성공: 답글 저장 로직
                     $title = $this->input->post('title');
                     $content = $this->input->post('content');
-                    $content = htmlspecialchars($content);
+                    $content = strip_tags($content, '<img><p><strong><h1><br>'); 
                     $channel_id = $this->input->post('channel_id'); 
                     $new_post_id =$this->Write_model->save_answer_post($title, $content, $user_id, $post_id, $channel_id );
 
@@ -325,6 +326,7 @@ class Write extends CI_Controller {
 
             $title = $this->input->post('title');
             $content = $this->input->post('content');
+            $content = strip_tags($content, '<img><p><strong><h1><br>'); 
             $channel_id = $this->input->post('channel_id'); 
   
             $this->Write_model->edit_post($post_id, $title, $content, $channel_id);

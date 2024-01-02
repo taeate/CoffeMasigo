@@ -15,15 +15,13 @@
                 <li>
                 <a href="/posts/free/<?= $hot_post['post_id'] ?>" class="p-1 hover:bg-gray-200 text-sm overflow-hidden whitespace-nowrap hover:cursor-pointer ">
                     <?= $hot_post['channel_name'] ?> ·
-                    <?php echo mb_strimwidth($hot_post['title'], 0, 25, "..."); ?>
+                    <?php echo htmlspecialchars(mb_strimwidth($hot_post['title'], 0, 25, "...")); ?>
                 </a>
 
                     
                 </li>
                 <?php endforeach;?>
-                <!-- <li>
-                <?php echo mb_strimwidth(" w-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-autow-auto", 0, 35, "..."); ?>     
-                </li> -->
+      
             
             </ul>
         

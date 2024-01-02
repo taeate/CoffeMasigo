@@ -19,7 +19,7 @@
                     <div class="flex justify-normal mb-2">
                         <div class="flex flex-none">
                             <div class="mt-2 text-2xl">
-                                <?php echo $title ?> 에 대한 답변 글 작성
+                                <?php echo htmlspecialchars($title) ?> 에 대한 답변 글 작성
                             </div>
 
                         </div>
@@ -67,7 +67,7 @@
                                 class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                             <input type="text" name="title" id="title"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
-                                value="<?php echo set_value('title'); ?>">
+                                value="<?php echo htmlspecialchars(set_value('title')); ?>">
                             <?php echo form_error('title'); ?>
                         </div>
                         <div class="mb-6" id="editor">

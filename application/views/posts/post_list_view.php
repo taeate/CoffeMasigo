@@ -25,11 +25,19 @@
                                 <div class="flex justify-between w-full">
                                     <div class="flex">
                                         <div class="text-xl font-bold">
-                                            <?php if (isset($channel_name)): ?>
-                                            <h1><?php echo htmlspecialchars($channel_name); ?></h1>
-                                            <?php else: ?>
-                                            <h1>전체글</h1>
-                                            <?php endif; ?>
+                                        <?php 
+                                        $is_notice = $this->uri->segment(3); // URL의 세 번째 세그먼트를 가져옴 (예: 'is_notice')
+
+                                        if (isset($channel_name)) {
+                                            echo "<h1>" . htmlspecialchars($channel_name) . "</h1>";
+                                        } elseif ($is_notice === 'is_notice') { // URL에서 'is_notice' 값을 확인
+                                            echo "<h1>공지사항</h1>";
+                                        } else {
+                                            echo "<h1>전체글</h1>";
+                                        }
+                                        ?>
+
+
                                         </div>
                                     </div>
                                     <div>
@@ -249,7 +257,7 @@
                                                 </div>
                                                 <div class="flex-[4] m-auto">
                                                     <div class="flex">
-                                                        <div><?php echo $post->title; ?></div>
+                                                        <div><?php echo htmlspecialchars($post->title); ?></div>
                                                         <?php if ($post->comment_count > 0): ?>
                                                             <div class="ml-2 text-red-500">
                                                                 [<?php echo $post->comment_count; ?>]
@@ -260,11 +268,13 @@
                                                         <div class="ml-2 text-blue-500"><i
                                                                 class="fa-solid fa-paperclip"></i></div>
                                                         <?php endif; ?>
-                                                        <?php if ($post->content && preg_match('/!\[.*\]\(http.*\)/', $post->content)): ?>
-                                                        <div class="ml-1 text-green-500"><i
-                                                                class="fa-solid fa-image"></i>
-                                                        </div>
+                                                        <?php
+                                                        $decoded_content = htmlspecialchars_decode($post->content);
+                                                        if ($decoded_content && preg_match('/<img\s+[^>]*src="[^"]+"/', $decoded_content)): ?>
+                                                            <div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>
                                                         <?php endif; ?>
+
+                                                        
                                                         <!-- <div class="ml-1 text-red-500"><i class="fa-regular fa-n"></i></div> -->
 
                                                     </div>
@@ -1047,7 +1057,7 @@ function loadReplies(postId) {
                         repliesHtml +=
                             '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
                     }
-
+                    
                     if (reply.content && /!\[.*\]\(http.*\)/.test(reply.content)) {
                         repliesHtml +=
                             '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';

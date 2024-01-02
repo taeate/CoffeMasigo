@@ -38,7 +38,7 @@
                         <?php if($detail_info->is_notice == 1): ?>
                         <div class="text-red-500 bg-red-200 rounded-lg">공지</div>
                         <?php endif; ?>
-                        <div><?php echo $title ?></div><br>
+                        <div><?php echo htmlspecialchars($title) ?></div><br>
                     </div>
                     <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5 text-gray-500 pt-2">
                         <div class="flex flex-none gap-3 items-center justify-center">
@@ -282,7 +282,7 @@
 
                                         </div>
 
-                                        <div class="text-sm" data-comment-content=<?= $content?>><?php echo $content; ?><br>
+                                        <div class="text-sm" data-comment-content="<?= $content?>"><?php echo htmlspecialchars($content); ?><br>
                                         </div>
 
                                     </div>

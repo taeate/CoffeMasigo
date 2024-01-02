@@ -25,7 +25,7 @@
                     <div class="flex justify-normal mb-2">
                         <div class="flex flex-none">
                             <div class="mt-2 text-2xl">
-                                <?php echo $title; ?>
+                                <?php echo htmlspecialchars($title); ?>
                             </div>
 
                         </div>
