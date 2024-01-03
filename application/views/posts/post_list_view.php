@@ -511,11 +511,14 @@ var currentSearchQuery = "";
 
 function searchPosts() {
 
-    var channel_id = document.getElementById('channel-id').value; 
+    // var channel_id = document.getElementById('channel-id').value; 
 
     
 
-    console.log(channel_id);
+    // console.log(channel_id);
+
+    currentOption = document.getElementById('search-options').value;
+    currentFilter = document.getElementById('search-past').value;
     
 
     var selectedPast = document.getElementById('search-past').value;
@@ -534,7 +537,7 @@ function searchPosts() {
             search: searchQuery,
             option: selectedOption,
             filter: selectedPast,
-            channel_id: channel_id 
+            // channel_id: channel_id 
         }, 
         success: function(data) {
             if (data.search_data.length) {
@@ -563,17 +566,27 @@ function searchPosts() {
 
     });
 
+    // $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
+    //     e.preventDefault();
+    //     var href = $(this).attr('href');
+    //     console.log('다음페이지주소:', href); // 디버깅을 위한 로그
+
+    //     var urlParams = new URLSearchParams(href.split('?')[1]);
+    //     var page = urlParams.get('page');
+
+    //     console.log('번호추출', page);
+    //     loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
+    // });
+
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        var href = $(this).attr('href');
-        console.log('다음페이지주소:', href); // 디버깅을 위한 로그
+    e.preventDefault();
+    var href = $(this).attr('href');
+    var urlParams = new URLSearchParams(href.split('?')[1]);
+    var page = urlParams.get('page');
 
-        var urlParams = new URLSearchParams(href.split('?')[1]);
-        var page = urlParams.get('page');
-
-        console.log('번호추출', page);
-        loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
-    });
+    // 현재 검색 옵션과 필터를 넘겨줍니다.
+    loadPage(page, 'search', null, currentOption, currentFilter);
+});
 
 
     return false;
@@ -581,10 +594,10 @@ function searchPosts() {
 
 
 
-function loadPage(page, sort, channelId) {
+function loadPage(page, sort, channelId, option, filter) {
 
 
-    console.log('페이지:', page, '정렬:', sort, '채널아이디:', channelId);
+    console.log('페이지:', page, '정렬:', sort, '채널아이디:', channelId, '옵션:', option, '필터:', filter);
 
     var url = '/posts/all/page/' + page;
 
@@ -618,8 +631,13 @@ function loadPage(page, sort, channelId) {
         }
 
     } else if (sort === 'search') {
-        url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) + '&page=' + page;
+        
+        url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) 
+            + '&option=' + encodeURIComponent(option) 
+            + '&filter=' + encodeURIComponent(filter)
+            + '&page=' + page;
     }
+    
 
     console.log(url);
 

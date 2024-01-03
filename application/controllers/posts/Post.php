@@ -243,8 +243,6 @@ class Post extends CI_Controller {
 
     public function search() {
 
-       
-
         $channel_id = $this->input->get('channel_id', true); // 채널 ID 받기
 
       
@@ -252,13 +250,14 @@ class Post extends CI_Controller {
          $search_query = htmlspecialchars($this->input->get('search', true));
          $search_option = $this->input->get('option', true);
          $search_filter = $this->input->get('filter', true);
+         
 
 
         // 페이지네이션 설정
         $config = array();
         $config['base_url'] = site_url('posts/search?search=' . urlencode($search_query));  
         $config['first_url'] = site_url('posts/search?search=' . urlencode($search_query));
-        $config['total_rows'] = $this->Post_model->count_search_posts($search_query); // 총 게시물수
+        $config['total_rows'] = $this->Post_model->count_search_posts($search_query, $search_option, $search_filter);
         $config['per_page'] = 10; // 페이지당 게시물수
         $config['num_links'] = false;
         $config['use_page_numbers'] = true;
