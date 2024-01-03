@@ -119,6 +119,10 @@
 
                                             <!-- Search Input -->
                                             <div class="relative w-full">
+                                                
+                                                <!-- 현재 채널 ID를 숨겨진 필드로 추가 -->
+                                                <input type="hidden" id="channel-id" name="channel-id" value="<?php echo $this->uri->segment(3); ?>">
+
                                                 <input type="text" name="search" id="search"
                                                     class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg  border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                                                     placeholder="검색" required>
@@ -507,6 +511,13 @@ var currentSearchQuery = "";
 
 function searchPosts() {
 
+    var channel_id = document.getElementById('channel-id').value; 
+
+    
+
+    console.log(channel_id);
+    
+
     var selectedPast = document.getElementById('search-past').value;
 
     var selectedOption = document.getElementById('search-options').value;
@@ -522,8 +533,9 @@ function searchPosts() {
         data: {
             search: searchQuery,
             option: selectedOption,
-            filter: selectedPast
-        }, // 검색어를 서버로 전송
+            filter: selectedPast,
+            channel_id: channel_id 
+        }, 
         success: function(data) {
             if (data.search_data.length) {
                 var postsHtml = '';

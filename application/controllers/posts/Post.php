@@ -243,9 +243,13 @@ class Post extends CI_Controller {
 
     public function search() {
 
+       
+
+        $channel_id = $this->input->get('channel_id', true); // 채널 ID 받기
+
       
          // URL 매개변수에서 검색어와 검색 대상 가져오기
-         $search_query = $this->input->get('search', true); // true를 사용하여 XSS 필터링 활성화 및 기본값 설정
+         $search_query = htmlspecialchars($this->input->get('search', true));
          $search_option = $this->input->get('option', true);
          $search_filter = $this->input->get('filter', true);
 
@@ -282,9 +286,19 @@ class Post extends CI_Controller {
         $start = ($page - 1) * $config['per_page'];
         $start = max($start, 0); // 오프셋이 음수가 되지 않도록 보장
 
+  
+
 
         // 검색 결과 가져오기
         $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
+
+
+            // 검색 결과 가져오기
+            if ($channel_id) {
+            $data['search_data'] = $this->Post_model->search_in_channel($search_query, $search_option, $search_filter, $channel_id, $start, $config['per_page']);
+        } else {
+            $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
+        }
 
               
          // 페이지네이션 링크 

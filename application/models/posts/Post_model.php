@@ -902,6 +902,79 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
     }
     
     
+    public function search_in_channel($search_query, $search_option, $search_filter, $channel_id, $start, $limit) {
+        // HTML 이스케이프 처리
+        $search_query = htmlspecialchars($search_query);
+    
+        // 'channel.name'을 select 절에 포함
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+    
+        // 'channel' 테이블과 조인
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+    
+        // 기존의 from 절 유지
+        $this->db->from('post');
+    
+        // 특정 채널에 대한 게시물만 검색하기 위한 조건 추가
+        $this->db->where('post.channel_id', $channel_id);
+    
+        // 삭제되지 않은 게시물만 검색
+        $this->db->where('post.delete_status', 0);
+    
+        // 검색 옵션에 따른 검색 조건 설정
+        switch($search_option) {
+            case 'title':
+                $this->db->like('title', $search_query);
+                break;
+            case 'content':
+                $this->db->like('content', $search_query);
+                break;
+            case 'author':
+                $this->db->like('user_id', $search_query);
+                break;
+            case 'title-content':
+            default:
+                $this->db->group_start();
+                $this->db->like('title', $search_query);
+                $this->db->or_like('content', $search_query);
+                $this->db->group_end();
+                break;
+        }
+    
+        // 시간 필터 처리
+        if (!empty($search_filter)) {
+            switch($search_filter) {
+                case 'last_day':
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 day')));
+                    break;
+                case 'last_week':
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 week')));
+                    break;
+                case 'last_month':
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 month')));
+                    break;
+                case 'last_year':
+                    $this->db->where('post.create_date >=', date('Y-m-d H:i:s', strtotime('-1 year')));
+                    break;
+            }
+        }
+    
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+    
+        $posts = $query->result_array();
+    
+        // 날짜 형식 변경
+        foreach ($posts as &$post) {
+            if (isset($post['create_date'])) {
+                $post['create_date'] = (new DateTime($post['create_date']))->format('Y.m.d H:i');
+            }
+        }
+    
+        return $posts;
+    }
+    
+    
     
 
  
