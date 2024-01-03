@@ -38,25 +38,30 @@
           <input type="name" name="username" id="username" placeholder="이름" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('username');?>" />  
           <span id="username_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('username'); ?></span>
 
+         <div class="flex justify-between">
           <label class="label">
-            <span class="label-text text-white">아이디</span>        
-            <span>
-                <button title="아이디중복확인" id="check_login_id" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>
-                
+              <span class="label-text text-white">아이디</span>  
+            </label>      
+            <span class="flex items-center">
+                <button title="아이디중복확인" id="check_login_id" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>             
             </span>
-          </label>
+         </div>
+
           <input type="id" name="userid" id="userid" placeholder="아이디" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('userid');?>"  />
               <span id="userid_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('userid'); ?></span>
               <p id="useridStatus_success" class="text-green-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
               <p id="useridStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
               
               
-            <label class="label">
-            <span class="label-text text-white">이메일</span>
-            <span>
-            <button title="이메일 중복확인" id="checkEmail" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>
-            </span>
-            </label>
+              <div class="flex justify-between">
+              <label class="label">
+              <span class="label-text text-white">이메일</span>
+              </label>
+              <span class="flex items-center">      
+              <button title="이메일 중복확인" id="checkEmail" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>
+              </span>
+              </div>
+         
               <input type="email" name="email" id="email" placeholder="qwer@gmail.com" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('email');?>"  />
               <span id="email_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('email'); ?></span>
               <p id="emailStatus_success" class="text-green-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
@@ -140,6 +145,7 @@ $(document).ready(function(){
                     usernameError.text('');
                 } else {
                     // 입력된 값이 정규식과 일치하지 않으면 오류 메시지를 표시하고 유효성 플래그를 false로 설정
+                    $('#useridStatus_failed').text('');
                     usernameError.text('한글만 입력 가능합니다.');
                 }
             });
@@ -152,15 +158,20 @@ $(document).ready(function(){
 
                 if (userid === '') {
                     // 아이디 필드가 비어있을 때
+                    $('#useridStatus_failed').text('');
+                    $('#useridStatus_success').text('');
                     useridError.text('작성필수');
                     isUserIdAvailable = false;
                 } else if (!useridPattern.test(userid)) {
                     // 아이디 패턴과 일치하지 않을 때
                     if(userid.length < 4) {
+                      $('#useridStatus_failed').text('');
                         useridError.text('아이디는 최소 4글자 이상이어야 합니다.');
                     } else if(userid.length > 12) {
+                      $('#useridStatus_failed').text('');
                         useridError.text('아이디는 최대 12글자를 초과할 수 없습니다.');
                     } else {
+                      $('#useridStatus_failed').text('');
                         useridError.text('아이디는 영어 소문자와 숫자로만 작성해주세요.');
                     }
                     isUserIdAvailable = false;
@@ -180,8 +191,14 @@ $(document).ready(function(){
                 if (emailPattern.test(email)) {
                     // 이메일 형식이 유효하면 오류 메시지를 지우고
                     emailError.text('');
-                } else {
+                } else if(email === ''){
+                  $('#emailStatus_success').text('');
+                    $('#emailStatus_failed').text('');
+                    emailError.text('작성필수');
+                }else {
                     // 이메일 형식이 유효하지 않으면 오류 메시지를 표시
+                    $('#emailStatus_success').text('');
+                    $('#emailStatus_failed').text('');
                     emailError.text('유효한 이메일 주소를 입력해주세요.');
                 }
                 // 이메일이 변경되었으므로 중복 확인을 다시 해야 함
@@ -325,28 +342,22 @@ $(document).ready(function(){
           $("#password2_error").text("");
           });
          
-        
-        
 
-
-          // 클라이언트 측 유효성 검사
+           // 필드 값 가져오기
           var username = $('#username').val();
           var userid = $('#userid').val();
           var email = $('#email').val();
           var password1 = $('#password1').val();
           var password2 = $('#password2').val();
-          var username = $('#username').val();
+
           var isValid = true; // 유효성 검사 플래그
 
-           // 이름 유효성 검사 (한글만 허용)
-           $('#username').on('input', function() {
-              var username = $('#username').val();
-              $('#username_error').text('');
-
-              if (!/^[\p{Hangul}]+$/.test(username)) {
-                  $('#username_error').text('한글만 입력 가능합니다.');
-              }
-          });
+     
+          // 이름 유효성 검사 (한글만 허용)
+          if (!/^[가-힣]+$/.test(username)) {
+              isValid = false;
+              $('#username_error').text('한글만 입력 가능합니다.');
+          }
 
       
 
@@ -359,14 +370,14 @@ $(document).ready(function(){
             isValid = true;
           }
 
-          console.log("이메일 체크 전");
+     
           // 이메일 형식이 유효한지 확인
           if (!isValidEmail(email)) {
               isValid = false;
               $('#email_error').text('유효한 이메일 주소를 입력해주세요.');
           }
 
-          console.log("이메일 체크 후");
+       
           
 
           // 이름이 비어있는지
@@ -405,7 +416,7 @@ $(document).ready(function(){
 
 
 
-          console.log("이메일 체크 끝");
+          
 
             // 중복 확인을 하지 않았거나 중복 확인에서 사용 불가능한 경우
           if (!isUserIdAvailable || !isEmailAvailable) {
@@ -424,7 +435,7 @@ $(document).ready(function(){
             }
             return false; 
             }
-            // 중복 확인이 모두 성공했다면 폼 제출을 계속합니다.
+       
            
                 
 

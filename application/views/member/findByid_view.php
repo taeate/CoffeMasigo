@@ -35,10 +35,10 @@
   
         <?php if(isset($findId) && $findId): ?>
           
-          <div class="flex gap-2 text-white">
-            당신의 아이디는
+          <div class="flex gap-2 text-white break-words break-all">
+            <div>당신의 아이디는</div>
             <div class="text-blue-400">"<?php echo $findId; ?>"</div>
-            입니다.
+            <div>입니다.</div>
           </div>
             <!-- 아이디를 찾은 경우: 로그인 버튼 표시 -->
             <div>

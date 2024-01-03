@@ -14,6 +14,16 @@ class Join extends CI_Controller {
 
 	public function index(){
 
+		$this->form_validation->set_rules(
+			'username', 
+			'이름', 
+			'required|regex_match[/^[가-힣]+$/]', 
+			array(
+				'required' => '이름을 입력해주세요.',
+				'regex_match' => '한글만 입력 가능합니다.'
+			)
+		);
+
 		$this->form_validation->set_rules('userid', '아이디', 'required|alpha_numeric|max_length[12]|callback_checkUserId');
 
 		 
