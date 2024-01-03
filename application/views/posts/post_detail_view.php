@@ -148,7 +148,7 @@
 
         </div>
 
-        <div name="댓글">
+        <div name="댓글" class="h-auto">
 
             <div class="flex flex-col w-full mt-4 ">
                 <div name="commnet-name" class="h-auto card bg-white">
@@ -215,6 +215,7 @@
                         </div>
                     </div>
 
+                    <div class="pb-12">
                     <div id="commentsContainer" class="">
                         <?php foreach($comment_info as $comment) : ?>
                         <?php $comment_id = $comment->comment_id; ?>
@@ -282,7 +283,7 @@
 
                                         </div>
 
-                                        <div class="text-sm" data-comment-content="<?= $content?>"><?php echo htmlspecialchars($content); ?><br>
+                                        <div class="text-sm break-words break-all" data-comment-content="<?= $content?>"><?php echo htmlspecialchars($content); ?><br>
                                         </div>
 
                                     </div>
@@ -300,6 +301,7 @@
                         <div class="bg-gray-300">
                             
                         </div>
+                    </div>
                     </div>
 
                 </div>

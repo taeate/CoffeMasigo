@@ -257,7 +257,7 @@
                                                 </div>
                                                 <div class="flex-[4] m-auto">
                                                     <div class="flex">
-                                                        <div><?php echo htmlspecialchars($post->title); ?></div>
+                                                        <div><?php echo $post->title; ?></div>
                                                         <?php if ($post->comment_count > 0): ?>
                                                             <div class="ml-2 text-red-500">
                                                                 [<?php echo $post->comment_count; ?>]

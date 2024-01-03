@@ -211,30 +211,33 @@ class Post extends CI_Controller {
     }
 
     public function comment_delete() {
-    $comment_id = $this->input->post('comment_id');
-
-    if (!empty($comment_id)) {
-        // 댓글 작성자의 user_id 가져오기
-        $user_id = $this->Post_model->get_comment_user_id($comment_id);
-
-        if ($user_id) {
-            // 경험치 2 포인트 차감
-            $this->Write_model->update_experience_points($user_id, -2);
-
-            // 댓글 삭제
-            $this->Post_model->delete_comment($comment_id);
-
-            // 성공적으로 삭제되었다는 응답 보내기
-            echo 'Deleted';
+        $comment_id = $this->input->post('comment_id');
+    
+        if (!empty($comment_id)) {
+            // 댓글 정보 가져오기
+            $comment = $this->Post_model->get_comment_by_id($comment_id);
+    
+            if ($comment && $comment->delete_status == 0) {
+                // 경험치 2 포인트 차감
+                $this->Write_model->update_experience_points($comment->user_id, -2);
+    
+                // 댓글 삭제
+                $this->Post_model->delete_comment($comment_id);
+    
+                // 성공적으로 삭제되었다는 응답 보내기
+                echo 'Deleted';
+            } else {
+                // 오류 처리: 댓글이 이미 삭제되었거나, 댓글 정보를 찾을 수 없음
+                show_error('댓글 정보를 찾을 수 없거나 이미 삭제된 댓글입니다.');
+            }
         } else {
-            // 오류 처리: 댓글 작성자 정보를 찾을 수 없음
-            show_error('댓글 작성자 정보를 찾을 수 없습니다.');
+            // 오류 처리: 잘못된 요청
+            show_error('잘못된 요청입니다.');
         }
-    } else {
-        // 오류 처리: 잘못된 요청
-        show_error('잘못된 요청입니다.');
     }
-}
+    
+
+
 
     
 

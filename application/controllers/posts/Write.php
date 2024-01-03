@@ -340,26 +340,33 @@ class Write extends CI_Controller {
         // $this->load->view("posts/post_edit_view");
     }
 
-    public function post_delete($post_id){
+
+    public function post_delete($post_id) {
 
         $user_id = $this->session->userdata('user_id');
         
         if (!empty($post_id)) {
-
             $post = $this->Write_model->get_post_by_id($post_id);
-
-            if ($post && $post->user_id == $user_id) {
-                // 사용자가 게시글의 작성자인 경우에만 삭제 수행
-                $this->Write_model->update_experience_points($user_id, -5);
-                $this->Write_model->delete_post($post_id);
-            }else {
-               
-                redirect('/posts/free/'.$post_id);
+    
+            if ($post) {
+                if ($post->delete_status == 0 && $post->user_id == $user_id) {
+                    // 게시글이 아직 삭제되지 않았고 사용자가 게시글의 작성자인 경우에만 삭제 수행
+                    $this->Write_model->update_experience_points($user_id, -5);
+                    $this->Write_model->delete_post($post_id);
+                } else {
+                    // 이미 삭제되었거나 작성자가 아닌 경우
+                    redirect('/posts');
+                }
+            } else {
+                // 게시글이 존재하지 않는 경우
+                redirect('/posts');
             }
-            
-            
+        } else {
+            // post_id가 제공되지 않은 경우
+            redirect('/posts');
         }
     }
+    
 
   
 
