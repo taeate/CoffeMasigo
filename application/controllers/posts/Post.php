@@ -245,7 +245,6 @@ class Post extends CI_Controller {
 
         $channel_id = $this->input->get('channel_id', true); // 채널 ID 받기
 
-      
          // URL 매개변수에서 검색어와 검색 대상 가져오기
          $search_query = htmlspecialchars($this->input->get('search', true));
          $search_option = $this->input->get('option', true);
@@ -254,10 +253,11 @@ class Post extends CI_Controller {
 
 
         // 페이지네이션 설정
+        
         $config = array();
         $config['base_url'] = site_url('posts/search?search=' . urlencode($search_query));  
         $config['first_url'] = site_url('posts/search?search=' . urlencode($search_query));
-        $config['total_rows'] = $this->Post_model->count_search_posts($search_query, $search_option, $search_filter);
+        $config['total_rows'] = $this->Post_model->count_search_posts($search_query, $search_option, $search_filter, $channel_id);
         $config['per_page'] = 10; // 페이지당 게시물수
         $config['num_links'] = false;
         $config['use_page_numbers'] = true;
@@ -289,12 +289,12 @@ class Post extends CI_Controller {
 
 
         // 검색 결과 가져오기
-        $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
+        // $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
 
 
-            // 검색 결과 가져오기
-            if ($channel_id) {
-            $data['search_data'] = $this->Post_model->search_in_channel($search_query, $search_option, $search_filter, $channel_id, $start, $config['per_page']);
+        // 검색 결과 가져오기
+        if ($channel_id) {
+             $data['search_data'] = $this->Post_model->search_in_channel($search_query, $search_option, $search_filter, $channel_id, $start, $config['per_page']);
         } else {
             $data['search_data'] = $this->Post_model->search($search_query, $search_option, $search_filter, $start, $config['per_page']);
         }

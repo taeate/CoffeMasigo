@@ -511,12 +511,9 @@ var currentSearchQuery = "";
 
 function searchPosts() {
 
-    // var channel_id = document.getElementById('channel-id').value; 
+    var channel_id = document.getElementById('channel-id').value; 
 
-    
-
-    // console.log(channel_id);
-
+    currentChannelId = channel_id;
     currentOption = document.getElementById('search-options').value;
     currentFilter = document.getElementById('search-past').value;
     
@@ -537,7 +534,7 @@ function searchPosts() {
             search: searchQuery,
             option: selectedOption,
             filter: selectedPast,
-            // channel_id: channel_id 
+            channel_id: channel_id,
         }, 
         success: function(data) {
             if (data.search_data.length) {
@@ -566,17 +563,6 @@ function searchPosts() {
 
     });
 
-    // $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
-    //     e.preventDefault();
-    //     var href = $(this).attr('href');
-    //     console.log('다음페이지주소:', href); // 디버깅을 위한 로그
-
-    //     var urlParams = new URLSearchParams(href.split('?')[1]);
-    //     var page = urlParams.get('page');
-
-    //     console.log('번호추출', page);
-    //     loadPage(page, 'search'); // 추출된 페이지 번호와 검색 정렬 방식 전달
-    // });
 
     $(document).off('click', '.pagination a').on('click', '.pagination a', function(e) {
     e.preventDefault();
@@ -585,7 +571,7 @@ function searchPosts() {
     var page = urlParams.get('page');
 
     // 현재 검색 옵션과 필터를 넘겨줍니다.
-    loadPage(page, 'search', null, currentOption, currentFilter);
+    loadPage(page, 'search', currentChannelId, currentOption, currentFilter);
 });
 
 
@@ -631,13 +617,17 @@ function loadPage(page, sort, channelId, option, filter) {
         }
 
     } else if (sort === 'search') {
-        
+        // Search 정렬 URL 설정
         url = '/posts/search?search=' + encodeURIComponent(currentSearchQuery) 
             + '&option=' + encodeURIComponent(option) 
             + '&filter=' + encodeURIComponent(filter)
             + '&page=' + page;
+        // 채널 ID가 있는 경우 URL에 추가
+        if (channelId) {
+            url += '&channel_id=' + encodeURIComponent(channelId);
+        }
     }
-    
+
 
     console.log(url);
 
