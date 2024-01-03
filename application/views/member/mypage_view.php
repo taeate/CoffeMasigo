@@ -35,10 +35,10 @@
                         
                         </div>
 
-                        <div class="grid grid-cols-2 grid-rows-2 gap-4 mt-12">
+                        <div class="grid grid-cols-2 grid-rows-2 gap-4 mt-12 text-black">
 
                             <div name="1">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow">
                                         <div class="p-6 font-bold text-lg">MEMBER</div>
                                         <hr>
                                         <div class="p-6">
@@ -62,7 +62,7 @@
                             </div>
 
                             <div name="2">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
                                         <div class="p-6 font-bold text-lg">비밀번호</div>
                                         <hr>
                                         <div class="p-6">
@@ -75,7 +75,7 @@
                                                 <form id="password-form" class="space-y-4" action="#" method="post">
                                                
                                                     <div>
-                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">비밀번호</label>
+                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">비밀번호</label>
                                                         <input type="password" name="password0" id="password0" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                                                         <?php if ($this->session->flashdata('error')): ?>
                                                         <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
@@ -112,7 +112,7 @@
 
 
                             <div name="3">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
                                         <div class="p-6 font-bold text-lg">내활동</div>
                                         <hr>
                                         <div class="p-6 flex flex-col">
@@ -124,7 +124,7 @@
                             </div>
 
                             <div name="4">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
                                         <div class="p-6">
                                             <div class="font-bold text-lg">소개글</div>
                                             <div class="text-gray-500 mt-4"><?php echo $user_data->introduction ?></div>
