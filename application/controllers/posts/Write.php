@@ -326,7 +326,7 @@ class Write extends CI_Controller {
 
             $title = $this->input->post('title');
             $content = $this->input->post('content');
-            $content = strip_tags($content, '<img><p><strong><h1><br>'); 
+            
             $channel_id = $this->input->post('channel_id'); 
   
             $this->Write_model->edit_post($post_id, $title, $content, $channel_id);

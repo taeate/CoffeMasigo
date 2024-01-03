@@ -3,20 +3,20 @@
 <body>
 
     <div class="flex flex-col bg-gray-200 h-auto">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
         <!-- Header -->
         <header class="bg-gray-800 text-white text-center">
            
         </header>
 
         <!-- Body -->
-        <div class="flex flex-1 mt-[350px] gap-4 mx-[300px] z-10 relative">
+        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
             <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
             <!-- Content -->
-            <main class="flex-1">
+            <main class="flex-1 w-min-[1044px]">
                 <div id="content" class="flex flex-col contentbox z-10">
                     <div name="top-box" class="flex flex-col ">
                         <div name="search-nav" class="searchbox z-30 h-auto bg-white place-items-center shadow-md">
@@ -56,22 +56,22 @@
                                 <div name="order-by">
                                     <div class="flex">
                                         <div>
-                                            <button class="btn btn-sm btn-accent hover:text-white"
+                                            <button class="p-2 btn btn-sm btn-accent text-white w-auto h-auto"
                                                 onclick="LatestOrderBy(getChannelIdFromUrl())">
                                                 <i class="fa-solid fa-clock-rotate-left"></i>최신</button>
                                         </div>
                                         <div class="ml-4">
-                                            <button class="btn btn-sm btn-accent hover:text-white"
+                                            <button class="p-2 btn btn-sm btn-accent text-white w-auto h-auto"
                                                 onclick="ThumbOrderBy(getChannelIdFromUrl())">
                                                 <i class="fa-solid fa-thumbs-up"></i>추천수</button>
                                         </div>
                                         <div class="ml-4">
-                                            <button class="btn btn-sm btn-accent hover:text-white"
+                                            <button class="p-2 btn btn-sm btn-accent w-auto h-auto"
                                                 onclick="ViewsOrderBy(getChannelIdFromUrl())">
                                                 <i class="fa-solid fa-eye"></i>조회수</button>
                                         </div>
                                         <div class="ml-4">
-                                            <label class="btn btn-sm btn-accent hover:text-white">
+                                            <label class="p-2 btn btn-sm btn-accent w-auto h-auto">
                                                 
                                                 <input type="checkbox" id="toggleNoticesCheckbox" onchange="hideNotices();">
 
@@ -156,9 +156,9 @@
                                 <div class="stat-figure text-primary">
                                     <i class="fa-solid fa-pen-nib fa-xl"></i>
                                 </div>
-                                <div class="stat-title">글을 가장 많이 쓴사람</div>
-                                <div class="text-primary font-bold text-xl"><?php echo htmlspecialchars($top_poster->user_id) ?></div>
-                                <div class="stat-desc mt-1">누적 게시글수: <?php echo htmlspecialchars($top_poster->post_count) ?></div>
+                                <div class="stat-title text-gray-600">글을 가장 많이 쓴사람</div>
+                                <div class="text-primary font-bold text-xl "><?php echo htmlspecialchars($top_poster->user_id) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">누적 게시글수: <?php echo htmlspecialchars($top_poster->post_count) ?></div>
                                 <!-- 게시글 수 표시 -->
                             </div>
 
@@ -166,10 +166,10 @@
                                 <div class="stat-figure text-secondary">
                                     <i class="fa-solid fa-comment fa-xl"></i>
                                 </div>
-                                <div class="stat-title">댓글을 가장 많이 쓴 사람</div>
+                                <div class="stat-title text-gray-600">댓글을 가장 많이 쓴 사람</div>
                                 <div class=" text-secondary font-bold text-xl"><?php echo htmlspecialchars($top_commenter->user_id) ?>
                                 </div>
-                                <div class="stat-desc mt-1">누적 댓글수: <?php echo htmlspecialchars($top_commenter->comment_count) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">누적 댓글수: <?php echo htmlspecialchars($top_commenter->comment_count) ?></div>
                                 <!-- 댓글 수 표시 -->
                             </div>
 
@@ -177,9 +177,9 @@
                                 <div class="stat-figure text-secondary">
                                     <i class="fa-solid fa-thumbs-up fa-xl"></i>
                                 </div>
-                                <div class="stat-title ">추천수를 제일 많이 받은사람</div>
+                                <div class="stat-title text-gray-600 ">추천수를 제일 많이 받은사람</div>
                                 <div class="font-bold text-xl"><?php echo htmlspecialchars($top_thumb->user_id) ?></div>
-                                <div class="stat-desc mt-1">누적 추천수: <?php echo htmlspecialchars($top_thumb->thumb_count) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">누적 추천수: <?php echo htmlspecialchars($top_thumb->thumb_count) ?></div>
                                 <!-- 추천 수 표시 -->
                             </div>
 
@@ -263,7 +263,7 @@
                                                     <div class="flex">
                                                         <div><?php echo $post->title; ?></div>
                                                         <?php if ($post->comment_count > 0): ?>
-                                                            <div class="ml-2 text-red-500">
+                                                            <div class="ml-1 text-red-500">
                                                                 [<?php echo $post->comment_count; ?>]
                                                             </div>
                                                         <?php endif; ?>
@@ -782,7 +782,7 @@ function LatestOrderBy(channelId) {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log(data);
+            
             var postsHtml = '';
             data.posts.forEach(function(post) {
                 postsHtml += createPostHtml(post);
@@ -972,7 +972,7 @@ function loadNotices() {
         apiUrl += '/channel/' + channelId; // 채널별 API 경로 조정
     }
     
-    console.log(apiUrl);
+    
 
     $.ajax({
         url: apiUrl,

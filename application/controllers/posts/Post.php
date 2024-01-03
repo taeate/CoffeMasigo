@@ -450,19 +450,14 @@ class Post extends CI_Controller {
 
     public function LatestOrderBy_Channel($channel_id){
 
+
         
-        // $channel_id = $this->input->get('channel_id');
-        // $page = $this->input->get('page') ? $this->input->get('page') : 1;
-        // $page = max(1, (int)$page); // $page가 숫자가 아닌 경우를 대비해 형변환을 하고, 최소값을 1로 설정합니다.
-        
-        // echo $page;
+     
         //페이지네이션 설정
         $config = array();
         $config['base_url'] = site_url('posts/post/LatestOrderBy_Channel/' . $channel_id . '/page/');
         $config['first_url'] = site_url('posts/post/LatestOrderBy_Channel/' . $channel_id . '/page/1');
         $config['uri_segment'] = 6; // URL에서 페이지 번호가 있는 세그먼트 번호 조정
-        // echo '채널아이디는: ';
-        // var_dump($channel_id);
        
         $config['total_rows'] = $this->Post_model->count_posts_for_channel($channel_id); // 총 게시물수
         $config['per_page'] = 10; // 페이지당 게시물수
@@ -548,7 +543,6 @@ class Post extends CI_Controller {
           // 페이지네이션 링크 생성
          $data['link'] = $this->pagination->create_links();
         
-
 
         $data['get_list'] = $this->Post_model->get_posts_ordered_by_thumb($start,$config['per_page']);
         

@@ -913,6 +913,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         // 날짜 형식 변경 및 답글 수 추가
         foreach ($notices as $notice) {
         $notice->create_date = (new DateTime($notice->create_date))->format('Y.m.d H:i');
+        $notice->title = htmlspecialchars($notice->title);
 
         // 각 공지사항에 대한 답글 수
         $replies = $this->get_reply_to_post($notice->post_id);

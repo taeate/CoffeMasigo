@@ -2,7 +2,7 @@
 
 <body>
 
-<div class="flex flex-col bg-gray-300 h-auto">
+<div class="flex flex-col bg-gray-300 h-auto text-black">
 <img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
   <!-- Header -->
   <header class=" text-white text-center">
@@ -101,7 +101,7 @@
             <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
             <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
             <div name="내용" class="flex border-b px-8 py-8">
-                <div class=" w-full toastui-editor-contents">
+                <div class=" w-full toastui-editor-contents whitespace-pre-wrap">
                     <?php echo htmlspecialchars_decode($content) ?>
                 </div>
                 

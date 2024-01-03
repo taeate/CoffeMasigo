@@ -1,194 +1,212 @@
 <?php $this->load->view('layout/header'); ?>
 
-<div class="flex-container" style="display: flex; margin: 400px;">
-    <!-- 사이드바 -->
-    <div class="w-80">
-        <?php $this->load->view('layout/sidebar'); ?>
-    </div>
-    <!-- <body class="mt-96"> -->
-    <div class="content ml-8" style="flex: 3;">
-        <div class="flex flex-col w-full ">
-            <div class="h-auto bg-base-100">
-                <div name="title" class="mt-8 ml-12 mr-12">
+<body>
+    <div class="flex flex-col bg-gray-200 h-auto">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
+        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+             <!-- Sidebar -->
+             <aside class="w-84">
+                <?php $this->load->view('layout/sidebar'); ?>
+            </aside>
+            <main class="flex-1">
+            <div class="flex-container">
+          
+                    <div class="flex flex-col w-full ">
+                        <div class="h-auto bg-white">
+                            <div name="title" class="mt-8 ml-12 mr-12">
 
 
 
-                    <?php if($before_data): ?>
-                    <?php $title = $before_data['post_info']->title; ?>
-                    <?php $content = $before_data['post_info']->content; ?>
-                    <?php $post_id = $before_data['post_info']->post_id; ?>
-                    <?php $channel_name = $before_data['post_info']->channel_name; ?>
+                                <?php if($before_data): ?>
+                                <?php $title = $before_data['post_info']->title; ?>
+                                <?php $content = $before_data['post_info']->content; ?>
+                                <?php $post_id = $before_data['post_info']->post_id; ?>
+                                <?php $channel_name = $before_data['post_info']->channel_name; ?>
 
 
 
 
-                    <div class="flex justify-normal mb-2">
-                        <div class="flex flex-none">
-                            <div class="mt-2 text-2xl">
-                                <?php echo htmlspecialchars($title); ?>
+                                <div class="flex justify-normal mb-2">
+                                    <div class="flex flex-none">
+                                        <div class="mt-2 text-2xl font-bold">게시글작성</div>
+                                    </div>
+                                    <!-- <div class="flex flex-none">
+                                        <div class="mt-2 text-2xl">
+                                            제목: <?php echo htmlspecialchars($title); ?>
+                                        </div>
+
+                                    </div> -->
+                                    <div class="grow"></div>
+                                    <div class="flex flex-none">
+                                        <?php if($user_role == 'admin'): ?>
+                                        <div class="form-control mr-4">
+                                            <label class="cursor-pointer label">
+                                                <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
+                                                <span class="label-text ml-1">공지로등록</span>
+                                            </label>
+                                        </div>
+                                        <?php endif; ?>
+                                        <!-- <div class="form-control ml-4">
+                                            <label class="cursor-pointer label">
+                                                <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
+                                                <span class="label-text ml-1">전체공개</span>
+                                            </label>
+                                        </div> -->
+
+                                    </div>
+                                </div>
+
+
+                                <form id="edit_form" method="POST" class="mt-8" enctype="multipart/form-data"
+                                    data-post-id="<?= $post_id ?>">
+                                    <div class="mb-4">
+                                        <select name="channel_id" class="select select-bordered w-52 h-4 max-w-xs mt-2 bg-white">
+                                            <option disabled selected>채널선택</option>
+                                            <option value="3"
+                                                <?php if ($before_data['post_info']->channel_id == 3) echo 'selected'; ?>>자유게시판
+                                            </option>
+                                            <option value="4"
+                                                <?php if ($before_data['post_info']->channel_id == 4) echo 'selected'; ?>>7세대 머스탱
+                                            </option>
+                                            <option value="5"
+                                                <?php if ($before_data['post_info']->channel_id == 5) echo 'selected'; ?>>머스탱 5.0
+                                            </option>
+                                            <option value="6"
+                                                <?php if ($before_data['post_info']->channel_id == 6) echo 'selected'; ?>>머스탱 2.3
+                                                에코부스터</option>
+                                            <option value="7"
+                                                <?php if ($before_data['post_info']->channel_id == 7) echo 'selected'; ?>>머스탱은 OOO
+                                                이다</option>
+                                            <option value="8"
+                                                <?php if ($before_data['post_info']->channel_id == 8) echo 'selected'; ?>>머스탱 시승기 공유
+                                            </option>
+                                            <option value="9"
+                                                <?php if ($before_data['post_info']->channel_id == 9) echo 'selected'; ?>>머스탱 연비 공유
+                                            </option>
+                                            <option value="10"
+                                                <?php if ($before_data['post_info']->channel_id == 10) echo 'selected'; ?>>머스탱 부품 공유
+                                            </option>
+                                            <option value="11"
+                                                <?php if ($before_data['post_info']->channel_id == 11) echo 'selected'; ?>>
+                                                맛집/여행/드라이브</option>
+                                            <option value="12"
+                                                <?php if ($before_data['post_info']->channel_id == 12) echo 'selected'; ?>>리스/승계
+                                            </option>
+                                            <option value="13"
+                                                <?php if ($before_data['post_info']->channel_id == 13) echo 'selected'; ?>>사건사고
+                                            </option>
+                                            <option value="14"
+                                                <?php if ($before_data['post_info']->channel_id == 14) echo 'selected'; ?>>QNA
+                                            </option>
+                                            <option value="16"
+                                                <?php if ($before_data['post_info']->channel_id == 16) echo 'selected'; ?>>서울
+                                            </option>
+                                            <option value="17"
+                                                <?php if ($before_data['post_info']->channel_id == 17) echo 'selected'; ?>>대전
+                                            </option>
+                                            <option value="18"
+                                                <?php if ($before_data['post_info']->channel_id == 18) echo 'selected'; ?>>대구
+                                            </option>
+                                            <option value="19"
+                                                <?php if ($before_data['post_info']->channel_id == 19) echo 'selected'; ?>>부산
+                                            </option>
+                                            <option value="20"
+                                                <?php if ($before_data['post_info']->channel_id == 20) echo 'selected'; ?>>제주
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="title"
+                                            class="block mb-2 font-bold text-gray-900 bg-white text-lg">제목</label>
+                                        <input type="text" name="title" id="title"
+                                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                            value="<?php echo htmlspecialchars($title); ?>">
+
+                                    </div>
+                                    <div class="mb-6" id="editor">
+
+
+                                        <label for="content"
+                                            class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"></label>
+
+                                        <textarea class="h-36" type="text" name="content"
+                                            id="content"><?php echo htmlspecialchars_decode($content); ?></textarea>
+
+
+                                    </div>
+
+                                    <div class="flex justify-between">
+                                        <div class="mt-2">
+                                            <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
+                                            <input type="file" id="file" name="file[]"
+                                                class="file-input file-input-bordered w-full max-w-xs bg-white" multiple />
+                                            <div id="uploaded-files"></div>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts/free/<?=$post_id?>">취소</a></button>
+                                            <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">작성</button>
+                                        </div>
+                                    </div>
+
+
+                                </form>
+
                             </div>
 
-                        </div>
-                        <div class="grow"></div>
-                        <div class="flex flex-none">
-                            <?php if($user_role == 'admin'): ?>
-                            <div class="form-control mr-4">
-                                <label class="cursor-pointer label">
-                                    <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
-                                    <span class="label-text ml-1">공지로등록</span>
-                                </label>
+                            <div class="m-8">
+                                <div class="mt-4 flex flex-col">
+                                <?php if (!empty($before_data['files'])): ?>
+                                    <div><strong>[첨부된 파일]</strong></div>
+                                    <div id="existing-files">
+                                        <?php foreach ($before_data['files'] as $file): ?>
+                                        <div id="file-<?php echo $file->file_id; ?>">
+                                            <?php echo $file->file_name; ?>
+                                            <button class="bg-blue-500 rounded text-white w-8 h-6 m-2"
+                                                onclick="deleteFile('<?php echo $file->file_id; ?>', '<?php echo $post_id; ?>')">X</button>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+
+
                             <?php endif; ?>
-                            <!-- <div class="form-control ml-4">
-                                <label class="cursor-pointer label">
-                                    <input type="checkbox" checked="checked" class="checkbox checkbox-accent" />
-                                    <span class="label-text ml-1">전체공개</span>
-                                </label>
-                            </div> -->
-
                         </div>
+
+                        <button id="scrollTopBtn"
+                            class="w-24 fixed hover:bg-green-500 bottom-16 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            위로<i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                        <button id="scrollBottomBtn"
+                            class="w-24 fixed bottom-4 right-4 bg-blue-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">
+                            아래로<i class="fa-solid fa-arrow-down"></i>
+                        </button>
+
                     </div>
 
 
-                    <form id="edit_form" method="POST" class="mt-8" enctype="multipart/form-data"
-                        data-post-id="<?= $post_id ?>">
-                        <div class="mb-4">
-                            <select name="channel_id" class="select select-bordered w-52 h-4 max-w-xs mt-2">
-                                <option disabled selected>채널선택</option>
-                                <option value="3"
-                                    <?php if ($before_data['post_info']->channel_id == 3) echo 'selected'; ?>>자유게시판
-                                </option>
-                                <option value="4"
-                                    <?php if ($before_data['post_info']->channel_id == 4) echo 'selected'; ?>>7세대 머스탱
-                                </option>
-                                <option value="5"
-                                    <?php if ($before_data['post_info']->channel_id == 5) echo 'selected'; ?>>머스탱 5.0
-                                </option>
-                                <option value="6"
-                                    <?php if ($before_data['post_info']->channel_id == 6) echo 'selected'; ?>>머스탱 2.3
-                                    에코부스터</option>
-                                <option value="7"
-                                    <?php if ($before_data['post_info']->channel_id == 7) echo 'selected'; ?>>머스탱은 OOO
-                                    이다</option>
-                                <option value="8"
-                                    <?php if ($before_data['post_info']->channel_id == 8) echo 'selected'; ?>>머스탱 시승기 공유
-                                </option>
-                                <option value="9"
-                                    <?php if ($before_data['post_info']->channel_id == 9) echo 'selected'; ?>>머스탱 연비 공유
-                                </option>
-                                <option value="10"
-                                    <?php if ($before_data['post_info']->channel_id == 10) echo 'selected'; ?>>머스탱 부품 공유
-                                </option>
-                                <option value="11"
-                                    <?php if ($before_data['post_info']->channel_id == 11) echo 'selected'; ?>>
-                                    맛집/여행/드라이브</option>
-                                <option value="12"
-                                    <?php if ($before_data['post_info']->channel_id == 12) echo 'selected'; ?>>리스/승계
-                                </option>
-                                <option value="13"
-                                    <?php if ($before_data['post_info']->channel_id == 13) echo 'selected'; ?>>사건사고
-                                </option>
-                                <option value="14"
-                                    <?php if ($before_data['post_info']->channel_id == 14) echo 'selected'; ?>>QNA
-                                </option>
-                                <option value="16"
-                                    <?php if ($before_data['post_info']->channel_id == 16) echo 'selected'; ?>>서울
-                                </option>
-                                <option value="17"
-                                    <?php if ($before_data['post_info']->channel_id == 17) echo 'selected'; ?>>대전
-                                </option>
-                                <option value="18"
-                                    <?php if ($before_data['post_info']->channel_id == 18) echo 'selected'; ?>>대구
-                                </option>
-                                <option value="19"
-                                    <?php if ($before_data['post_info']->channel_id == 19) echo 'selected'; ?>>부산
-                                </option>
-                                <option value="20"
-                                    <?php if ($before_data['post_info']->channel_id == 20) echo 'selected'; ?>>제주
-                                </option>
-                            </select>
-                        </div>
-                        <div class="mb-6">
-                            <label for="title"
-                                class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
-                            <input type="text" name="title" id="title"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                value="<?php echo htmlspecialchars($title); ?>">
-
-                        </div>
-                        <div class="mb-6" id="editor">
 
 
-                            <label for="content"
-                                class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"></label>
 
-                            <textarea class="h-36" type="text" name="content"
-                                id="content"><?php echo htmlspecialchars($content); ?></textarea>
+                    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+                    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
 
-                        </div>
-
-                        <div class="flex justify-between">
-                            <div class="mt-2">
-                                <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                <input type="file" id="file" name="file[]"
-                                    class="file-input file-input-bordered w-full max-w-xs" multiple />
-                                <div id="uploaded-files"></div>
-                            </div>
-                            <div>
-                                <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">취소</button>
-                                <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">작성</button>
-                            </div>
-                        </div>
-
-
-                    </form>
-
+                
                 </div>
-
-                <div class="m-8">
-                    <div class="mt-4 flex flex-col">
-                    <?php if (!empty($before_data['files'])): ?>
-                        <div><strong>[첨부된 파일]</strong></div>
-                        <div id="existing-files">
-                            <?php foreach ($before_data['files'] as $file): ?>
-                            <div id="file-<?php echo $file->file_id; ?>">
-                                <?php echo $file->file_name; ?>
-                                <button class="bg-blue-500 rounded text-white w-8 h-6 m-2"
-                                    onclick="deleteFile('<?php echo $file->file_id; ?>', '<?php echo $post_id; ?>')">X</button>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
+        
+            </main>
+            <!-- Rightbar -->
+            <aside class="w-84">
+                <?php $this->load->view('layout/rightbar'); ?>
+            </aside>
 
 
-                <?php endif; ?>
-            </div>
-
-            <button id="scrollTopBtn"
-                class="w-24 fixed hover:bg-green-500 bottom-16 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                위로<i class="fa-solid fa-arrow-up"></i>
-            </button>
-            <button id="scrollBottomBtn"
-                class="w-24 fixed bottom-4 right-4 bg-blue-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">
-                아래로<i class="fa-solid fa-arrow-down"></i>
-            </button>
 
         </div>
-
-
-
-
-
-        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-
-
-        </body>
     </div>
-</div>
+</body>
 
 <style>
     .toastui-editor-mode-switch {

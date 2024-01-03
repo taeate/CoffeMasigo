@@ -5,8 +5,6 @@ class Write_model extends CI_Model {
 
     public function set_article($title, $content, $user_id, $is_notice, $channel_id) {
 
-        
-
         date_default_timezone_set('Asia/Seoul');
 
         $data = array(
