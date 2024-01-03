@@ -113,7 +113,7 @@
                                 class="block mb-2 font-bold text-gray-900 dark:text-white text-lg">제목</label>
                             <input type="text" name="title" id="title"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                value="<?php echo $title; ?>">
+                                value="<?php echo htmlspecialchars($title); ?>">
 
                         </div>
                         <div class="mb-6" id="editor">
@@ -123,7 +123,7 @@
                                 class="block mb-2 font-bold text-gray-900 dark:text-white text-lg"></label>
 
                             <textarea class="h-36" type="text" name="content"
-                                id="content"><?php echo $content; ?></textarea>
+                                id="content"><?php echo htmlspecialchars($content); ?></textarea>
 
 
                         </div>

@@ -58,6 +58,8 @@ class Post extends CI_Controller {
 
 
         foreach ($data['get_list'] as $post) {
+            $post->title = htmlspecialchars($post->title);
+            $post->content = htmlspecialchars($post->content);
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
@@ -287,6 +289,8 @@ class Post extends CI_Controller {
 
         
         foreach ($data['search_data'] as &$post) { // 참조를 사용하여 각 게시글을 수정
+            $post['title'] = htmlspecialchars($post['title']);
+            $post['content'] = htmlspecialchars($post['content']);
             $post['comment_count'] = $this->Post_model->count_comment($post['post_id']);
             $post['replies'] = $this->Post_model->get_reply_to_post_count($post['post_id']);
         }
@@ -409,6 +413,8 @@ class Post extends CI_Controller {
         $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest($start,$config['per_page']);
         
         foreach ($data['get_list'] as &$post) {
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -475,8 +481,10 @@ class Post extends CI_Controller {
        $data['get_list'] = $this->Post_model->get_posts_ordered_by_latest_for_channel($channel_id,$start,$config['per_page']);
        
        foreach ($data['get_list'] as &$post) {
-       $post->comment_count = $this->Post_model->count_comment($post->post_id);
-       $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
+        $post->comment_count = $this->Post_model->count_comment($post->post_id);
+        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
 
        if ($this->input->is_ajax_request()) {
@@ -529,6 +537,8 @@ class Post extends CI_Controller {
         $data['get_list'] = $this->Post_model->get_posts_ordered_by_thumb($start,$config['per_page']);
         
         foreach ($data['get_list'] as &$post) {
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -591,6 +601,8 @@ class Post extends CI_Controller {
        $data['get_list'] = $this->Post_model->get_posts_ordered_by_thumb_for_channel($channel_id,$start,$config['per_page']);
        
        foreach ($data['get_list'] as &$post) {
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
        $post->comment_count = $this->Post_model->count_comment($post->post_id);
        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
@@ -643,6 +655,8 @@ class Post extends CI_Controller {
         
         
         foreach ($data['get_list'] as &$post) {
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -703,8 +717,10 @@ class Post extends CI_Controller {
        $data['get_list'] = $this->Post_model->get_posts_ordered_by_views_for_channel($channel_id,$start,$config['per_page']);
        
        foreach ($data['get_list'] as &$post) {
-       $post->comment_count = $this->Post_model->count_comment($post->post_id);
-       $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
+        $post->title = htmlspecialchars($post->title);
+        $post->content = htmlspecialchars($post->content);
+        $post->comment_count = $this->Post_model->count_comment($post->post_id);
+        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
 
        if ($this->input->is_ajax_request()) {
@@ -728,6 +744,8 @@ class Post extends CI_Controller {
         $data['get_list'] = $this->Post_model->get_posts();
 
         foreach ($data['get_list'] as &$post) {
+            $post->title = htmlspecialchars($post->title);
+            $post->content = htmlspecialchars($post->content);
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
         }
@@ -806,6 +824,8 @@ class Post extends CI_Controller {
         $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
         foreach ($data['get_list'] as $post) {
+            $post->title = htmlspecialchars($post->title);
+            $post->content = htmlspecialchars($post->content);
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
@@ -875,6 +895,8 @@ class Post extends CI_Controller {
         $data['hot_posts'] = $this->Post_model->get_hot_posts();
 
         foreach ($data['get_list'] as &$post) {
+            $post->title = htmlspecialchars($post->title);
+            $post->content = htmlspecialchars($post->content);
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);

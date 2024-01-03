@@ -1023,7 +1023,7 @@ function loadReplies(postId) {
         
     } else {
 
-        repliesContainer.addClass('p-2 bg-gray-200'); 
+        repliesContainer.addClass(' bg-gray-200'); 
         $.ajax({
         url: '/posts/post/get_replies',
         data: {

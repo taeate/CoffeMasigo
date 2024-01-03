@@ -52,7 +52,7 @@ class Write extends CI_Controller {
 
                 $title = $this->input->post('title');
                 $content = $this->input->post('content');
-                $content = strip_tags($content, '<img><p><strong><h1><br>'); 
+                
                 
               
                 $channel_id = $this->input->post('channel_id'); 
@@ -350,7 +350,7 @@ class Write extends CI_Controller {
 
             if ($post && $post->user_id == $user_id) {
                 // 사용자가 게시글의 작성자인 경우에만 삭제 수행
-                $this->Write_model->update_experience_points($user_id, -2);
+                $this->Write_model->update_experience_points($user_id, -5);
                 $this->Write_model->delete_post($post_id);
             }else {
                

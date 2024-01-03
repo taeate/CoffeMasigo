@@ -5,7 +5,7 @@ class Write_model extends CI_Model {
 
     public function set_article($title, $content, $user_id, $is_notice, $channel_id) {
 
-        $content = htmlspecialchars($content);
+        
 
         date_default_timezone_set('Asia/Seoul');
 
@@ -95,7 +95,7 @@ class Write_model extends CI_Model {
     public function save_answer_post($title, $content, $user_id, $parent_post_id, $channel_id) {
 
     $content = htmlspecialchars($content);
-    
+
     date_default_timezone_set('Asia/Seoul');
     
     $ref = null;

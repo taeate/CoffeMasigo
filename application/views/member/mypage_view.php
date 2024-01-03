@@ -71,7 +71,7 @@
                                             <dialog id="my_modal_1" class="modal">
                                             <div class="modal-box">
                                                 <h3 class="font-bold text-xl mt-4 mb-4">비밀번호변경</h3>
-                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal()">✕</button> 
+                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal1()">✕</button> 
                                                 <form id="password-form" class="space-y-4" action="#" method="post">
                                                
                                                     <div>
@@ -84,7 +84,10 @@
                                                         
                                                     </div>
                                                     <div>
-                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">변경할 비밀번호</label>
+                                                        <div class="flex gap-1">
+                                                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">변경할 비밀번호</label>
+                                                            <span class="text-sm text-red-500">(최소 4자 이상, 영문과 숫자를 모두 포함)</span>
+                                                        </div>
                                                         <input type="password" name="password1" id="password1" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                                                         <div class="text-red-500" id="password_error_1"><?php echo form_error('password1'); ?></div>
                                                     </div>
@@ -133,7 +136,7 @@
                                              <dialog id="my_modal_2" class="modal">
                                                 <div class="modal-box">
                                                     <h3 class="font-bold text-xl mt-4 mb-4">소개글 변경</h3>
-                                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal()">✕</button> 
+                                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal2()">✕</button> 
                                                     <form id="intro-form" class="space-y-4" action="#" method="post">
                                                 
                                                         <div>
@@ -289,14 +292,16 @@ function cancelProfileChange(event) {
 
 
 
-function closeModal() {
+function closeModal1() {
     var modal = document.getElementById('my_modal_1');
+    console.log('클릭됨');
     modal.close();
 }
 
 
-function closeModal() {
+function closeModal2() {
     var modal = document.getElementById('my_modal_2');
+    console.log('클릭됨');
     modal.close();
 }
 

@@ -14,9 +14,37 @@ class Mypage extends CI_Controller {
         $this->load->library('form_validation');
     }  
     public function index() {
-        $this->form_validation->set_rules('password0', '비밀번호', 'required|callback_password_check', array('required' => '비밀번호가 입력해주세요.'));
-        $this->form_validation->set_rules('password1', '변경할 비밀번호', 'required|callback_no_previous_password', array('required' => '변경할 비밀번호를 입력해주세요.'));
-        $this->form_validation->set_rules('password2', '비밀번호 확인', 'required|matches[password1]', array('required' => '비밀번호를 입력해주세요.'));
+        
+         // 기존 비밀번호 검증
+            $this->form_validation->set_rules(
+                'password0', 
+                '현재 비밀번호', 
+                'required|callback_password_check', 
+                array('required' => '현재 비밀번호를 입력해주세요.')
+            );
+
+            // 새로운 비밀번호 검증
+            $this->form_validation->set_rules(
+                'password1', 
+                '변경할 비밀번호', 
+                'required|min_length[4]|regex_match[/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/]', 
+                array(
+                    'required' => '변경할 비밀번호를 입력해주세요.',
+                    'min_length' => '변경할 비밀번호는 최소 4자 이상이어야 합니다.',
+                    'regex_match' => '변경할 비밀번호는 영문과 숫자를 조합하여야 합니다.'
+                )
+            );
+
+            // 비밀번호 확인 검증
+            $this->form_validation->set_rules(
+                'password2', 
+                '비밀번호 확인', 
+                'required|matches[password1]', 
+                array(
+                    'required' => '비밀번호 확인을 입력해주세요.',
+                    'matches' => '비밀번호가 일치하지 않습니다.'
+                )
+            );
     
         $user_id = $this->session->userdata('user_id');
     
