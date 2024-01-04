@@ -55,9 +55,8 @@ class Join extends CI_Controller {
 		$this->form_validation->set_rules(
             'intro', 
             '소개글', 
-            'required|max_length[30]', 
+            'max_length[30]', 
             array(
-                'required' => '내용을 입력해주세요.',
                 'max_length' => '변경할 소개글 내용은 최대 30자 이하로 작성해주세요.',
             )
         );

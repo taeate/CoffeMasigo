@@ -249,9 +249,7 @@ $(document).ready(function(){
                 if (introPattern.test(intro)) {
                     // 입력된 값이 정규식과 일치하면 오류 메시지를 지우고 유효성 플래그를 true로 설정
                     introError.text('');
-                } else if(intro === ""){
-                    introError.text('내용을 입력해주세요.');
-                }
+                } 
                 else {
                     // 입력된 값이 정규식과 일치하지 않으면 오류 메시지를 표시하고 유효성 플래그를 false로 설정
                     introError.text('소개글 내용은 최대 30자 이하로 작성해주세요.');
@@ -371,8 +369,16 @@ $(document).ready(function(){
           var email = $('#email').val();
           var password1 = $('#password1').val();
           var password2 = $('#password2').val();
+          var intro = $('#intro').val();
+          var introPattern = /^.{1,30}$/;
 
           var isValid = true; // 유효성 검사 플래그
+   
+
+          if(!introPattern){
+            isValid = false;
+            $('#intro_error').text('소개글 내용은 최대 30자 이하로 작성해주세요.');
+          }
 
      
           // 이름 유효성 검사 (한글만 허용)
