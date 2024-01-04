@@ -100,8 +100,28 @@ class Mypage extends CI_Controller {
     
 
     public function change_intro() {
+
+        $this->form_validation->set_rules(
+            'intro', 
+            '소개글', 
+            'required|max_length[30]', 
+            array(
+                'required' => '내용을 입력해주세요.',
+                'max_length' => '변경할 소개글 내용은 최대 30자 이하로 작성해주세요.',
+            )
+        );
+
         // AJAX 요청인 경우만 처리
         if ($this->input->is_ajax_request()) {
+
+            if ($this->form_validation->run() == FALSE) {
+                $errors = [
+                    'intro_error' => form_error('intro'),
+                ];
+                echo json_encode(['error' => true, 'errors' => $errors]);
+                
+            }else{
+
             $intro = $this->input->post('intro');
             $user_id = $this->session->userdata('user_id'); // 세션에서 사용자 ID 가져오기 또는 사용자 식별 방법에 따라 변경
         
@@ -127,6 +147,9 @@ class Mypage extends CI_Controller {
         
             // JSON 응답 반환
             echo json_encode($response);
+
+            }
+            
         }
     }
     

@@ -237,6 +237,25 @@ $(document).ready(function(){
             });
 
 
+             // 소개글 입력 필드에 대한 실시간 유효성 검사
+             $('#intro').on('input', function() {
+                var intro = $(this).val();
+                var introPattern = /^.{1,30}$/;
+                var introError = $('#intro_error');
+
+                if (introPattern.test(intro)) {
+                    // 입력된 값이 정규식과 일치하면 오류 메시지를 지우고 유효성 플래그를 true로 설정
+                    introError.text('');
+                } else if(intro === ""){
+                    introError.text('내용을 입력해주세요.');
+                }
+                else {
+                    // 입력된 값이 정규식과 일치하지 않으면 오류 메시지를 표시하고 유효성 플래그를 false로 설정
+                    introError.text('소개글 내용은 최대 30자 이하로 작성해주세요.');
+                }
+            });
+
+
              // 아이디 중복확인
              $('#check_login_id').click(function(e) {
                 e.preventDefault();

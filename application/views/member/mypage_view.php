@@ -148,9 +148,10 @@
                                                                             <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
                                                                             <input type="text" name="intro" id="intro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                                                                             <?php if ($this->session->flashdata('error')): ?>
-                                                                            <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
+                                                                            <div class="text-red-500 text-sm font-bold pt-2"><?php echo $this->session->flashdata('error'); ?></div>
                                                                             <?php endif; ?>
-                                                                            <!-- <div class="text-red-500" id="password_error_0"><?php echo form_error('password0'); ?></div> -->
+                                                                            <div class="text-red-500 text-sm font-bold pt-2" id="intro_error"><?php echo form_error('intro'); ?></div>
+                                                                           
                                                                             
                                                                         </div>
                                                                         
@@ -323,7 +324,6 @@ $("#intro-form").submit(function(event) {
             intro: $('#intro').val() // 소개글 값을 가져와서 전달
         },
         success: function(response) {
-            console.log('s');
             if (response.error) {
                 $('#intro_error').html(response.errors.intro_error);
             } else {
