@@ -101,7 +101,7 @@
                 </label>
 
 
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-gray-600 text-white rounded-box w-52">
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-30 p-2 shadow bg-gray-600 text-white rounded-box w-52">
                     <li><a href="/mypage">프로필 변경</a></li>
 
                     <?php if ($this->session->userdata('is_logged_in')): ?>

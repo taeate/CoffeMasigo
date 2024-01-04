@@ -1,186 +1,193 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
+    <div class="flex flex-col bg-gray-200 h-auto">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
+        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+            <!-- Sidebar -->
+            <aside class="w-84">
+                <?php $this->load->view('layout/sidebar'); ?>
+            </aside>
+            <main class="flex-1">
+                <!-- 리스트 페이지 컨텐츠 -->
+                <div id="content" class="contentbox bg-white" >
+                    <?php if($this->session->userdata('user_id')):?>
+                    <div class="container">
+                            <div class="flex flex-col items-center p-10">
+                                <!-- <div class="text-2xl mb-12">내정보</div> -->
+                                <div class="flex flex-col items-center p-14">
 
-<div class="flex-container" style="display: flex; margin-left: 400px; margin-right: 400px; margin-top: 200px; margin-bottom: 200px;">
-
-
-    <!-- 사이드바 -->
-    <div class="w-80">
-        <?php $this->load->view('layout/sidebar'); ?>
-    </div>
-    
-    <!-- 리스트 페이지 컨텐츠 -->
-    <div id="content" class="contentbox ml-4 z-10 bg-white" style="flex: 3;" >
-        <?php if($this->session->userdata('user_id')):?>
-        <div class="container">
-                <div class="flex flex-col items-center p-14">
-                    <!-- <div class="text-2xl mb-12">내정보</div> -->
-                    <div class="flex flex-col items-center">
-
-                        <div class="w-44 h-44 rounded-full border-2 border-gray-300 flex items-center justify-center overflow-hidden">
-                            <img id="userimage" src="<?php echo ('uploads/' . $this->session->userdata('profile_image')); ?>" class="object-cover object-center h-full w-full" />
-                            <img style="display: none;" onchange="previewImage(this)" id="image-preview"  alt="프로필 미리보기" class="object-cover object-center h-full w-full" />
-                        </div>
-                        <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 "><?php echo $this->session->userdata('username');?></h5>
-                        <span class="text-sm text-gray-500 font-medium">ID: <?php echo $this->session->userdata('user_id');?></span>
-                        <div class="flex mt-4 md:mt-6">
-                            <form action="member/Mypage/change_image" method="post">
-                            <input type="file" class="hidden" id="file-input" name="profile_image">
-                            <a id="imgchange-btn" onclick="openFileUploader();" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">프로필사진 변경</a>
-                            <button type="submit" onclick="saveProfile(event)" id="save-btn" class="btn bg-green-300 text-white hidden">저장</button>
-
-                            <button onclick="cancelProfileChange(event)" id="cancel-btn" class="btn btn-error hidden">취소</button>
-                            </form>
-                        
-                        </div>
-
-                        <div class="grid grid-cols-2 grid-rows-2 gap-4 mt-12 text-black">
-
-                            <div name="1">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow">
-                                        <div class="p-6 font-bold text-lg">MEMBER</div>
-                                        <hr>
-                                        <div class="p-6">
-                                            <div class="mb-3 text-gray-500 flex" name="userid">
-                                                <div><i class="fa-solid fa-address-card mr-2"></i></div>
-                                                <div><?php echo $this->session->userdata('user_id');?></div>
-                                            </div>
-                                            <div class="mb-3 text-gray-500 flex" name="useremail" class="flex items-center">
-                                                <div><i class="fa-solid fa-envelope mr-2"></i></div>
-                                                <div><?php echo $this->session->userdata('email');?></div>
-                                            </div>
-                                            <div class="mb-3 text-gray-500 flex" name="useremail" class="flex items-center">
-                                                <div><i class="fa-solid fa-calendar mr-2"></i></div>
-                                                <?php if(isset($user_data->create_date)): ?>
-                                                <div><?php echo date('Y.m.d', strtotime($user_data->create_date)); ?></div>                                                
-                                                    
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
+                                    <div class="w-44 h-44 rounded-full border-2 border-gray-300 flex items-center justify-center overflow-hidden">
+                                        <img id="userimage" src="<?php echo ('uploads/' . $this->session->userdata('profile_image')); ?>" class="object-cover object-center h-full w-full" />
+                                        <img style="display: none;" onchange="previewImage(this)" id="image-preview"  alt="프로필 미리보기" class="object-cover object-center h-full w-full" />
                                     </div>
-                            </div>
+                                    <h5 class="mb-1 mt-4 text-xl font-bold text-gray-900 "><?php echo $this->session->userdata('username');?></h5>
+                                    <span class="text-sm text-gray-500 font-medium">ID: <?php echo $this->session->userdata('user_id');?></span>
+                                    <div class="flex mt-4 md:mt-6">
+                                        <form action="member/Mypage/change_image" method="post">
+                                        <input type="file" class="hidden" id="file-input" name="profile_image">
+                                        <a id="imgchange-btn" onclick="openFileUploader();" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">프로필사진 변경</a>
+                                        <button type="submit" onclick="saveProfile(event)" id="save-btn" class="btn bg-green-300 text-white hidden">저장</button>
 
-                            <div name="2">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
-                                        <div class="p-6 font-bold text-lg">비밀번호</div>
-                                        <hr>
-                                        <div class="p-6">
-                                           <button onclick="my_modal_1.showModal()" class="text-blue-500" href="">비밀번호 재설정</button>
-                                           
-                                            <dialog id="my_modal_1" class="modal">
-                                            <div class="modal-box">
-                                                <h3 class="font-bold text-xl mt-4 mb-4">비밀번호변경</h3>
-                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal1()">✕</button> 
-                                                <form id="password-form" class="space-y-4" action="#" method="post">
-                                               
-                                                    <div>
-                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 ">비밀번호</label>
-                                                        <input type="password" name="password0" id="password0" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                                                        <?php if ($this->session->flashdata('error')): ?>
-                                                        <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
-                                                        <?php endif; ?>
-                                                        <div class="text-red-500" id="password_error_0"><?php echo form_error('password0'); ?></div>
-                                                        
-                                                    </div>
-                                                    <div>
-                                                        <div class="flex gap-1">
-                                                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">변경할 비밀번호</label>
-                                                            <span class="text-sm text-red-500">(최소 4자 이상, 영문과 숫자를 모두 포함)</span>
+                                        <button onclick="cancelProfileChange(event)" id="cancel-btn" class="btn btn-error hidden">취소</button>
+                                        </form>
+                                    
+                                    </div>
+
+                                    <div class="gap-4 p-12 text-black">
+
+                                        <div class="flex gap-4">
+                                            <div name="1" class="w-96">
+                                                    <div class=" w-max-sm bg-white border border-gray-200 rounded-lg shadow">
+                                                        <div class="p-6 font-bold text-lg">MEMBER</div>
+                                                        <hr>
+                                                        <div class="p-6">
+                                                            <div class="mb-3 text-gray-500 flex" name="userid">
+                                                                <div><i class="fa-solid fa-address-card mr-2"></i></div>
+                                                                <div><?php echo $this->session->userdata('user_id');?></div>
+                                                            </div>
+                                                            <div class="mb-3 text-gray-500 flex" name="useremail" class="flex items-center">
+                                                                <div><i class="fa-solid fa-envelope mr-2"></i></div>
+                                                                <div><?php echo $this->session->userdata('email');?></div>
+                                                            </div>
+                                                            <div class="mb-3 text-gray-500 flex" name="useremail" class="flex items-center">
+                                                                <div><i class="fa-solid fa-calendar mr-2"></i></div>
+                                                                <?php if(isset($user_data->create_date)): ?>
+                                                                <div><?php echo date('Y.m.d', strtotime($user_data->create_date)); ?></div>                                                
+                                                                    
+                                                                <?php endif; ?>
+                                                            </div>
                                                         </div>
-                                                        <input type="password" name="password1" id="password1" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                                                        <div class="text-red-500" id="password_error_1"><?php echo form_error('password1'); ?></div>
                                                     </div>
-                                                    <div>
-                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">비밀번호 확인</label>
-                                                        <input type="password" name="password2" id="password2" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                                                        <div class="text-red-500" id="password_error_2"><?php echo form_error('password2'); ?></div>
-                                                    </div>
-                                                    <div class="flex justify-between">
-                                          
-                                                        <a href="member/Find_password/findPassword" class="text-sm text-blue-700 hover:underline dark:text-blue-500">비밀번호를 잊어버리셨나요?</a>
-                                                    </div>
-                                                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">변경하기</button>
-                                                    
-                                                </form>
-                                                
                                             </div>
-                                            </dialog>
-                                        </div>
-                                    </div>
-                            </div>
 
-
-                            <div name="3">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
-                                        <div class="p-6 font-bold text-lg">내활동</div>
-                                        <hr>
-                                        <div class="p-6 flex flex-col">
-                                            <a href="/member/wrote/post" class="mb-2 text-blue-500">내가 작성한 글  <?php echo $post_count; ?>개</a>
-                                            <a href="/member/wrote/comment" class="mb-2 text-blue-500">내가 작성한 댓글  <?php echo $comment_count; ?>개</a>
-                                            <a href="/member/wrote/thumb_post" class="mb-2 text-blue-500">내가 추천한 글  <?php echo $wrote_thumb_post_count; ?>개</a>
-                                        </div>
-                                    </div>
-                            </div>
-
-                            <div name="4">
-                                    <div class="w-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
-                                        <div class="p-6">
-                                            <div class="font-bold text-lg">소개글</div>
-                                            <div class="text-gray-500 mt-4"><?php echo $user_data->introduction ?></div>
-                                        </div>
-                                        
-                                        <hr>
-                                        <div class="p-6">
-                                             <button onclick="my_modal_2.showModal()" class="text-blue-500" href="">소개글 재설정</button>
-                                             <dialog id="my_modal_2" class="modal">
-                                                <div class="modal-box">
-                                                    <h3 class="font-bold text-xl mt-4 mb-4">소개글 변경</h3>
-                                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="close_modal_button" onclick="closeModal2()">✕</button> 
-                                                    <form id="intro-form" class="space-y-4" action="#" method="post">
-                                                
-                                                        <div>
-                                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
-                                                            <input type="text" name="intro" id="intro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                                                            <?php if ($this->session->flashdata('error')): ?>
-                                                            <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
-                                                            <?php endif; ?>
-                                                            <!-- <div class="text-red-500" id="password_error_0"><?php echo form_error('password0'); ?></div> -->
+                                            <div name="2" class="w-96">
+                                                    <div class="w-full h-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
+                                                        <div class="p-6 font-bold text-lg">비밀번호</div>
+                                                        <hr>
+                                                        <div class="p-6">
+                                                        <button onclick="my_modal_1.showModal()" class="text-blue-500" href="">비밀번호 재설정</button>
+                                                        
+                                                            <dialog id="my_modal_1" class="modal">
+                                                            <div class="modal-box dark:bg-gray-700">
+                                                                <h3 class="font-bold text-xl mt-4 mb-4 dark:text-white">비밀번호변경</h3>
+                                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white" id="close_modal_button" onclick="closeModal1()">✕</button> 
+                                                                <form id="password-form" class="space-y-4 dark:bg-gray-700" action="#" method="post">
                                                             
+                                                                    <div>
+                                                                        <label for="password" class="block mb-2 text-sm font-medium dark:text-white">비밀번호</label>
+                                                                        <input type="password" name="password0" id="password0" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                                        <?php if ($this->session->flashdata('error')): ?>
+                                                                        <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
+                                                                        <?php endif; ?>
+                                                                        <div class="text-red-500 text-sm font-bold pt-2" id="password_error_0"><?php echo form_error('password0'); ?></div>
+                                                                        
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="flex gap-1">
+                                                                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">변경할 비밀번호</label>
+                                                                            <span class="text-sm dark:text-white">(최소 4자 이상, 영문과 숫자를 모두 포함)</span>
+                                                                        </div>
+                                                                        <input type="password" name="password1" id="password1" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                                        <div class="text-red-500 text-sm font-bold pt-2" id="password_error_1"><?php echo form_error('password1'); ?></div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">비밀번호 확인</label>
+                                                                        <input type="password" name="password2" id="password2" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                                        <div class="text-red-500 text-sm font-bold pt-2" id="password_error_2"><?php echo form_error('password2'); ?></div>
+                                                                    </div>
+                                                                    <div class="flex justify-between">
+                                                        
+                                                                        <a href="member/Find_password/findPassword" class="text-sm text-blue-700 hover:underline dark:text-blue-500">비밀번호를 잊어버리셨나요?</a>
+                                                                    </div>
+                                                                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">변경하기</button>
+                                                                    
+                                                                </form>
+                                                                
+                                                            </div>
+                                                            </dialog>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="flex gap-4 pt-4">
+                                            <div name="3" class="w-96">
+                                                    <div class="w-full h-full w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
+                                                        <div class="p-6 font-bold text-lg">내활동</div>
+                                                        <hr>
+                                                        <div class="p-6 flex flex-col">
+                                                            <a href="/member/wrote/post" class="mb-2 text-blue-500">내가 작성한 글  <?php echo $post_count; ?>개</a>
+                                                            <a href="/member/wrote/comment" class="mb-2 text-blue-500">내가 작성한 댓글  <?php echo $comment_count; ?>개</a>
+                                                            <a href="/member/wrote/thumb_post" class="mb-2 text-blue-500">내가 추천한 글  <?php echo $wrote_thumb_post_count; ?>개</a>
+                                                        </div>
+                                                    </div>
+                                            </div>
+
+                                            <div name="4" class="w-96">
+                                                    <div class=" w-max-sm bg-white border border-gray-200 rounded-lg shadow ">
+                                                        <div class="">
+                                                            <div class="p-6 font-bold text-lg">소개글</div>
+                                                            <hr>
+                                                            <div class="p-6 text-gray-500 break-words break-all">
+                                                                <?php echo $user_data->introduction ?>
+                                                            </div>
                                                         </div>
                                                         
-                                                        <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">변경하기</button>
-                                                        
-                                                    </form>
-                                                    
-                                                </div>
-                                            </dialog>
+                                                        <hr>
+                                                        <div class="p-6">
+                                                            <button onclick="my_modal_2.showModal()" class="text-blue-500" href="">소개글 재설정</button>
+                                                            <dialog id="my_modal_2" class="modal">
+                                                                <div class="modal-box dark:bg-gray-700">
+                                                                    <h3 class="font-bold text-xl mt-4 mb-4 dark:text-white">소개글 변경</h3>
+                                                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white" id="close_modal_button" onclick="closeModal2()">✕</button> 
+                                                                    <form id="intro-form" class="space-y-4" action="#" method="post">
+                                                                
+                                                                        <div>
+                                                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
+                                                                            <input type="text" name="intro" id="intro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                                            <?php if ($this->session->flashdata('error')): ?>
+                                                                            <div class="text-red-500"><?php echo $this->session->flashdata('error'); ?></div>
+                                                                            <?php endif; ?>
+                                                                            <!-- <div class="text-red-500" id="password_error_0"><?php echo form_error('password0'); ?></div> -->
+                                                                            
+                                                                        </div>
+                                                                        
+                                                                        <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">변경하기</button>
+                                                                        
+                                                                    </form>
+                                                                    
+                                                                </div>
+                                                            </dialog>
+                                                        </div>
+                                                    </div>
+                                            </div>
                                         </div>
+
+
                                     </div>
+
+                                </div>
                             </div>
-
-
-                        </div>
-
+                        
                     </div>
-                </div>
-            
-        </div>
-        <?php endif;?>
+                    <?php endif;?>
 
-        
+                    
+
+                </div>
+            </main>
+             <!-- Rightbar -->
+             <aside class="w-84">
+                <?php $this->load->view('layout/rightbar'); ?>
+            </aside>
+
+        </div>
 
     </div>
-
-    <!-- <div class="w-80 ml-4">
-    <?php $this->load->view('layout/rightbar'); ?>
-    </div> -->
-
-    
-    
-</div>
 </body>
-<!-- <?php $this->load->view('layout/footer'); ?> -->
+
 
 
 <script>

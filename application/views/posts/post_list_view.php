@@ -3,7 +3,7 @@
 <body>
 
     <div class="flex flex-col bg-gray-200 h-auto">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
         <!-- Header -->
         <header class="bg-gray-800 text-white text-center">
            

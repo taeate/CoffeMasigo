@@ -14,7 +14,7 @@ class Mypage extends CI_Controller {
         $this->load->library('form_validation');
     }  
     public function index() {
-        
+
          // 기존 비밀번호 검증
             $this->form_validation->set_rules(
                 'password0', 
@@ -90,6 +90,7 @@ class Mypage extends CI_Controller {
             $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
             $data['user_data'] = $this->Wrote_model->get_user_data($user_id);
             $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
+            $data['hot_posts'] = $this->Post_model->get_hot_posts();
             
 
    
