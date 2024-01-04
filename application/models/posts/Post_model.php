@@ -821,6 +821,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         $this->db->select('COUNT(*) as post_count', FALSE);
         $this->db->from('post');
         $this->db->group_by('user_id');
+        $this->db->where('delete_status', 0);
         $this->db->order_by('post_count', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -835,6 +836,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         $this->db->select('COUNT(*) as comment_count', FALSE);
         $this->db->from('comment');
         $this->db->group_by('user_id');
+        $this->db->where('delete_status', 0);
         $this->db->order_by('comment_count', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -1025,6 +1027,17 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         return $posts;
     }
     
+
+    public function get_comment_by_id($comment_id) {
+        $this->db->where('comment_id', $comment_id);
+        $query = $this->db->get('comment'); 
+
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return null;
+        }
+    }
     
     
 

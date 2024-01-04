@@ -10,14 +10,17 @@
 
       <form id="join_form" class="card-body" method="post" action="<?php echo site_url('member/join'); ?>" enctype="multipart/form-data">
         <div class="form-control">
-        <div class="flex flex-col items-center justify-center mt-2 mb-4">
-          <span class="text-white">프로필이미지</span>
+        <div class="flex flex-col items-center justify-center p-4">
+          <span class="text-white text-xl font-bold">회원가입</span>
           
         </div>
-        <div class="flex flex-col avatar justify-center items-center group">
+        <div class="flex flex-col avatar justify-center items-center group p-4">
           <label for="file-upload" class="btn btn-ghost btn-circle w-28 h-28 rounded-full ring ring-offset-base-100 ring-offset-2 hover:bg-gray-500" style="display: flex; justify-content: center; align-items: center; cursor: pointer;">
           
-            <div class="w-full h-full rounded-full overflow-hidden">
+            <div class="w-full h-full rounded-full overflow-hidden flex justify-center items-center">
+              <div class="text-white flex justify-center items-center">
+              <i class="fa-solid fa-plus fa-xl"></i>
+              </div>
               
               <img id="image-preview" src="" alt="미리보기 이미지" class="w-full h-full object-cover" style="display: none;">
               
@@ -26,7 +29,7 @@
             
             <input id="file-upload" type="file" name="profile_image" style="display: none;" onchange="previewImage(this)">
           </label>
-          <span class="text-white text-xs mt-4 mb-4">프로필을 설정하지 않으면 기본 이미지로 대체됩니다.</span>
+          <span class="text-white text-xs pt-8">프로필을 설정하지 않으면 기본 이미지로 대체됩니다.</span>
         </div>
 
       

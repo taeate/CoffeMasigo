@@ -117,6 +117,15 @@ class Post extends CI_Controller {
 
             // 게시물 세부 정보 가져오기
             $detail_info  = $this->Post_model->find_detail($post_id);
+
+            if ($detail_info && isset($detail_info['post_info']->delete_status) && $detail_info['post_info']->delete_status == 1) {
+             echo "<script>
+                alert('삭제된 게시물입니다.');
+                window.history.back(); 
+                 </script>";
+            
+                return;
+            }
             
             $user_ip = $_SERVER['REMOTE_ADDR'];
             
@@ -129,8 +138,7 @@ class Post extends CI_Controller {
                 $data['files'] = $detail_info['files'];
                 $data['file_count'] = $detail_info['file_count'];
                 
-                
-
+    
 
             } else {
                 echo "찾지 못함";

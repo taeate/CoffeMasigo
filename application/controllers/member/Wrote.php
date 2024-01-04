@@ -61,13 +61,13 @@ class Wrote extends CI_Controller {
         $config['prev_tag_open'] = '<li>';
         $config['prev_tag_close'] = '</li>';
 
-        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">';
+        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 dark:hover:bg-gray-700 hover:text-white dark:border-gray-300 dark:bg-white dark:text-black">';
         $config['cur_tag_close'] = '</a></li>';
 
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
 
-        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white');
+        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:border-gray-300 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white');
 
         
         
@@ -91,7 +91,7 @@ class Wrote extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
-
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
         $data['wrote_post'] = $this->Wrote_model->get_wrote_post($userid,$start,$config['per_page']);
         $data['wrote_count'] = $this->Wrote_model->count_wrote_posts($userid);
 
@@ -145,13 +145,13 @@ class Wrote extends CI_Controller {
         $config['prev_tag_open'] = '<li>';
         $config['prev_tag_close'] = '</li>';
 
-        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">';
+        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 dark:hover:bg-gray-700 hover:text-white dark:border-gray-300 dark:bg-white dark:text-black">';
         $config['cur_tag_close'] = '</a></li>';
 
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
 
-        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white');
+        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:border-gray-300 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white');
 
         
         
@@ -175,7 +175,7 @@ class Wrote extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
-
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
         $data['wrote_comment'] = $this->Wrote_model->get_wrote_comment($userid,$start,$config['per_page']);
         $data['wrote_comment_count'] = $this->Wrote_model->count_wrote_comment($userid);
 
@@ -230,13 +230,13 @@ class Wrote extends CI_Controller {
         $config['prev_tag_open'] = '<li>';
         $config['prev_tag_close'] = '</li>';
 
-        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">';
+        $config['cur_tag_open'] = '<li><a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 dark:hover:bg-gray-700 hover:text-white dark:border-gray-300 dark:bg-white dark:text-black">';
         $config['cur_tag_close'] = '</a></li>';
 
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
 
-        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white');
+        $config['attributes'] = array('class' => 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:border-gray-300 dark:text-black dark:hover:bg-gray-700 dark:hover:text-white');
 
         
         
@@ -260,8 +260,7 @@ class Wrote extends CI_Controller {
         $data['comment_count'] = $this->Post_model->count_wrote_comments_sidebar($userid);
         $data['wrote_thumb_post_count'] = $this->Wrote_model->count_wrote_thumb_post($userid);
         $data['exp_level_info'] = $this->Post_model->get_exp_level_info($userid);
-
-
+        $data['hot_posts'] = $this->Post_model->get_hot_posts();
         $data['wrote_thumb_post'] = $this->Wrote_model->get_wrote_thumb_post($userid,$start,$config['per_page']);
        
        

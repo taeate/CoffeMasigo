@@ -100,7 +100,7 @@
 
             <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
             <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-            <div name="내용" class="flex border-b px-8 py-8">
+            <div name="내용" class="flex px-8 py-8">
                 <div class=" w-full toastui-editor-contents whitespace-pre-wrap">
                     <?php echo htmlspecialchars_decode($content) ?>
                 </div>
@@ -112,32 +112,32 @@
             <div name="버튼들" class="flex">
                 <div class="px-8 py-4 w-full">
                         <div name="button-area">
-                            <div name="delete-update-btn" class="flex justify-end">
-                                <?php  $user_id = $this->session->userdata('user_id');
-                                if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
-                                ?>
-                                <button class="btn bg-gray-500 text-white w-16 h-8 mr-2"
-                                    onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
-                                <button class="post-delete-btn btn bg-gray-500 text-white w-16 h-6"
-                                    data-postid="<?=$post_id?>">삭제</button>
-
-
-                                <?php else: ?>
-                                <?php endif; ?>
-                            </div>
-                            <div name="like-btn" class="flex justify-center">
+                           
+                            <div name="like-btn" class="flex justify-center p-10">
                                 <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()"
-                                    class="btn bg-gray-500 text-white w-28 h-12">추천 <?php echo $count_thumb; ?></button>
+                                    class="btn bg-sky-600 text-white w-28 h-12 border-none">추천 <?php echo $count_thumb; ?></button>
                             </div>
-
-                            <div name="answer-btn" class="flex justify-between">
+                            <hr>
+                            <div name="answer-btn" class="flex justify-between p-4">
                                 <div class="">
-                                <button class="btn bg-gray-500 text-white w-28 h-12" onclick="goBack()">목록으로</button>
+                                <button class="btn bg-blue-500 text-white w-28 h-12 border-none" onclick="goBack()">목록으로</button>
                                     <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
-                                    class="btn bg-gray-500 text-white w-28 h-12">답글쓰기</a>
+                                    class="btn bg-blue-500 text-white w-28 h-12 border-none">답글쓰기</a>
                                 </div>
                                 <div class="">
-                                    <button id="shareButton" class="btn bg-gray-500 text-white w-28 h-12">공유하기</button>
+                                <button id="shareButton" class="btn bg-blue-500 text-white w-28 h-12 border-none">공유하기</button>
+                                    <?php  $user_id = $this->session->userdata('user_id');
+                                    if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
+                                    ?>
+                                    <button class="btn bg-blue-500 text-white w-16 h-8  border-none"
+                                        onclick="window.location.href='/posts/edit/<?=$post_id?>'">수정</button>
+                                    <button class="post-delete-btn btn bg-blue-500 text-white w-16 h-6 border-none"
+                                        data-postid="<?=$post_id?>">삭제</button>
+
+
+                                    <?php else: ?>
+                                    <?php endif; ?>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                         <?php endif; ?>
 
 
-                        <div class="flex ml-8 mb-4">
+                        <div class="flex ml-8">
                             <button id="comment_orderBy_create" class="hover:text-blue-500">
                                 
                             </button>
@@ -318,6 +318,7 @@
         <?php $this->load->view('layout/rightbar'); ?>
     </aside>
   </div>
+
     <button id="scrollTopBtn"
         class="w-24 fixed hover:bg-green-500 bottom-16 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         위로<i class="fa-solid fa-arrow-up"></i>
