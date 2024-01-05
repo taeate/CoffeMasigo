@@ -94,6 +94,7 @@ class Post_model extends CI_Model {
         foreach ($replies as $reply) {
             $reply->create_date = (new DateTime($reply->create_date))->format('Y.m.d H:i');
             $reply->content = htmlspecialchars_decode($reply->content); 
+            $reply->title = htmlspecialchars($reply->title); 
         }
 
         return $query->result();
