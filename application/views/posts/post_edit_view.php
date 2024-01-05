@@ -2,13 +2,13 @@
 
 <body>
     <div class="flex flex-col bg-gray-200 h-auto">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
-        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
+    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
              <!-- Sidebar -->
              <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
-            <main class="flex-1">
+            <main class="w-full">
             <div class="flex-container">
           
                     <div class="flex flex-col w-full ">
@@ -139,8 +139,8 @@
                                         <div class="mt-2">
                                             <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
                                             <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
-                                                class="file-input file-input-bordered w-full max-w-xs bg-white text-white" multiple />
-                                            <div id="uploaded-files"></div>
+                                                class="file rounded-lg border-2 file-input-bordered w-full max-w-sm bg-white  file:bg-blue-500 flie:text-none file:border-none" multiple />
+                                            <div class="pt-2" id="uploaded-files"></div>
                                         </div>
                                         <div>
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts/free/<?=$post_id?>">취소</a></button>
@@ -157,6 +157,9 @@
                                 <div class="mt-4 flex flex-col">
                                 <?php if (!empty($before_data['files'])): ?>
                                     <div><strong>[첨부된 파일]</strong></div>
+                                    <?php else: ?>
+                                    <div><strong></strong></div>
+                                    <?php endif; ?>
                                     <div id="existing-files">
                                         <?php foreach ($before_data['files'] as $file): ?>
                                         <div id="file-<?php echo $file->file_id; ?>">
@@ -166,7 +169,7 @@
                                         </div>
                                         <?php endforeach; ?>
                                     </div>
-                                    <?php endif; ?>
+                            
                                 </div>
                             </div>
 
@@ -215,6 +218,10 @@
 </style>
 
 <script>
+
+// 파일 업로드 관련 설정
+var maxFileSize = 50000000; 
+
 document.addEventListener('DOMContentLoaded', function() {
     const scrollTopBtn = document.getElementById('scrollTopBtn');
     const scrollBottomBtn = document.getElementById('scrollBottomBtn');
@@ -312,14 +319,23 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
         return;
     }
 
-     // 파일 업로드 수 검사
-     var fileInput = document.getElementById('file');
-    if (fileInput && fileInput.files.length > 10) {
-        alert('파일은 최대 10개까지 업로드 가능합니다.');
-        return;
+      // 파일 업로드 수 및 크기 검사
+      var fileInput = document.getElementById('file');
+      if (fileInput) {
+        var files = fileInput.files;
+        if (files.length > 10) {
+            alert('파일은 최대 10개까지 업로드 가능합니다.');
+            return;
+        }
+
+        // 파일 크기 검사
+        for (var i = 0; i < files.length; i++) {
+            if (files[i].size > maxFileSize) {
+                alert('파일이 허용된 최대 크기를 초과했습니다.');
+                return;
+            }
+        }
     }
-
-
 
     axios.post('/posts/write/post_edit/' + post_id, formData)
         .then(function(response) {

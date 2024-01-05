@@ -3,21 +3,21 @@
 <body>
 
 <div class="flex flex-col bg-gray-300 h-auto text-black">
-<img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
+<img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
   <!-- Header -->
   <header class=" text-white text-center">
     
   </header>
 
   <!-- Body -->
-  <div class="flex flex-1 mt-[350px] gap-4 mx-[300px] z-10 relative">
+  <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
     <!-- Sidebar -->
     <aside class="w-84">
         <?php $this->load->view('layout/sidebar'); ?>
     </aside>
 
     <!-- Content -->
-    <main class="flex-1">
+    <main class="w-full">
         <!-- 컨텐츠영역 -->
 
             <?php if ($detail_info) : ?>
@@ -40,15 +40,15 @@
                         <?php endif; ?>
                         <div><?php echo htmlspecialchars($title) ?></div><br>
                     </div>
-                    <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5 text-gray-500 pt-2">
+                    <div class="lg:flex grid grid-cols-2 whitespace-nowrap place-items-center gap-5 text-gray-600 pt-2">
                         <div class="flex flex-none gap-3 items-center justify-center">
                             <div class="">
-                                <?php echo $channel_name ?>
+                                <?php echo $channel_name ?>  |
                             </div>
                             <div class="">
-                                    <?php echo $createdate ?>
+                                    <?php echo $createdate ?>  |
                             </div>
-                            <?php echo $user_id ?>
+                            <?php echo htmlspecialchars($user_id); ?>
                                 
                             
                         </div>
@@ -105,7 +105,7 @@
             <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
             <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
             <div name="내용" class="flex px-8 py-8 z-10">
-                <div class="z-10  w-full toastui-editor-contents whitespace-pre-wrap">
+                <div class="z-10  w-full toastui-editor-contents">
                     <?php echo htmlspecialchars_decode($content) ?>
                 </div>
                 
@@ -119,17 +119,18 @@
                            
                             <div name="like-btn" class="flex justify-center p-10">
                                 <button data-post-id="<?php echo $post_id ?>" id="post-container" onclick="thumbUp()"
-                                    class="btn bg-sky-600 text-white w-28 h-12 border-none">추천 <?php echo $count_thumb; ?></button>
+                                    class="btn bg-sky-600 text-white w-28 h-12 border-none"><i class="fa-solid fa-caret-up fa-lg pt-1"></i>추천 <?php echo $count_thumb; ?></button>
                             </div>
                             <hr>
                             <div name="answer-btn" class="flex justify-between p-4">
                                 <div class="">
-                                <button class="btn bg-blue-500 text-white w-28 h-12 border-none" onclick="goBack()">목록으로</button>
+                                <!-- <button class="btn bg-pink-500 text-white w-28 h-12 border-none" onclick="goBack()">뒤로가기</button>
+                                <button class="btn bg-blue-500 text-white w-28 h-12 border-none" onclick="golist()">목록으로</button> -->
                                     <a href="/posts/write/answer_post/<?= $post_id ?>" onclick="checkLoginBeforeWrite()"
                                     class="btn bg-blue-500 text-white w-28 h-12 border-none">답글쓰기</a>
                                 </div>
                                 <div class="">
-                                <button id="shareButton" class="btn bg-blue-500 text-white w-28 h-12 border-none">공유하기</button>
+                                <button id="shareButton" class="btn bg-blue-500 text-white w-28 h-12 border-none"><i class="fa-solid fa-share-nodes"></i>공유하기</button>
                                     <?php  $user_id = $this->session->userdata('user_id');
                                     if ($user_id && $user_id == $author_id): // 로그인한 사용자가 글의 작성자인 경우
                                     ?>
@@ -175,13 +176,16 @@
                         <!-- 댓글 작성 폼 -->
                         <div class="p-4">
                         <form class="comment-form" method="post" id="">
-                            <div
-                                class="w-full border border-gray-200 rounded-lg bg-gray-50">
+                            <div class="w-full border border-gray-200 rounded-lg bg-gray-50">
                                 <div class="px-4 py-2 bg-white rounded-t-lg ">
                                     <label for="comment" class="sr-only">Your comment</label>
                                     <textarea id="comment" name="comment" rows="4"
                                         class="w-full px-0 text-sm text-gray-900 bg-white border-0 "
                                         placeholder="댓글은 여기에 작성해주세요" required></textarea>
+                                        <div class="text-gray-400 text-sm">
+                                            <span id="charCount">0</span>/
+                                            <span>300</span>
+                                        </div>
                                 </div>
                                 <div class="flex flex-none items-center justify-between px-3 py-2 border-t ">
                                     <button type="submit"
@@ -341,28 +345,27 @@
 
 <script>
 
-document.getElementById('toggleDropdown').addEventListener('click', function() {
-    var dropdown = document.getElementById('fileDropdown');
-    dropdown.classList.toggle('hidden');
-});
+document.addEventListener('DOMContentLoaded', function () {
+    var commentTextArea = document.getElementById('comment');
+    var charCountSpan = document.getElementById('charCount');
 
+    commentTextArea.addEventListener('input', function () {
+        var charCount = commentTextArea.value.length;
+        charCountSpan.textContent = charCount;
 
-document.addEventListener('click', function(event) {
-    var dropdown = document.getElementById('fileDropdown');
-    var toggleButton = document.getElementById('toggleDropdown');
-    
-    if (!toggleButton.contains(event.target)) {
-        dropdown.classList.add('hidden');
-    }
+        
+        if (charCount > 300) {
+            alert('글자 수가 300자를 초과하였습니다.');
+            commentTextArea.value = commentTextArea.value.substring(0, 300);
+            charCountSpan.textContent = 300;
+        }
+    });
 });
 
 function goBack() {
-    if (window.location.pathname === '/posts/write') {
-        window.location.href = '/posts'; // 기본 목록 페이지로 이동
-    } else {
-        window.history.back();
-    }
+   window.history.back();
 }
+
 
     
 document.addEventListener('DOMContentLoaded', function() {

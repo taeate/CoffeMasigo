@@ -115,10 +115,6 @@
 
 
 
-
-
-
-
 function checkLoginBeforeWrite() {
 
     <?php if(!$this->session->userdata('user_id')): ?>

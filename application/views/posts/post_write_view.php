@@ -2,11 +2,12 @@
 
 <body>
     <div class="flex flex-col bg-gray-200 h-auto">
-        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
+    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
-            <main class="flex-1">
+            <main class="w-full">
                 <div class="flex flex-1 content" style="flex: 3;">
                     <div class="flex flex-col w-full ">
                         <div class="h-auto bg-white text-black">
@@ -90,10 +91,11 @@
 
                                     <div class="flex justify-between">
                                         <div class="mt-2">
-                                            <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                            <input type="file" id="file" name="file[]"
-                                                class="file-input file-input-bordered w-full max-w-xs" multiple />
-                                            <div id="uploaded-files"></div>
+                                            <div class="ml-2 mb-2">* 글작성시 파일 크기는 총 500MB 이하여야 합니다</div>
+                                            <div class="ml-2 mb-2">* 파일첨부는 최대 10개까지만 가능합니다.</div>
+                                            <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
+                                                class="file rounded-lg border-2 file-input-bordered w-full max-w-sm bg-white  file:bg-blue-500 flie:text-none file:border-none" multiple />
+                                            <div class="pt-2" id="uploaded-files"></div>
                                         </div>
                                         <div>
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">취소</button>
@@ -184,10 +186,11 @@
 
                                     <div class="flex justify-between">
                                         <div class="mt-2">
-                                            <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
+                                            <div class="ml-2 mb-2 text-sm">* 글작성시 파일 크기는 총 500MB 이하여야 합니다</div>
+                                            <div class="ml-2 mb-2 text-sm">* 파일첨부는 최대 10개까지만 가능합니다.</div>
                                             <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
-                                                class="file-input file-input-bordered w-full max-w-xs bg-white text-white" multiple />
-                                            <div id="uploaded-files"></div>
+                                                class="file rounded-lg border-2 file-input-bordered w-full max-w-sm bg-white  file:bg-blue-500 flie:text-none file:border-none" multiple />
+                                            <div class="pt-2" id="uploaded-files"></div>
                                         </div>
                                         <div>
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts">취소</a></button>
@@ -276,7 +279,8 @@
 <script>
 
 
-
+// 파일 업로드 관련 설정
+var maxFileSize = 50000000; 
 
 document.addEventListener('DOMContentLoaded', function () {
     var answerForm = document.getElementById('answer_form');
@@ -371,16 +375,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // 파일 업로드 수 검사
+                 // 파일 업로드 수 및 크기 검사
                 var fileInput = document.getElementById('file');
-                if (fileInput && fileInput.files.length > 10) {
-                    alert('파일은 최대 10개까지 업로드 가능합니다.');
-                    return;
+                if (fileInput) {
+                    var files = fileInput.files;
+                    if (files.length > 10) {
+                        alert('파일은 최대 10개까지 업로드 가능합니다.');
+                        return;
+                    }
+
+                    // 파일 크기 검사
+                    for (var i = 0; i < files.length; i++) {
+                        if (files[i].size > maxFileSize) {
+                            alert('파일이 허용된 최대 크기를 초과했습니다.');
+                            return;
+                        }
+                    }
                 }
+
 
                 fetch('/posts/write', {
                         method: 'POST',
-                        body: formData
+                        body: formData,              
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -422,10 +438,11 @@ document.getElementById('file').addEventListener('change', function(e) {
         var file = files[i];
         var fileElement = document.createElement('div');
         fileElement.innerHTML = (i + 1) + '. ' + file.name +
-            ' <button class="btn btn-primary" onclick="removeFile(' + i + ')">삭제</button>';
+            ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="removeFile(' + i + ')">X</button>';
+            
         filesList.appendChild(fileElement);
     }
-});
+});  
 
 function removeFile(index) {
     var filesInput = document.getElementById('file');

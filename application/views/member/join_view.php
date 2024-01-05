@@ -40,7 +40,6 @@
           </label>
           <input type="name" name="username" id="username" placeholder="이름" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('username');?>" />  
           <span id="username_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('username'); ?></span>
-
          <div class="flex justify-between">
           <label class="label">
               <span class="label-text text-white">아이디</span>  
@@ -56,19 +55,7 @@
               <p id="useridStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
               
               
-              <div class="flex justify-between">
-              <label class="label">
-              <span class="label-text text-white">이메일</span>
-              </label>
-              <span class="flex items-center">      
-              <button title="이메일 중복확인" id="checkEmail" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>
-              </span>
-              </div>
-         
-              <input type="email" name="email" id="email" placeholder="qwer@gmail.com" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('email');?>"  />
-              <span id="email_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('email'); ?></span>
-              <p id="emailStatus_success" class="text-green-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
-              <p id="emailStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
+              
               
 
               <label class="label">
@@ -82,6 +69,21 @@
               </label>
               <input type="password" name="password2" id="password2" placeholder="비밀번호를 입력해주세요." class="input input-bordered bg-gray-600 text-white"  />
               <span id="password2_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('password2'); ?></span>
+
+
+              <div class="flex justify-between">
+                <label class="label">
+                <span class="label-text text-white">이메일</span>
+                </label>
+                <span class="flex items-center">      
+                <button title="이메일 중복확인" id="checkEmail" class="btn btn-primary bg-blue-600 btn-xs text-xs text-white">중복확인</button>
+                </span>
+              </div>
+         
+              <input type="email" name="email" id="email" placeholder="qwer@gmail.com" class="input input-bordered bg-gray-600 text-white"  value="<?php echo set_value('email');?>"  />
+              <span id="email_error" class="text-red-500 font-bold mt-1 ml-2 text-sm"><?php echo form_error('email'); ?></span>
+              <p id="emailStatus_success" class="text-green-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
+              <p id="emailStatus_failed" class="text-red-500 text-right text-sm mt-0.5 mr-1 font-bold"></p>
 
               <label class="label">
               <span class="label-text text-white">소개글</span>

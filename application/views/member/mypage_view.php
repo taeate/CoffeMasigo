@@ -2,13 +2,14 @@
 
 <body>
     <div class="flex flex-col bg-gray-200 h-auto">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
-        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
+    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
+            
             <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
-            <main class="flex-1">
+            <main class="w-full">
                 <!-- 리스트 페이지 컨텐츠 -->
                 <div id="content" class="contentbox bg-white" >
                     <?php if($this->session->userdata('user_id')):?>
@@ -145,8 +146,15 @@
                                                                     <form id="intro-form" class="space-y-4" action="#" method="post">
                                                                 
                                                                         <div>
-                                                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
+                                                                            <div class="flex justify-between">
+                                                                                <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">소개글</label>
+                                                                                <div class="text-gray-400 text-sm">
+                                                                                    <span id="charCount">0</span>/
+                                                                                    <span>30</span>
+                                                                                </div>
+                                                                            </div>
                                                                             <input type="text" name="intro" id="intro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                                                                            
                                                                             <?php if ($this->session->flashdata('error')): ?>
                                                                             <div class="text-red-500 text-sm font-bold pt-2"><?php echo $this->session->flashdata('error'); ?></div>
                                                                             <?php endif; ?>
@@ -193,7 +201,24 @@
 
 <script>
 
-    
+document.addEventListener('DOMContentLoaded', function () {
+    var commentTextArea = document.getElementById('intro');
+    var charCountSpan = document.getElementById('charCount');
+
+    commentTextArea.addEventListener('input', function () {
+        var charCount = commentTextArea.value.length;
+        charCountSpan.textContent = charCount;
+
+
+        if (charCount > 30) {
+            alert('글자 수가 30자를 초과하였습니다.');
+
+            commentTextArea.value = commentTextArea.value.substring(0, 30);
+            charCountSpan.textContent = 30;
+        }
+    });
+});
+
 function previewImage(input) {
     const preview = document.getElementById('image-preview');
     const userimage = document.getElementById('userimage');

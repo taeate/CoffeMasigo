@@ -525,6 +525,8 @@ class Post_model extends CI_Model {
  
      // 일반 글만 반환
      return $posts;
+
+    
 }
 
 

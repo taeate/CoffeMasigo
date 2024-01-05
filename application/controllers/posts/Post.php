@@ -59,7 +59,7 @@ class Post extends CI_Controller {
 
         foreach ($data['get_list'] as $post) {
             $post->title = htmlspecialchars($post->title);
-            $post->content = htmlspecialchars($post->content);
+            $post->content = $post->content;
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);
@@ -438,7 +438,7 @@ class Post extends CI_Controller {
         
         foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -501,7 +501,7 @@ class Post extends CI_Controller {
        
        foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
@@ -556,7 +556,7 @@ class Post extends CI_Controller {
         
         foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -620,7 +620,7 @@ class Post extends CI_Controller {
        
        foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
        $post->comment_count = $this->Post_model->count_comment($post->post_id);
        $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
@@ -674,7 +674,7 @@ class Post extends CI_Controller {
         
         foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
     }
@@ -736,7 +736,7 @@ class Post extends CI_Controller {
        
        foreach ($data['get_list'] as &$post) {
         $post->title = htmlspecialchars($post->title);
-        $post->content = htmlspecialchars($post->content);
+        $post->content = htmlspecialchars_decode($post->content);
         $post->comment_count = $this->Post_model->count_comment($post->post_id);
         $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
    }
@@ -843,7 +843,7 @@ class Post extends CI_Controller {
 
         foreach ($data['get_list'] as $post) {
             $post->title = htmlspecialchars($post->title);
-            $post->content = htmlspecialchars($post->content);
+            $post->content = htmlspecialchars_decode($post->content);
             $post->comment_count = $this->Post_model->count_comment($post->post_id);
             $post->replies = $this->Post_model->get_reply_to_post_count($post->post_id);
             $post->thumb = $this->Post_model->count_thumb($post->post_id);

@@ -2,13 +2,13 @@
 
 <body>
 <div class="flex flex-col bg-gray-300 h-auto text-black">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[300px] w-screen object-cover" alt="">
-    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
+    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
         <!-- Sidebar -->
         <aside class="w-84">
             <?php $this->load->view('layout/sidebar'); ?>
         </aside>
-        <main class="flex-1">
+        <main class="w-full">
             <!-- 리스트 페이지 컨텐츠 -->
             <div>
                 <div
@@ -123,7 +123,7 @@
                         <div class="shadow-md">
                             <!-- 내용이 없을 때의 메시지 -->
                             <div class="flex flex-col border-b">
-                                <div class="flex flex-1 p-2 bg-base-100 border-gray-300 cursor-pointer justify-center">
+                                <div class="flex flex-1 p-2 bg-base-100 border-gray-300 cursor-pointer justify-center bg-white">
                                     <div class="p-4">추천된 글이 없습니다.</div>
                                 </div>
                             </div>

@@ -10,13 +10,13 @@
         </header>
 
         <!-- Body -->
-        <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+        <div class="flex flex-1 pt-[200px] gap-4 px-[200px] z-10 relative text-black justify-center">
             <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
             <!-- Content -->
-            <main class="flex-1 w-min-[1044px]">
+            <main class="w-full w-min-[1044px]">
                 <div id="content" class="flex flex-col contentbox z-10">
                     <div name="top-box" class="flex flex-col ">
                         <div name="search-nav" class="searchbox z-30 h-auto bg-white place-items-center shadow-md">
@@ -127,7 +127,7 @@
                                                     class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg  border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                                                     placeholder="검색" required>
                                                 <button type="submit"
-                                                    class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-black rounded-e-lg border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                                    class="absolute bg-blue-500 text-white top-0 end-0 h-full p-2.5 text-sm font-medium text-black rounded-e-lg border border-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                                     <svg class="w-4 h-4" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 20 20">
@@ -207,6 +207,7 @@
                                              onclick="window.location.href='/posts/free/<?= htmlspecialchars(urlencode($post->post_id)) ?>'">
 
                                             <div class="ml-4 flex-[1] flex flex-col items-center ">
+                                                
                                                 <div class="m-auto">
                                                     <div class="text-red-500 bg-red-200 rounded-lg">공지</div>
                                                 </div>
@@ -475,18 +476,23 @@ function createPostHtml(post) {
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="' + titleStyle + '">' + post.title + '</div>';
     if (post.comment_count > 0) {
-    postHtml += '<div class="ml-2 text-red-500">[' + post.comment_count + ']</div>';
+    postHtml += '<div class="ml-1 text-red-500">[' + post.comment_count + ']</div>';
 }
     if (post.file_count > 0) {
         postHtml += '<div class="ml-2 text-blue-500"><i class="fa-solid fa-paperclip"></i></div>';
     }
-    if (post.content && /!\[.*\]\(http.*\)/.test(post.content)) {
+    
+   // HTML 형식의 <img> 태그를 찾는 정규 표현식 사용
+    var imgRegex = /<img[^>]+src="([^">]+)"/;
+    if (imgRegex.test(post.content)) {
         postHtml += '<div class="ml-1 text-green-500"><i class="fa-solid fa-image"></i></div>';
     }
+
+
     postHtml += '            </div>';
     postHtml += '            <div class="flex">';
     postHtml += '                <div class="font-base text-gray-500">' + post.channel_name + '</div>';
-    if (post.replies > 1) {
+    if (post.replies > 0) {
         postHtml +=
             '    <a href="#" class="view-replies ml-2 text-red-500 hover:text-blue-800" onclick="event.stopPropagation(); loadReplies(' +
             post.post_id + '); return false;">답글보기[' + post.replies + ']</a>';

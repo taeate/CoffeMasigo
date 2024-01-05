@@ -3,12 +3,12 @@
 <body>
     <div class="flex flex-col bg-gray-300 h-auto text-black">
     <img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
-    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black">
+    <div class="flex flex-1 pt-[250px] gap-4 px-[100px] z-10 relative text-black justify-center">
              <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>
             </aside>
-            <main class="flex-1">
+            <main class="w-full">
                 <!-- 리스트 페이지 컨텐츠 -->
                 <div class="">
                     <div class="flex bg-white text-base font-medium text-center text-gray-500 border-b border-gray-100  mb-2 justify-between">
