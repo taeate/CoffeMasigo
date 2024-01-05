@@ -158,15 +158,17 @@
             <div class="flex flex-col w-full mt-4 ">
                 <div name="commnet-name" class="h-auto card bg-white">
                     <div class="bg-white ">
-                        <div class="flex p-4 text-lg">
+                        <div class="flex pt-4 pr-4 pl-4 text-lg">
                             <div class="font-bold">
                                 댓글
 
                             </div>
                             <!-- 해당 post_id 의 댓글의 개수표시 -->
                             <?php if(isset($comments_count)): ?>
-                            <div class="flex items-center justify-center text-sm ml-2">
-                                총 <?php echo $comments_count; ?>개
+                            <div class="flex items-center justify-center text-sm ml-2 gap-1">
+                                <div>총</div>
+                                <div class="text-red-500"><?php echo $comments_count; ?></div>
+                                <div>개</div>
                             </div>
                             <?php endif; ?>
 
@@ -175,7 +177,7 @@
                         <?php if ($this->session->userdata('user_id')): ?>
                         <!-- 댓글 작성 폼 -->
                         <div class="p-4">
-                        <form class="comment-form" method="post" id="">
+                        <form class="pt-4 pb-4 comment-form" method="post" id="">
                             <div class="w-full border border-gray-200 rounded-lg bg-gray-50">
                                 <div class="px-4 py-2 bg-white rounded-t-lg ">
                                     <label for="comment" class="sr-only">Your comment</label>

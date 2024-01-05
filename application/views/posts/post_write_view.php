@@ -280,7 +280,7 @@
 
 
 // 파일 업로드 관련 설정
-var maxFileSize = 50000000; 
+var maxFileSize = 500000000; 
 
 document.addEventListener('DOMContentLoaded', function () {
     var answerForm = document.getElementById('answer_form');
