@@ -76,22 +76,26 @@
                         </div>
                 
             
-                    <div class="flex-1"></div>
-                    <div class="flex-none">
-                        <div class="dropdown dropdown-end">
-                            <div tabindex="0" role="button" class="m-1 hover:text-blue-500 text-gray-500">첨부파일 <?php echo $file_count; ?>개 <i class="fa-solid fa-caret-down"></i></div>
-                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">
-                            <?php foreach ($files as $file): ?>
-                             
-                                    <div class="flex flex-col"> <!-- Flexbox 컨테이너 -->
-                                        <a href="<?php echo $file->file_path; ?>" class="flex-1"><?php echo $file->file_name; ?></a>
-                                        <a class="text-blue-500" href="<?php echo '/posts/write/downloadFile/' . $file->file_name; ?>">다운로드</a>
-                                    </div>
-                            
-                            <?php endforeach; ?>
-                            </ul>
+                        <div class="flex-1"></div>
+                        <div class="flex-none">
+                            <div class="dropdown dropdown-end z-50">
+                                <div tabindex="0" role="button" class="m-1 hover:text-blue-500 text-gray-500" id="toggleDropdown">첨부파일 <?php echo $file_count; ?>개 <i class="fa-solid fa-caret-down"></i></div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu shadow bg-white rounded-box w-auto h-auto" id="fileDropdown">
+                                    <?php foreach ($files as $file): ?>
+                                        <div class="flex z-50 break-words break-all w-full border-b border-l border-r border-t">
+                                            <div class="p-2 flex">
+                                                <div style="max-width: 200px;">
+                                                    <a href="<?php echo $file->file_path; ?>" class="mb-1 block" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                        <?php echo $file->file_name; ?>
+                                                    </a>
+                                                    <a class="text-blue-500 block hover:underline" href="<?php echo '/posts/write/downloadFile/' . urlencode($file->file_name); ?>">다운로드</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                  
 
                
@@ -100,8 +104,8 @@
 
             <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
             <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-            <div name="내용" class="flex px-8 py-8">
-                <div class=" w-full toastui-editor-contents whitespace-pre-wrap">
+            <div name="내용" class="flex px-8 py-8 z-10">
+                <div class="z-10  w-full toastui-editor-contents whitespace-pre-wrap">
                     <?php echo htmlspecialchars_decode($content) ?>
                 </div>
                 
@@ -336,6 +340,21 @@
 
 
 <script>
+
+document.getElementById('toggleDropdown').addEventListener('click', function() {
+    var dropdown = document.getElementById('fileDropdown');
+    dropdown.classList.toggle('hidden');
+});
+
+
+document.addEventListener('click', function(event) {
+    var dropdown = document.getElementById('fileDropdown');
+    var toggleButton = document.getElementById('toggleDropdown');
+    
+    if (!toggleButton.contains(event.target)) {
+        dropdown.classList.add('hidden');
+    }
+});
 
 function goBack() {
     if (window.location.pathname === '/posts/write') {

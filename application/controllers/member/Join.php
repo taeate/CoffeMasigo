@@ -80,12 +80,12 @@ class Join extends CI_Controller {
 
 				if (!isset($_FILES['profile_image']['name']) || $_FILES['profile_image']['name'] == '') {
 					// 사용자가 파일을 업로드하지 않은 경우, 기본 이미지 경로 설정
-					$profile_image_path = 'profile.PNG';
+					$profile_image_path = 'default.jpg';
 				} else {
 					// 사용자가 파일을 업로드한 경우, 파일 업로드 처리
 					if (!$this->upload->do_upload('profile_image')) {
 						// 파일 업로드에 실패한 경우, 에러 처리 또는 기본 이미지 설정
-						$profile_image_path = 'profile.PNG';
+						$profile_image_path = 'default.jpg';
 					} else {
 						// 파일 업로드 성공, 업로드된 파일 경로 설정
 						$upload_data = $this->upload->data();

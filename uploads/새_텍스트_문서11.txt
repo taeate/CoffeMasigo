@@ -1,0 +1,1 @@
+실행된 SQL문: delete from `masigo`.`post` where `post_id` = '72'오류 번호 : 1451오류 메시지: Cannot delete or update a parent row: a foreign key constraint fails (`masigo`.`comment`, CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`))

@@ -138,8 +138,8 @@
                                     <div class="flex justify-between">
                                         <div class="mt-2">
                                             <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                            <input type="file" id="file" name="file[]"
-                                                class="file-input file-input-bordered w-full max-w-xs bg-white" multiple />
+                                            <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
+                                                class="file-input file-input-bordered w-full max-w-xs bg-white text-white" multiple />
                                             <div id="uploaded-files"></div>
                                         </div>
                                         <div>
@@ -309,6 +309,13 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
     // 내용 검사
     if (editorContent.trim() === '') {
         alert('내용을 입력해주세요.');
+        return;
+    }
+
+     // 파일 업로드 수 검사
+     var fileInput = document.getElementById('file');
+    if (fileInput && fileInput.files.length > 10) {
+        alert('파일은 최대 10개까지 업로드 가능합니다.');
         return;
     }
 

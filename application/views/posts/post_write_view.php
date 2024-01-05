@@ -185,7 +185,7 @@
                                     <div class="flex justify-between">
                                         <div class="mt-2">
                                             <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
-                                            <input type="file" id="file" name="file[]"
+                                            <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
                                                 class="file-input file-input-bordered w-full max-w-xs bg-white text-white" multiple />
                                             <div id="uploaded-files"></div>
                                         </div>
@@ -194,6 +194,7 @@
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">작성</button>
                                         </div>
                                     </div>
+
 
 
                                 </form>
@@ -310,7 +311,13 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        console.log(post_id);
+         // 파일 업로드 수 검사
+         var fileInput = document.getElementById('file');
+                if (fileInput && fileInput.files.length > 10) {
+                    alert('파일은 최대 10개까지 업로드 가능합니다.');
+                    return;
+                }
+
 
         axios.post('/posts/write/answer_post/'+post_id, formData)
             .then(function (response) {
@@ -364,6 +371,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                // 파일 업로드 수 검사
+                var fileInput = document.getElementById('file');
+                if (fileInput && fileInput.files.length > 10) {
+                    alert('파일은 최대 10개까지 업로드 가능합니다.');
+                    return;
+                }
+
                 fetch('/posts/write', {
                         method: 'POST',
                         body: formData
@@ -382,6 +396,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         // 네트워크 오류 또는 서버 에러 처리
                         console.error('Error:', error);
                 });
+
+                
             });
 
         }

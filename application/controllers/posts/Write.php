@@ -94,23 +94,24 @@ class Write extends CI_Controller {
 
 
     public function upload_files($post_id, $user_id){
-        
-
         $config['upload_path'] = './uploads/';
-        $config['allowed_types'] = '*';
-        $config['max_size'] = 500; // 정수로 설정
-        // $config['encrypt_name'] = TRUE; // 파일명을 암호화하여 무작위 생성
-        // $config['file_ext_tolower'] = TRUE; // 파일 확장자를 소문자로 변환
-        $config['remove_spaces'] = FALSE; // 파일 이름에서 공백 제거
-        // $config['xss_clean'] = TRUE; // XSS 필터링 적용
-
+        $config['allowed_types'] = '*'; // 허용된 파일 유형
+        $config['max_size'] = 500000; // 최대 파일 크기
+        $config['remove_spaces'] = TRUE; // 파일 이름에서 공백 제거
+        $config['file_ext_tolower'] = TRUE; // 파일 확장자를 소문자로 변환
+    
         $this->load->library('upload', $config);
 
         if (!empty($_FILES['file']['name'][0])) {
             $files = $_FILES['file'];
 
+             // 파일 개수 확인
+                if (count($files['name']) > 10) {
+                    echo json_encode(['success' => false, 'message' => '파일은 최대 10개까지만 업로드 가능합니다.']);
+                    return;
+                }
+    
             foreach ($files['name'] as $key => $name) {
-                
                 $_FILES['single_file'] = array(
                     'name' => $files['name'][$key],
                     'type' => $files['type'][$key],
@@ -118,61 +119,63 @@ class Write extends CI_Controller {
                     'error' => $files['error'][$key],
                     'size' => $files['size'][$key]
                 );
-
+    
                 if ($this->upload->do_upload('single_file')) {
-
                     $uploadData = $this->upload->data();
-                    
                     $this->Write_model->saveFileData($post_id, $uploadData['file_name'], $uploadData['full_path'], $uploadData['file_type'], $uploadData['file_size'], $user_id);
                 } else {
-                    $error = $this->upload->display_errors();
-               
-                }
+                    $error = strip_tags($this->upload->display_errors()); // HTML 태그를 제거
+                    echo json_encode(['success' => false, 'message' => $error]);
+                    return;
+                }         
+
+                
             }
-
-        }else{
-
-        }
-    }
-
-
-    public function downloadFile($file_name) {
-       // URL 디코딩 적용
-    $decoded_file_name = urldecode($file_name);
-    
-    // 파일 경로 설정
-    $file_path = './uploads/' . $decoded_file_name; 
-
-    
-        if (file_exists($file_path)) {
-            // 파일 확장자에 따른 Content-Type 설정
-            $file_extension = strtolower(pathinfo($decoded_file_name, PATHINFO_EXTENSION));
-            switch ($file_extension) {
-                case 'jpg':
-                case 'jpeg':
-                    $content_type = 'image/jpeg';
-                    break;
-                case 'png':
-                    $content_type = 'image/png';
-                    break;
-                default:
-                    $content_type = 'application/octet-stream';
-            }
-    
-            header('Content-Description: File Transfer');
-            header('Content-Type: ' . $content_type);
-            header('Content-Disposition: attachment; filename="' . rawurlencode(basename($decoded_file_name)) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file_path));
-            
-            readfile($file_path);
-            exit;
         } else {
-            echo '파일이 존재하지 않습니다.';
+            
         }
     }
+    
+
+
+   public function downloadFile($file_name) {
+    // URL에서 인코딩된 파일 이름을 디코딩
+    $decoded_file_name = urldecode($file_name);
+
+    // 파일 경로 설정
+    $file_path = './uploads/' . $decoded_file_name;
+
+    if (file_exists($file_path)) {
+        // 파일 확장자에 따른 Content-Type 설정
+        $file_extension = strtolower(pathinfo($decoded_file_name, PATHINFO_EXTENSION));
+        switch ($file_extension) {
+            case 'jpg':
+            case 'jpeg':
+                $content_type = 'image/jpeg';
+                break;
+            case 'png':
+                $content_type = 'image/png';
+                break;
+            default:
+                $content_type = 'application/octet-stream';
+        }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $content_type);
+        header('Content-Disposition: attachment; filename="' . basename($decoded_file_name) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file_path));
+
+        readfile($file_path);
+        exit;
+    } else {
+        echo '파일이 존재하지 않습니다.';
+    }
+}
+
+    
     
     
     

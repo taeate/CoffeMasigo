@@ -47,6 +47,9 @@ class Write_model extends CI_Model {
         // 레벨 업 체크
         if ($new_points >= $level_up_points) {
             $new_level = $user->level + 1;
+
+             // 음수 값을 방지하기 위해 새로운 경험치를 음수 값으로 설정하지 않도록 검사
+            $new_points = max(0, $new_points - $level_up_points);
     
             // 레벨과 경험치 업데이트 (경험치를 0으로 초기화)
             $this->db->update('user', array('level' => $new_level, 'exp_point' => 0), array('user_id' => $user_id));
