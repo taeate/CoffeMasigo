@@ -470,10 +470,19 @@ class Post_model extends CI_Model {
     }
 
     public function count_posts_for_channel($channel_id) {
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->where('channel_id', $channel_id); 
-        $this->db->from('post');
+
+        if($channel_id === 'is_notice'){
+            $this->db->where('delete_status', 0);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', 1); 
+            $this->db->from('post');
+        }else{
+
+            $this->db->where('delete_status', 0);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('channel_id', $channel_id); 
+            $this->db->from('post');
+        }
         return $this->db->count_all_results();
     }
     
@@ -482,6 +491,21 @@ class Post_model extends CI_Model {
     public function get_posts_ordered_by_latest_for_channel($channel_id, $start = 0, $limit = 10) {
       
         date_default_timezone_set('Asia/Seoul');
+        
+        if($channel_id == 'is_notice'){
+
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        $this->db->where('delete_status', FALSE);
+        $this->db->where('parent_post_id', null);
+        $this->db->where('is_notice', 1);
+        $this->db->order_by('create_date', 'DESC');
+        $this->db->limit($limit, $start);
+        $posts = $this->db->get('post')->result();
+
+        }else{
+            
+        
     
         // 일반 글 
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
@@ -493,6 +517,8 @@ class Post_model extends CI_Model {
         $this->db->order_by('create_date', 'DESC');
         $this->db->limit($limit, $start);
         $posts = $this->db->get('post')->result();
+
+        }
 
         // 날짜 형식 변경
         foreach ($posts as $post) {
@@ -536,15 +562,29 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
 
     date_default_timezone_set('Asia/Seoul');
 
+    if($channel_id === 'is_notice'){
+
+        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+        $this->db->where('delete_status', 0);
+        $this->db->where('parent_post_id', null);
+        $this->db->where('is_notice', 1);
+        $this->db->order_by('thumb', 'DESC');
+        $this->db->limit($limit, $start);
+        $posts = $this->db->get('post')->result();
+
+    }else{
+
     $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
     $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-    $this->db->where('delete_status', FALSE);
+    $this->db->where('delete_status', 0);
     $this->db->where('parent_post_id', null);
     $this->db->where('is_notice', FALSE);
     $this->db->where('channel.channel_id', $channel_id); 
     $this->db->order_by('thumb', 'DESC');
     $this->db->limit($limit, $start);
     $posts = $this->db->get('post')->result();
+    }
 
     // 날짜 형식 변경
     foreach ($posts as $post) {
@@ -598,15 +638,33 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
 
         date_default_timezone_set('Asia/Seoul');
 
-        $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
-        $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
-        $this->db->where('delete_status', FALSE);
-        $this->db->where('parent_post_id', null);
-        $this->db->where('is_notice', FALSE);
-        $this->db->where('channel.channel_id', $channel_id); 
-        $this->db->order_by('views', 'DESC');
-        $this->db->limit($limit, $start);
-        $posts = $this->db->get('post')->result();
+        if($channel_id === 'is_notice'){
+
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('delete_status', 0);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', 1);
+            $this->db->order_by('views', 'DESC');
+            $this->db->limit($limit, $start);
+            $posts = $this->db->get('post')->result();
+
+        }else{
+
+            $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
+            $this->db->join('channel', 'channel.channel_id = post.channel_id', 'left');
+            $this->db->where('delete_status', 0);
+            $this->db->where('parent_post_id', null);
+            $this->db->where('is_notice', FALSE);
+            $this->db->where('channel.channel_id', $channel_id); 
+            $this->db->order_by('views', 'DESC');
+            $this->db->limit($limit, $start);
+            $posts = $this->db->get('post')->result();
+            
+
+        }
+
+      
 
         // 날짜 형식 변경
         foreach ($posts as $post) {
@@ -790,6 +848,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         // is_notice가 1인 게시물만 선택
         $this->db->from('post');
         $this->db->where('is_notice', 1);
+        $this->db->where('delete_status', 0);
         
         // 정렬 및 기타 조건 설정
         $this->db->order_by('create_date', 'DESC');

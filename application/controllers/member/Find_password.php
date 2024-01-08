@@ -20,7 +20,16 @@ class Find_password extends CI_Controller {
         // 폼 유효성 검사 규칙 설정
         $this->form_validation->set_rules('userid', '아이디', 'required', array('required' => '아이디를 입력해주세요.'));
         $this->form_validation->set_rules('username', '이름', 'required', array('required' => '이름을 입력해주세요.'));
-        $this->form_validation->set_rules('email', '이메일', 'required', array('required' => '이메일을 입력해주세요.'));
+        $this->form_validation->set_rules(
+            'email',
+            '이메일',
+            'required|valid_email',
+            array(
+                'required' => '이메일을 입력해주세요.',
+                'valid_email' => '유효한 이메일 형식이 아닙니다.'
+            )
+        );
+        
     
         $data = [];
     

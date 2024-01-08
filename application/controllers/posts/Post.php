@@ -458,8 +458,6 @@ class Post extends CI_Controller {
 
     public function LatestOrderBy_Channel($channel_id){
 
-
-        
      
         //페이지네이션 설정
         $config = array();
