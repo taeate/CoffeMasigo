@@ -66,7 +66,7 @@
                                                 <i class="fa-solid fa-thumbs-up"></i>추천수</button>
                                         </div>
                                         <div class="ml-4">
-                                            <button class="p-2 btn btn-sm btn-accent w-auto h-auto"
+                                            <button class="p-2 btn btn-sm btn-accent text-white w-auto h-auto"
                                                 onclick="ViewsOrderBy(getChannelIdFromUrl())">
                                                 <i class="fa-solid fa-eye"></i>조회수</button>
                                         </div>
@@ -784,8 +784,6 @@ function LatestOrderBy(channelId) {
     }
 
 
-    console.log(url);
-
     $.ajax({
         url: url,
         type: 'GET',
@@ -1189,45 +1187,5 @@ function redirectToURL() {
 
 
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const navbar = document.querySelector('nav');
-//     const search = document.querySelector('.searchbox');
-//     const sidebar = document.querySelector('.sidebarbox');
-
-
-
-//     // 원래 sidebar의 너비 계산
-//     const originalSidebarWidth = sidebar.offsetWidth + 'px';
-//     const originalSearchWidth = search.offsetWidth + 'px';
-
-//     if (navbar && content && sidebar) {
-
-//         const navbarHeight = navbar.offsetHeight;
-//         const contentTop = content.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
-//         window.addEventListener('scroll', function(){
-//             if(window.scrollY >= contentTop){
-//                 sidebar.classList.add('fixed');
-//                 search.classList.add('fixed');
-//                 sidebar.style.top = `${navbarHeight}px`;
-//                 search.style.top = `${navbarHeight}px`;
-
-//                 sidebar.style.width = originalSidebarWidth; 
-//                 search.style.width = originalSearchWidth; // 고정 상태에서 원래 너비 적용
-//             } else {
-//                 sidebar.classList.remove('fixed');
-//                 sidebar.style.top = '';
-//                 sidebar.style.width = ''; // 너비 스타일 제거
-
-//                  // searchbox 스타일 초기화
-//                 search.classList.remove('fixed');
-//                 search.style.top = '';
-//                 search.style.width = '';
-//                 search.style.zIndex = '50';
-//                 search.style.backgroundColor = '';
-//             }
-//         });
-//     } 
-// });
 
 </script>

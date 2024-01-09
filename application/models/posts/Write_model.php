@@ -8,6 +8,7 @@ class Write_model extends CI_Model {
         date_default_timezone_set('Asia/Seoul');
 
         $content = htmlspecialchars($content);
+        
 
         $data = array(
             'title'=> $title,
@@ -111,12 +112,17 @@ class Write_model extends CI_Model {
         $ref = $parent_post->ref ? $parent_post->ref : $parent_post_id;
         $re_level = $parent_post->re_level + 1;
 
-        // re_step 값 계산
-        $this->db->select_max('re_step');
+        // 부모 답글의 re_step 값 찾기
+        $parent_re_step = $parent_post->re_step;
+
+        // 새 답글의 re_step 값 계산
+        $re_step = $parent_re_step + 1;
+
+        // 기존 답글의 re_step 업데이트
+        $this->db->set('re_step', 're_step + 1', FALSE);
         $this->db->where('ref', $ref);
-        $this->db->where('re_level', $re_level);
-        $max_re_step = $this->db->get('post')->row()->re_step;
-        $re_step = $max_re_step + 1;
+        $this->db->where('re_step >=', $re_step);
+        $this->db->update('post');
     } else {
         // 최상위 답글의 경우
         $ref = null;
