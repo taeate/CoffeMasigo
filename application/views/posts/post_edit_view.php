@@ -137,7 +137,7 @@
 
                                     <div class="flex justify-between">
                                         <div class="mt-2">
-                                        <div class="ml-2 mb-2">* 글작성시 파일 크기는 총 500MB 이하여야 합니다</div>
+                                        <div class="ml-2 mb-2">* 글작성시 파일 크기는 총 10MB 이하여야 합니다</div>
                                             <div class="ml-2 mb-2">* 파일첨부는 최대 10개까지만 가능합니다.</div>
                                             <div class="ml-2 mb-2">* 단일 파일 추가는 불가능합니다.</div>
                                             <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
@@ -303,39 +303,50 @@ document.getElementById('edit_form').addEventListener('submit', function(e) {
     let formData = new FormData(this);
     var editorContent = editor.getHTML(); 
 
+    // HTML 엔터티로 디코딩된 내용 가져오기
+    var decodedEditorContent = new DOMParser().parseFromString(editorContent, 'text/html').body.textContent.trim();
+
+    
+    // 제목 검사
+    let title = document.getElementById('title').value.trim();
+    if (title === '' ) {
+    alert('제목을 입력해주세요.');
+    return;
+    }
+
+    // 내용검사
+    if (decodedEditorContent === '') {
+    alert('내용을 입력해주세요.');
+    return;
+    }
+
+
+
     formData.append('content', editorContent); 
     formData.append('channel_id', document.querySelector('select[name="channel_id"]').value);
     let post_id = $('#edit_form').attr('data-post-id');
 
-    // 제목 검사
-    let title = document.getElementById('title').value.trim();
 
-    if (title === '') {
-        alert('제목을 입력해주세요.');
-        return;
-    }
-
-    // 내용 검사
-    if (editorContent.trim() === '') {
-        alert('내용을 입력해주세요.');
-        return;
-    }
-
-      // 파일 업로드 수 및 크기 검사
-      var fileInput = document.getElementById('file');
-      if (fileInput) {
+    // 파일 업로드 수 및 크기 검사
+    var fileInput = document.getElementById('file');
+    if (fileInput) {
         var files = fileInput.files;
+
+        // 파일 개수 확인
         if (files.length > 10) {
             alert('파일은 최대 10개까지 업로드 가능합니다.');
             return;
         }
 
-        // 파일 크기 검사
+        // 파일 크기 확인
+        var totalSize = 0;
         for (var i = 0; i < files.length; i++) {
-            if (files[i].size > maxFileSize) {
-                alert('파일이 허용된 최대 크기를 초과했습니다.');
-                return;
-            }
+            totalSize += files[i].size;
+        }
+        var maxSize = 10 * 1024 * 1024; // 10MB를 바이트로 변환
+        if (totalSize > maxSize) {
+            alert('파일 크기가 최대 허용 크기를 초과합니다.');
+            return;
         }
     }
 
