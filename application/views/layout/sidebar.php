@@ -129,8 +129,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const links = document.querySelectorAll('a[href^="/posts"]'); 
 
     links.forEach(link => {
-        if (currentPath === link.getAttribute('href')) {
-            // URL이 정확히 일치하는 경우에만 클래스를 추가
+        const href = link.getAttribute('href');
+        if (currentPath === href && href !== '/posts/write') {
+            // URL이 정확히 일치하고, /posts/write가 아닌 경우에만 클래스 추가
             link.classList.add('text-blue-500');
         }
     });

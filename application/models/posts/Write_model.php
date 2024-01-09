@@ -178,7 +178,7 @@ class Write_model extends CI_Model {
         $this->db->where('post_id', $post_id);
         $post_info = $this->db->get()->row();
     
-        $this->db->select('file_name, file_path, file_id');
+        $this->db->select('file_name, file_path, file_size, file_id');
         $this->db->where('post_id', $post_id);
         $files = $this->db->get('uploadfile')->result();
     

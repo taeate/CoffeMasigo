@@ -166,6 +166,7 @@
                                         <?php foreach ($before_data['files'] as $file): ?>
                                         <div id="file-<?php echo $file->file_id; ?>">
                                             <?php echo $file->file_name; ?>
+                                            [<?php echo $file->file_size; ?>KB]
                                             <button class="bg-blue-500 rounded text-white w-8 h-6 m-2"
                                                 onclick="deleteFile('<?php echo $file->file_id; ?>', '<?php echo $post_id; ?>')">X</button>
                                         </div>
@@ -385,16 +386,21 @@ document.getElementById('file').addEventListener('change', function(e) {
         if (!uploadedFiles.includes(file.name)) {
             uploadedFiles.push(file.name); // 새로운 파일을 배열에 추가
 
-            var fileElement = document.createElement('div');
+             // 파일 크기를 KB 단위로 변환
+             var fileSize = (file.size / 1024).toFixed(2) + ' KB';
+
+             var fileElement = document.createElement('div');
             fileElement.className = 'new-file';
             fileElement.id = 'file-' + uploadedFiles.length; // 파일 요소에 고유한 ID 할당
-            fileElement.innerHTML = file.name +
+            fileElement.innerHTML = file.name + ' - ' + fileSize +
                 ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="newfile_remove(' + (
                     uploadedFiles.length - 1) + ')">X</button>';
             filesList.appendChild(fileElement);
         }
     }
 });
+
+
 
 function newfile_remove(index) {
     var filesInput = document.getElementById('file');

@@ -460,20 +460,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 document.getElementById('file').addEventListener('change', function(e) {
-
     var files = e.target.files;
     var filesList = document.getElementById('uploaded-files');
     filesList.innerHTML = '';
 
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
+
+        // 파일 크기를 KB 단위로 변환
+        var fileSize = (file.size / 1024).toFixed(2) + ' KB';
+
         var fileElement = document.createElement('div');
-        fileElement.innerHTML = (i + 1) + '. ' + file.name +
-            ' <button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="removeFile(' + i + ')">X</button>';
-            
+        fileElement.innerHTML = (i + 1) + '. ' + file.name + ' [' + fileSize +
+            ']<button class="bg-blue-500 rounded text-white w-8 h-6 m-2" onclick="removeFile(' + i + ')">X</button>';
+
         filesList.appendChild(fileElement);
     }
-});  
+});
+
 
 function removeFile(index) {
     var filesInput = document.getElementById('file');
