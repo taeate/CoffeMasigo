@@ -112,6 +112,30 @@
 <script>
 
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('a[href^="/posts/channel_id/"]');
+
+    links.forEach(link => {
+        if (currentPath.includes(link.getAttribute('href'))) {
+            // URL이 정확히 일치하는 경우에만 클래스를 추가
+            link.classList.add('text-blue-500');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('a[href^="/posts"]'); 
+
+    links.forEach(link => {
+        if (currentPath === link.getAttribute('href')) {
+            // URL이 정확히 일치하는 경우에만 클래스를 추가
+            link.classList.add('text-blue-500');
+        }
+    });
+});
+
 
 
 

@@ -99,7 +99,7 @@
                                             <div class="pt-2" id="uploaded-files"></div>
                                         </div>
                                         <div>
-                                            <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">취소</button>
+                                            <button type="button" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts/free/<?=$post_id?>">취소</a></button>
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">작성</button>
                                         </div>
                                     </div>

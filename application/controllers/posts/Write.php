@@ -222,6 +222,9 @@ class Write extends CI_Controller {
                     $channel_id = $this->input->post('channel_id'); 
                     $new_post_id =$this->Write_model->save_answer_post($title, $content, $user_id, $post_id, $channel_id );
 
+                     // 경험치 업데이트
+                    $this->Write_model->update_experience_points($user_id, 5);
+
                     $this->upload_files($new_post_id, $user_id);
                           
                     echo json_encode(['success' => true, 'new_post_id' => $new_post_id, 'message' => '성공']);
