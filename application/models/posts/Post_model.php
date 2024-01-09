@@ -323,7 +323,7 @@ class Post_model extends CI_Model {
         // HTML 이스케이프 처리
         $search_query = htmlspecialchars($search_query);
 
-         // 'channel.name'을 select 절에 포함
+        // 'channel.name'을 select 절에 포함
         $this->db->select('post.*, channel.name as channel_name, (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count');
 
         // 'channel' 테이블과 조인
@@ -948,7 +948,7 @@ public function get_posts_ordered_by_thumb_for_channel($channel_id, $start = 0, 
         }
     }
 
-    public function get_hot_posts($limit = 40) {
+    public function get_hot_posts($limit = 30) {
         $this->db->select('p.post_id, p.title, p.content, p.create_date, p.views, COUNT(c.comment_id) AS comment_count, p.thumb AS thumb_count, (COUNT(c.comment_id) + p.thumb) AS total_score, ch.name AS channel_name');
         $this->db->from('post AS p');
         $this->db->join('comment AS c', 'p.post_id = c.post_id', 'LEFT');

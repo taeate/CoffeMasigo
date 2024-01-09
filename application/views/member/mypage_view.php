@@ -251,8 +251,6 @@ document.getElementById('file-input').addEventListener('change', function(event)
         // 파일 선택 후 미리보기 이미지 표시
         previewImage(event.target);
 
-        
-        console.log('선택한 파일명:', selectedFile.name);
     }
 });
 

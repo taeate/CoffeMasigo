@@ -790,7 +790,6 @@ class Post extends CI_Controller {
         $config = array();
         $config['base_url'] = site_url('/posts/channel_id/' . $channel_id . '/page/');
         $config['first_url'] = site_url('posts/channel_id/' . $channel_id . '/page/1');
-        
         $config['total_rows'] = $this->Post_model->count_channel_posts($channel_id); // 총 게시물수
         $config['per_page'] = 10; // 페이지당 게시물수
         $config['num_links'] = FALSE;

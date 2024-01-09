@@ -7,6 +7,8 @@ class Write_model extends CI_Model {
 
         date_default_timezone_set('Asia/Seoul');
 
+        $content = htmlspecialchars($content);
+
         $data = array(
             'title'=> $title,
             'content'=> $content,

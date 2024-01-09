@@ -1,9 +1,9 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
-    <div class="flex flex-col bg-gray-300 h-auto text-black">
-    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[500px] w-screen object-cover" alt="">
-    <div class="flex flex-1 pt-[250px] gap-4 px-[100px] z-10 relative text-black justify-center">
+    <div class="flex flex-col bg-gray-100 h-auto text-black">
+    <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
+    <div class="flex flex-1 pt-[200px] gap-4 px-[200px] z-10 relative text-black justify-center">
              <!-- Sidebar -->
             <aside class="w-84">
                 <?php $this->load->view('layout/sidebar'); ?>

@@ -12,6 +12,10 @@ class Login extends CI_Controller {
     } 
     public function index() {
 
+        if ($this->session->userdata('is_logged_in')) {
+            redirect('/posts'); 
+        }
+
         $this->form_validation->set_rules('user_id', '아이디', 'required', array('required' => '아이디를 입력해주세요.'));
         $this->form_validation->set_rules('password', '비밀번호', 'required', array('required' => '비밀번호를 입력해주세요.'));
         $this->form_validation->set_error_delimiters('<div class="ml-1 mb-1 text-red-500">', '</div>');

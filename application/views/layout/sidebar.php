@@ -1,5 +1,5 @@
 
-<div class=" bg-white h-auto w-auto rounded sidebarbox">
+<div class="sticky top-0  bg-white h-auto w-auto rounded sidebarbox">
     <div name="sidebar-container" class="rounded w-[300px]">
 
         <div class="p-2">

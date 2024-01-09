@@ -1,8 +1,11 @@
 <?php $this->load->view('layout/header'); ?>
 <body class="">
-<div class="hero min-h-screen bg-base-200 ">
+<div class="hero min-h-screen bg-black ">
   
-<img src="/application/views/images/car.jpg" class="h-screen w-screen" alt="">
+<!-- <img src="/application/views/images/car.jpg" class="h-screen w-screen" alt=""> -->
+<video class="w-full h-full -mt-[100px]" autoplay muted loop>
+        <source src="/application/views/images/2024mustang.mp4" type="video/mp4">
+    </video>
   <div class="hero-content flex-col lg:flex-row-reverse w-5/6">    
  
     <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-gray-700 ">

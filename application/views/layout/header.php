@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-gray-200">
+<html lang="en" class="bg-black">
 
 <head>
 

@@ -2,7 +2,7 @@
 
 <body>
 
-    <div class="flex flex-col bg-gray-200 h-auto">
+    <div class="flex flex-col bg-gray-100 h-auto">
     <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
         <!-- Header -->
         <header class="bg-gray-800 text-white text-center">
@@ -158,7 +158,7 @@
                                 </div>
                                 <div class="stat-title text-gray-600">글을 가장 많이 쓴사람</div>
                                 <div class="text-primary font-bold text-xl "><?php echo htmlspecialchars($top_poster->user_id) ?></div>
-                                <div class="stat-desc mt-1 text-gray-400">누적 게시글수: <?php echo htmlspecialchars($top_poster->post_count) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">게시글수: <?php echo htmlspecialchars($top_poster->post_count) ?></div>
                                 <!-- 게시글 수 표시 -->
                             </div>
 
@@ -169,7 +169,7 @@
                                 <div class="stat-title text-gray-600">댓글을 가장 많이 쓴 사람</div>
                                 <div class=" text-secondary font-bold text-xl"><?php echo htmlspecialchars($top_commenter->user_id) ?>
                                 </div>
-                                <div class="stat-desc mt-1 text-gray-400">누적 댓글수: <?php echo htmlspecialchars($top_commenter->comment_count) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">댓글수: <?php echo htmlspecialchars($top_commenter->comment_count) ?></div>
                                 <!-- 댓글 수 표시 -->
                             </div>
 
@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="stat-title text-gray-600 ">추천수를 제일 많이 받은사람</div>
                                 <div class="font-bold text-xl"><?php echo htmlspecialchars($top_thumb->user_id) ?></div>
-                                <div class="stat-desc mt-1 text-gray-400">누적 추천수: <?php echo htmlspecialchars($top_thumb->thumb_count) ?></div>
+                                <div class="stat-desc mt-1 text-gray-400">추천수: <?php echo htmlspecialchars($top_thumb->thumb_count) ?></div>
                                 <!-- 추천 수 표시 -->
                             </div>
 
@@ -302,7 +302,10 @@
 
                                                     </div>
                                                 </div>
+                                                
+                                                
                                                 <div class="flex-[2] m-auto "><?php echo $post->user_id ?></div>
+                                              
                                                 <div class="flex-1 m-auto">
                                                     <i class="fa-solid fa-eye"></i>
                                                     <?php echo $post->views ?>

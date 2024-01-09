@@ -97,7 +97,7 @@ class Write extends CI_Controller {
         
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = '*'; // 허용된 파일 유형
-        $config['max_size'] = 500000; // 최대 파일 크기 
+        // $config['max_size'] = 50000; // 최대 파일 크기
         $config['remove_spaces'] = TRUE; // 파일 이름에서 공백 제거
         $config['file_ext_tolower'] = TRUE; // 파일 확장자를 소문자로 변환
     
@@ -106,7 +106,7 @@ class Write extends CI_Controller {
         if (!empty($_FILES['file']['name'][0])) {
             $files = $_FILES['file'];
 
-                // 파일 개수 확인
+             // 파일 개수 확인
                 if (count($files['name']) > 10) {
                     echo json_encode(['success' => false, 'message' => '파일은 최대 10개까지만 업로드 가능합니다.']);
                     return;
@@ -120,6 +120,12 @@ class Write extends CI_Controller {
                     'error' => $files['error'][$key],
                     'size' => $files['size'][$key]
                 );
+
+                // 파일 크기 확인
+                // if ($_FILES['single_file']['size'] > $config['max_size']) {
+                //     echo json_encode(['success' => false, 'message' => '파일 크기가 최대 허용 크기를 초과합니다.']);
+                //     return;
+                // }
     
                 if ($this->upload->do_upload('single_file')) {
                     $uploadData = $this->upload->data();

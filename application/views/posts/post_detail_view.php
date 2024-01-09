@@ -2,7 +2,7 @@
 
 <body>
 
-<div class="flex flex-col bg-gray-300 h-auto text-black">
+<div class="flex flex-col bg-gray-100 h-auto text-black">
 <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
   <!-- Header -->
   <header class=" text-white text-center">
@@ -12,12 +12,12 @@
   <!-- Body -->
   <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
     <!-- Sidebar -->
-    <aside class="w-84">
+    <aside name="sidebar" class="w-84">
         <?php $this->load->view('layout/sidebar'); ?>
     </aside>
 
     <!-- Content -->
-    <main class="w-full">
+    <main name="mainbar" class="w-full">
         <!-- 컨텐츠영역 -->
 
             <?php if ($detail_info) : ?>
@@ -105,9 +105,10 @@
             <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
             <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
             <div name="내용" class="flex px-8 py-8 z-10">
-                <div class="z-10  w-full toastui-editor-contents">
+                <div class="z-10 w-full toastui-editor-contents">
                     <?php echo htmlspecialchars_decode($content) ?>
                 </div>
+                
                 
             </div>
     
@@ -155,11 +156,11 @@
 
         <div name="댓글" class="h-auto">
 
-            <div class="flex flex-col w-full mt-4 ">
-                <div name="commnet-name" class="h-auto card bg-white">
+            <div class="flex flex-col w-full mt-4 mb-20">
+                <div name="commnet-name" class="h-auto  bg-white">
                     <div class="bg-white ">
                         <div class="flex pt-4 pr-4 pl-4 text-lg">
-                            <div class="font-bold">
+                            <div class="font-bold" id="comment-box">
                                 댓글
 
                             </div>
@@ -184,8 +185,9 @@
                                     <textarea id="comment" name="comment" rows="4"
                                         class="w-full px-0 text-sm text-gray-900 bg-white border-0 "
                                         placeholder="댓글은 여기에 작성해주세요" required></textarea>
-                                        <div class="text-gray-400 text-sm">
-                                            <span id="charCount">0</span>/
+                                        <div class="text-gray-400 text-sm flex gap-1">
+                                            <span id="charCount">0 </span>
+                                            <span>/</span>
                                             <span>300</span>
                                         </div>
                                 </div>
@@ -267,6 +269,10 @@
                                                 <?php if($user_id == !null) :?>
 
                                                 <?php echo $user_id; ?>
+                                                <!-- <?php if($user_id == $post->user_id) :?>
+                                                    ddd
+                                                <?php endif;?> -->
+                                                
 
 
                                                 <?php else: ?>
@@ -319,16 +325,7 @@
             </div>
 
         </div>
-
-       
-    </main>
-
-    <!-- Rightbar -->
-    <aside class="w-64 ">
-        <?php $this->load->view('layout/rightbar'); ?>
-    </aside>
-  </div>
-
+                                                    
     <button id="scrollTopBtn"
         class="w-24 fixed hover:bg-green-500 bottom-16 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         위로<i class="fa-solid fa-arrow-up"></i>
@@ -337,6 +334,15 @@
         class="w-24 fixed bottom-4 right-4 bg-blue-500 hover:bg-green-500 text-white font-bold py-2 px-4 rounded">
         아래로<i class="fa-solid fa-arrow-down"></i>
     </button>
+       
+    </main>
+
+    <!-- Rightbar -->
+    <aside name="rightbar" class="w-64 ">
+        <?php $this->load->view('layout/rightbar'); ?>
+    </aside>
+  </div>
+
 
 
 </div>
@@ -346,6 +352,14 @@
 
 
 <script>
+    
+function openModal(imageElement) {
+    let modal = document.getElementById('modal');
+    let modalImage = document.getElementById('modal-image');
+
+    modalImage.src = imageElement.src; // 클릭된 이미지의 src를 모달 이미지 src에 설정
+    modal.classList.remove('hidden'); // 모달 보여주기
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     var commentTextArea = document.getElementById('comment');

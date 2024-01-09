@@ -1,7 +1,7 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
-    <div class="flex flex-col bg-gray-200 h-auto">
+    <div class="flex flex-col bg-gray-100 h-auto">
     <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
     <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
              <!-- Sidebar -->
@@ -137,13 +137,15 @@
 
                                     <div class="flex justify-between">
                                         <div class="mt-2">
-                                            <div class="ml-2 mb-2">* 파일 크기는 250kb 이하여야 합니다.</div>
+                                        <div class="ml-2 mb-2">* 글작성시 파일 크기는 총 500MB 이하여야 합니다</div>
+                                            <div class="ml-2 mb-2">* 파일첨부는 최대 10개까지만 가능합니다.</div>
+                                            <div class="ml-2 mb-2">* 단일 파일 추가는 불가능합니다.</div>
                                             <input type="file" id="file" name="file[]" accept="image/gif, image/jpeg, image/png, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/plain, application/zip, application/pdf"
                                                 class="file rounded-lg border-2 file-input-bordered w-full max-w-sm bg-white  file:bg-blue-500 flie:text-none file:border-none" multiple />
                                             <div class="pt-2" id="uploaded-files"></div>
                                         </div>
                                         <div>
-                                            <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts/free/<?=$post_id?>">취소</a></button>
+                                            <button type="button" class="bg-gray-500 text-white w-24 h-12 rounded"><a href="/posts/free/<?=$post_id?>">취소</a></button>
                                             <button type="submit" class="bg-gray-500 text-white w-24 h-12 rounded">작성</button>
                                         </div>
                                     </div>

@@ -1,0 +1,135 @@
+USE masigo;
+
+SHOW TABLES;
+DESC channel;
+DESC ci_sessions;
+DESC COMMENT;
+DESC post;
+DESC post_thumb;
+DESC post_views;
+DESC uploadfile;
+DESC USER;
+
+SELECT * FROM post WHERE parent_post_id = 660;
+SELECT * FROM post WHERE post_id = 701;
+SELECT * FROM USER;
+
+SELECT 
+    post.*, 
+    channel.name AS channel_name, 
+    (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count
+FROM 
+    post
+LEFT JOIN channel ON channel.channel_id = post.channel_id
+WHERE 
+    delete_status = FALSE AND 
+    parent_post_id IS NULL AND 
+    is_notice = FALSE
+ORDER BY 
+    create_date DESC;
+
+
+UPDATE COMMENT
+SET delete_status = 0
+WHERE delete_status IS NULL;
+
+
+SELECT * FROM COMMENT WHERE post_id = 55;
+SELECT * FROM post;
+SELECT * FROM post WHERE parent_post_id = 30;
+SELECT * FROM post WHERE ref = 30;
+SELECT * FROM post WHERE post_id = 38;
+
+WHERE
+ user_id = 'ie9ie9'
+ AND delete_status = 0;
+ 
+ SHOW TABLES;
+ DESC USER;
+ DESC post;
+ DESC post_thumb;
+
+SELECT exp_point FROM USER WHERE user_id = 'BID';
+
+
+DELETE FROM post WHERE parent_post_id = 547;
+
+ALTER TABLE USER
+ADD CONSTRAINT exp_point_non_negative CHECK (exp_point >= 0);
+
+UPDATE USER
+SET exp_point = 20
+WHERE user_id = 'cucudas';
+
+
+SELECT * FROM USER;
+DELETE FROM USER WHERE id = 24;
+DELETE FROM post WHERE post_id = 682;
+
+
+
+
+SELECT * FROM channel;
+SELECT * FROM post WHERE is_notice = 1;
+
+ALTER TABLE USER MODIFY create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+SELECT * FROM post
+WHERE (parent_post_id = 511 OR ref = 511)
+  AND post_id != 511;
+
+UPDATE post
+SET delete_status = 0
+WHERE user_id = 'ie9ie9'
+AND delete_status = 1;
+
+SELECT * FROM post WHERE post_id = 541;
+SELECT * FROM post WHERE channel_id = 4 AND delete_status = 0 AND is_notice = 0;
+SELECT * FROM post WHERE post_id = 660;
+SELECT * FROM  USER WHERE user_id = 'poza07';
+UPDATE USER
+SET exp_point = 1
+WHERE user_id = 'cucudas';
+
+
+SELECT * FROM uploadfile WHERE post_id = 634;
+
+SELECT SUM(FILE_SIZE) AS total_file_size
+FROM uploadfile
+WHERE post_id = 634;
+
+DESC USER;
+  
+SELECT 
+    post.*, 
+    channel.name AS channel_name,
+    (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count
+FROM 
+    post
+LEFT JOIN 
+    channel ON channel.channel_id = post.channel_id
+WHERE 
+    parent_post_id = 511
+    AND post.post_id != 511
+    AND post.delete_status = 0
+ORDER BY 
+    post.ref ASC, 
+    post.re_step ASC, 
+    post.re_level ASC;
+
+
+
+
+SELECT * FROM post WHERE channel_id = 2;
+
+
+DELETE FROM post WHERE post_id = 444;
+
+
+SELECT * FROM COMMENT WHERE post_id = 511;
+
+
+UPDATE post
+SET delete_status = 0
+WHERE delete_status IS NULL;

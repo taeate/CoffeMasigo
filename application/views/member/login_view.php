@@ -1,8 +1,13 @@
 <?php $this->load->view('layout/header'); ?>
 
-<body class="">
-  <div class="hero min-h-screen bg-base-200 ">
-      <img src="/application/views/images/car.jpg" class="h-screen w-screen" alt="">
+<body class="overflow-hidden">
+    
+  <div class="hero bg-black ">
+      <!-- <img src="/application/views/images/car.jpg" class="h-screen w-screen" alt=""> -->
+    <video class="w-full h-full -mt-[100px]" autoplay muted loop>
+        <source src="/application/views/images/2024mustang.mp4" type="video/mp4">
+    </video>
+
       <div class="hero-content flex-col lg:flex-row-reverse">
 
           <!-- 비밀번호 변경 성공후  로그인 페이지에서 Alert 표시 -->

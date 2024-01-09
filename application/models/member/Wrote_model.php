@@ -7,8 +7,6 @@ class Wrote_model extends CI_Model {
 
     public function get_wrote_post($userid, $start = 0, $limit = 15) {
 
-
-
         $this->db->select('post.*, channel.name as channel_name, 
         (SELECT COUNT(*) FROM uploadfile WHERE uploadfile.post_id = post.post_id) AS file_count,
         (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.post_id AND comment.delete_status = 0) AS comment_count');
@@ -115,6 +113,10 @@ class Wrote_model extends CI_Model {
             if (isset($thumb['create_date'])) {
                 $thumb['create_date'] = (new DateTime($thumb['create_date']))->format('Y.m.d H:i');
             }
+
+            // htmlspecialchars 적용
+            $thumb['title'] = htmlspecialchars($thumb['title'], ENT_QUOTES, 'UTF-8');
+            
         }
     
         return $thumbs;

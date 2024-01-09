@@ -1,9 +1,9 @@
 <?php $this->load->view('layout/header'); ?>
 
 <body>
-<div class="flex flex-col bg-gray-300 h-auto text-black">
+<div class="flex flex-col bg-gray-100 h-auto text-black">
     <img src="/application/views/images/car.jpg" class="z-0 absolute h-[400px] w-screen object-cover" alt="">
-    <div class="flex flex-1 pt-[250px] gap-4 px-[200px] z-10 relative text-black justify-center">
+    <div class="flex flex-1 pt-[200px] gap-4 px-[200px] z-10 relative text-black justify-center">
         <!-- Sidebar -->
         <aside class="w-84">
             <?php $this->load->view('layout/sidebar'); ?>
@@ -14,32 +14,33 @@
                 <div
                     class="flex bg-white text-base font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-2 justify-between">
                     <ul class="flex flex-wrap -mb-px">
-                        <li class="me-2">
-                            <a href="/member/wrote/post" 
-                                class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500">
-                                <span>내가 쓴 글</span>
-                                <div></div>
-                            </a>
-                        </li>
-                        <li class="me-2">
-                            <a href="/member/wrote/comment" 
-                            
-                                class="inline-block p-4 border-b-2 rounded-t-lg active dark:text-blue-500 dark:border-blue-500"
-                                aria-current="page">
-                                <span>내가 쓴 댓글</span>
-                                <div></div>
-                            </a>
-                        </li>
-                        <li class="me-2">
-                            <a href="/member/wrote/thumb_post" 
-                            
-                                class="flex gap-2 inline-block p-4 text-blue-600 border-blue-600 active border-b-2  rounded-t-lg dark:hover:text-gray-300"
-                                aria-current="page">
-                                <span>내가 추천한 글</span>
-                                <div></div>
-                            </a>
-                        </li>
-                    </ul>
+                            <li class="p-2">
+                                <a href="/member/wrote/post" 
+                                    class="inline-block p-2 border-b-2 rounded-t-lg active text-gray-400 ">
+                                    <span>내가 쓴 글</span>
+                                    <div></div>
+                                </a>
+                            </li>
+                            <li class="p-2">
+                                <a href="/member/wrote/comment" 
+                                
+                                    class="inline-block p-2 border-b-2 rounded-t-lg active text-gray-400 "
+                                    aria-current="page">
+                                    <span>내가 쓴 댓글</span>
+                                    <div></div>
+                                </a>
+                            </li>
+                            <li class="p-2">
+                                <a href="/member/wrote/thumb_post" 
+                                
+                                class="
+                                flex gap-2 inline-block p-2 text-blue-600 border-blue-600 active border-b-2  rounded-t-lg "
+                                    aria-current="page">
+                                    <span>내가 추천한 글</span>
+                                    <div></div>
+                                </a>
+                            </li>
+                        </ul>
 
                     <!-- <ul class="p-4">
                         <div class="">
@@ -58,9 +59,9 @@
                         <?php foreach ($wrote_thumb_post as $thumb_post): ?>
                         <!-- 리스트 페이지의 내용 -->
                         <div class="bg-white">
-                            <div class="flex flex-col border-b hover:bg-blue-100">
+                            <div class="flex flex-col hover:bg-blue-100">
                                 <a href="/posts/free/<?php echo $thumb_post['post_id']; ?>">
-                                    <div class="flex flex-1 p-2 border-b border-gray-300 cursor-pointer">
+                                    <div class="flex flex-1 p-2 border-b border-gray-200 cursor-pointer">
 
                                         <!-- 콘텐츠 내용 -->
                                         <div class="flex-[0.4] flex flex-col items-center ">
