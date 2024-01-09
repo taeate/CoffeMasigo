@@ -62,8 +62,6 @@ class Join extends CI_Controller {
         );
 		
 
-
-
 			if ($this->form_validation->run() === FALSE) {
 			
 				$this->load->view('member/join_view');

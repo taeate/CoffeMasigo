@@ -22,7 +22,7 @@
           
             <div class="w-full h-full rounded-full overflow-hidden flex justify-center items-center">
               <div class="text-white flex justify-center items-center">
-              <i class="fa-solid fa-plus fa-xl"></i>
+                <i id="icon" class="fa-solid fa-plus fa-xl"></i>
               </div>
               
               <img id="image-preview" src="" alt="미리보기 이미지" class="w-full h-full object-cover" style="display: none;">
@@ -125,6 +125,7 @@ function previewImage(input) {
       reader.onload = function(e) {
         preview.style.display = 'block';
         preview.src = e.target.result;
+        icon.style.display = 'none';
       };
 
       reader.readAsDataURL(input.files[0]);

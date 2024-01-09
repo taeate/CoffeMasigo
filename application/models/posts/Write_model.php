@@ -219,8 +219,7 @@ class Write_model extends CI_Model {
     }
 
     public function saveFileData($post_id, $file_name, $file_path, $file_type, $file_size, $user_id) {
-        // 파일 이름을 안전하게 만들기
-        // $file_name = $this->sanitizeFileName($file_name);
+  
 
         // 파일 데이터 배열 생성
         $data = array(
@@ -231,7 +230,7 @@ class Write_model extends CI_Model {
             'file_size' => $file_size,
             'upload_date' => date('Y-m-d H:i:s'), // 현재 시간을 업로드 날짜로 설정
             'user_id' => $user_id,
-            'status' => 1 // 파일 상태, 예: 1 = 활성화
+            'status' => 1 // 파일 상태, 1 = 활성화
         );
 
         // 데이터베이스에 데이터 삽입
@@ -241,14 +240,7 @@ class Write_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    // private function sanitizeFileName($fileName) {
-    //     // 파일 이름에서 불필요하거나 위험한 문자 제거
-    //     $fileName = str_replace(" ", "-", $fileName);
-    //     $fileName = preg_replace("/[^a-zA-Z0-9\-\.가-힣]/u", "", $fileName);
 
-
-    //     return $fileName;
-    // }
 
     public function saveImageFile($file, $fileName) {
         // 파일 저장 디렉토리 설정

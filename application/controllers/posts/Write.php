@@ -121,7 +121,7 @@ class Write extends CI_Controller {
                     'size' => $files['size'][$key]
                 );
 
-        
+
     
                 if ($this->upload->do_upload('single_file')) {
                     $uploadData = $this->upload->data();
